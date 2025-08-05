@@ -18,7 +18,7 @@
 - **ng2-charts**: 7.0.0
 
 ### Development Tools
-- **Angular CLI**: 18.2.20
+- **Angular CLI**: 18.2.20 
 - **Angular DevKit**: 18.2.20
 - **Karma**: 6.4.4 (Testing)
 - **Jasmine**: 5.1.2 (Testing Framework)
