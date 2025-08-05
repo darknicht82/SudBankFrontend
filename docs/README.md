@@ -10,7 +10,6 @@ Frontend independiente para el Sistema Regulatorio de SudBank, desarrollado en A
 SudBankFrontend/
 ├── src/
 │   ├── app/
-│   │   ├── regulatory/          # Módulos regulatorios (L01-L14, L31, R01-R06)
 │   │   ├── services/            # Servicios HTTP
 │   │   ├── components/          # Componentes reutilizables
 │   │   ├── pages/               # Páginas principales
@@ -113,12 +112,6 @@ docker-compose up -d
 - **Chart.js**: 4.5.0
 - **Bootstrap**: 5.3.6
 - **RxJS**: 7.8.2
-
-## 📚 Documentación Adicional
-
-- [API Endpoints](./docs/API_ENDPOINTS.md)
-- [Guía de Despliegue](./docs/DEPLOYMENT.md)
-- [Guía de Desarrollo](./docs/DEVELOPMENT.md)
 
 ## 👥 Autores
 
