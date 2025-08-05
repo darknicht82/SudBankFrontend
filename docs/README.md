@@ -60,14 +60,8 @@ ng test
 ## 📊 Módulos Regulatorios
 
 ### Estructuras L (Liquidez)
-- **L01**: Listado de Clientes
-- **L02**: Emisores y Custodios
-- **L03**: Contrapartes
-- **L04**: Instrumentos Financieros
-- **L05**: Depósitos
-- **L06**: Préstamos
-- **L07**: Emisores y Custodios
-- **L08**: Liquidez Estructural
+- **L07**: Emisores y Custodios 
+- **L08**: Liquidez Estructural (Funcional Mock)
 - **L09**: Detalles de Productos
 - **L10**: Brechas de Sensibilidad
 - **L11**: Sensibilidad del Valor Patrimonial
@@ -125,4 +119,3 @@ Proyecto interno de SudBank - Todos los derechos reservados
 
 **Versión**: 1.0.0  
 **Fecha**: 2025-01-08  
-**Banco**: 1038 (Banco Sudamericano) 
