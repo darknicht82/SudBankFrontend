@@ -1,0 +1,73 @@
+<div class="l08-container">
+  <div class="header-section">
+    <h1 class="page-title">Reporte L08 - Liquidez Estructural</h1>
+    <div class="breadcrumb">
+      <span>Dashboard</span> / <span>Reportes Regulatorios</span> / <span>L08 - Liquidez Estructural</span>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-header">
+      <h2>Datos de Liquidez Estructural</h2>
+      <div class="table-actions">
+        <button class="btn btn-primary" (click)="exportarDatos()">
+          <i class="pi pi-download"></i> Exportar
+        </button>
+        <button class="btn btn-secondary" (click)="actualizarDatos()">
+          <i class="pi pi-refresh"></i> Actualizar
+        </button>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Código Liquidez</th>
+            <th>Tipo ID</th>
+            <th>Identificación</th>
+            <th>Tipo Instrumento</th>
+            <th>Calificación</th>
+            <th>Calificadora</th>
+            <th>Lunes</th>
+            <th>Martes</th>
+            <th>Miércoles</th>
+            <th>Jueves</th>
+            <th>Viernes</th>
+            <th>Fecha Reporte</th>
+            <th>Entidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of datos" class="table-row">
+            <td class="id-cell">{{ row.id }}</td>
+            <td class="code-cell">{{ row.codigoLiquidez }}</td>
+            <td class="type-cell">
+              <span class="badge" [class.badge-r]="row.tipoIdentificacion === 'R'" [class.badge-e]="row.tipoIdentificacion === 'E'">
+                {{ row.tipoIdentificacion }}
+              </span>
+            </td>
+            <td class="id-number-cell">{{ row.identificacionEntidad | number }}</td>
+            <td class="instrument-cell">{{ row.tipoInstrumento }}</td>
+            <td class="rating-cell">{{ row.calificacionEntidad }}</td>
+            <td class="rater-cell">{{ row.calificadoraRiesgo }}</td>
+            <td class="value-cell">{{ row.valorLunes | number:'1.0-2' }}</td>
+            <td class="value-cell">{{ row.valorMartes | number:'1.0-2' }}</td>
+            <td class="value-cell">{{ row.valorMiercoles | number:'1.0-2' }}</td>
+            <td class="value-cell">{{ row.valorJueves | number:'1.0-2' }}</td>
+            <td class="value-cell">{{ row.valorViernes | number:'1.0-2' }}</td>
+            <td class="date-cell">{{ row.fechaReporte | date:'dd/MM/yyyy' }}</td>
+            <td class="entity-cell">{{ row.entidadCodigo }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <div class="pagination-info">
+        Mostrando {{ datos.length }} registros de {{ datos.length }} total
+      </div>
+    </div>
+  </div>
+</div>

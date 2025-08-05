@@ -1,0 +1,338 @@
+/* Variables de colores institucionales */
+:host {
+  --primary-color: #1e3a8a;
+  --secondary-color: #3b82f6;
+  --accent-color: #06b6d4;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --light-bg: #f8fafc;
+  --border-color: #e2e8f0;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --white: #ffffff;
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Contenedor principal */
+.l08-container {
+  padding: 1.5rem;
+  background-color: var(--light-bg);
+  min-height: 100vh;
+}
+
+/* Sección de encabezado */
+.header-section {
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  color: var(--primary-color);
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.breadcrumb {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.breadcrumb span {
+  color: var(--text-secondary);
+}
+
+.breadcrumb span:last-child {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Contenedor de tabla */
+.table-container {
+  background: var(--white);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* Encabezado de tabla */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: var(--white);
+}
+
+.table-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--accent-color);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background-color: #0891b2;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--white);
+  color: var(--primary-color);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--light-bg);
+  transform: translateY(-1px);
+}
+
+/* Contenedor de tabla con scroll */
+.table-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* Tabla de datos */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.data-table thead {
+  background-color: var(--light-bg);
+}
+
+.data-table th {
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-color);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background-color: var(--light-bg);
+  z-index: 10;
+}
+
+.data-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.data-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+/* Estilos específicos de celdas */
+.id-cell {
+  font-weight: 600;
+  color: var(--primary-color);
+  text-align: center;
+  min-width: 60px;
+}
+
+.code-cell {
+  font-weight: 600;
+  color: var(--secondary-color);
+  text-align: center;
+  min-width: 120px;
+}
+
+.type-cell {
+  text-align: center;
+  min-width: 80px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-r {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.badge-e {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.id-number-cell {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  min-width: 140px;
+}
+
+.instrument-cell,
+.rating-cell,
+.rater-cell {
+  text-align: center;
+  font-weight: 500;
+  min-width: 80px;
+}
+
+.value-cell {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 100px;
+}
+
+.date-cell {
+  text-align: center;
+  color: var(--text-secondary);
+  min-width: 100px;
+}
+
+.entity-cell {
+  text-align: center;
+  font-weight: 600;
+  color: var(--primary-color);
+  min-width: 80px;
+}
+
+/* Pie de tabla */
+.table-footer {
+  padding: 1rem 1.5rem;
+  background-color: var(--light-bg);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination-info {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .table-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .table-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 768px) {
+  .l08-container {
+    padding: 1rem;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .table-header {
+    padding: 1rem;
+  }
+  
+  .table-header h2 {
+    font-size: 1.125rem;
+  }
+  
+  .btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .data-table {
+    font-size: 0.8rem;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 0.5rem 0.375rem;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.table-container {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estados de carga */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Scrollbar personalizado */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: var(--light-bg);
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+} 

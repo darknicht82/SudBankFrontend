@@ -1,0 +1,187 @@
+/* Variables de colores institucionales globales */
+:root {
+  --primary-color: #1e3a8a;
+  --secondary-color: #3b82f6;
+  --accent-color: #06b6d4;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --light-bg: #f8fafc;
+  --border-color: #e2e8f0;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --white: #ffffff;
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos globales */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--light-bg);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* Estilos optimizados para el componente principal */
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.main-content {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.nav-item {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0.5rem;
+  }
+  
+  .nav-menu {
+    flex-direction: column;
+  }
+}
+
+/* Estilos para PrimeNG Menubar */
+:host ::ng-deep .p-menubar {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  flex: 1;
+}
+
+:host ::ng-deep .p-menubar-root-list {
+  gap: 1.5rem;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-link {
+  color: var(--white) !important;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.5rem;
+  margin: 0 0.2rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-link:hover {
+  background-color: rgba(255,255,255,0.13) !important;
+  color: #fff !important;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-text {
+  color: var(--white) !important;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-icon {
+  color: var(--white) !important;
+}
+
+/* Animaciones globales */
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Utilidades */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+
+.p-1 { padding: 0.25rem; }
+.p-2 { padding: 0.5rem; }
+.p-3 { padding: 1rem; }
+.p-4 { padding: 1.5rem; }
+
+.menu-logo-bar {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  padding: 0 2.5rem 0 1rem;
+  min-height: 56px;
+  box-shadow: 0 2px 12px 0 rgba(30,58,138,0.07);
+  gap: 2.5rem;
+}
+
+.logo-placeholder {
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: 0.05em;
+  margin-right: 2.5rem;
+  text-shadow: 0 2px 8px rgba(30,58,138,0.15);
+  user-select: none;
+  transition: opacity 0.2s;
+}

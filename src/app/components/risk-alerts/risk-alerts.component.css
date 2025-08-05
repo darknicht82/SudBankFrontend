@@ -1,0 +1,47 @@
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.badge {
+  padding: 0.5em 0.75em;
+  font-size: 0.875rem;
+}
+
+:host ::ng-deep {
+  .p-datatable {
+    .p-datatable-thead > tr > th {
+      background-color: #f8f9fa;
+      color: #495057;
+      font-weight: 600;
+    }
+
+    .p-datatable-tbody > tr > td {
+      padding: 1rem;
+    }
+
+    .p-datatable-tbody > tr:hover {
+      background-color: #f8f9fa;
+    }
+  }
+
+  .p-button.p-button-outlined {
+    &.p-button-success {
+      color: #28a745;
+      border-color: #28a745;
+      &:hover {
+        background-color: #28a745;
+        color: white;
+      }
+    }
+
+    &.p-button-danger {
+      color: #dc3545;
+      border-color: #dc3545;
+      &:hover {
+        background-color: #dc3545;
+        color: white;
+      }
+    }
+  }
+} 

@@ -1,0 +1,39 @@
+# ========================================
+# DOCKER COMPOSE - SUDBANK FRONTEND
+# ========================================
+# Propósito: Orquestación del frontend independiente
+#
+# Autor: Christian Aguirre
+# Fecha: 2025-01-08
+
+version: '3.8'
+
+services:
+  # ========================================
+  # FRONTEND ANGULAR
+  # ========================================
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sudbank-frontend
+    ports:
+      - "4200:4200"
+    environment:
+      - API_BASE_URL=http://192.168.10.7:8085
+      - ADAPTER_BASE_URL=http://192.168.10.7:8080
+    networks:
+      - frontend-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4200/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  frontend-network:
+    driver: bridge
+
+volumes: {} 

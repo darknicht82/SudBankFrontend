@@ -1,0 +1,48 @@
+.metrics-list {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.metric-item {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.metric-item h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #495057;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+.metric-change {
+  font-size: 0.875rem;
+}
+
+.status-high {
+  color: #dc3545;
+}
+
+.status-medium {
+  color: #ffc107;
+}
+
+.status-low {
+  color: #28a745;
+}
+
+.positive {
+  color: #28a745;
+}
+
+.negative {
+  color: #dc3545;
+} 
