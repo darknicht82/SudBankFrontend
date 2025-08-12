@@ -215,10 +215,10 @@
                     </select>
                     <div class="edit-actions">
                       <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
-                        <i class="fas fa-check"></i>
+                        ✓
                       </button>
                       <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
-                        <i class="fas fa-times"></i>
+                        ✗
                       </button>
                     </div>
                   </div>
@@ -230,17 +230,33 @@
                     {{ item.identificacion }}
                   </div>
                   <div *ngIf="isEditing(i, 'identificacion')" class="edit-mode">
-                    <input type="text" 
+                    <!-- Select para códigos extranjeros cuando Tipo ID es X -->
+                    <select *ngIf="getTipoIdentificacionActual(i) === 'X'"
+                            [(ngModel)]="editValue" 
+                            class="form-control form-control-sm"
+                            (keydown)="onKeyDown($event)">
+                      <option value="">Seleccionar código extranjero</option>
+                      <option *ngFor="let codigo of codigosExtranjerosL01" [value]="codigo.codigo">
+                        {{codigo.codigo}} - {{codigo.descripcion}}
+                      </option>
+                    </select>
+                    
+                    <!-- Input para RUC cuando Tipo ID es R -->
+                    <input *ngIf="getTipoIdentificacionActual(i) === 'R'"
+                           type="text" 
                            [(ngModel)]="editValue" 
                            class="form-control form-control-sm"
                            (keydown)="onKeyDown($event)"
-                           placeholder="RUC 13 dígitos o código 7 dígitos">
+                           maxlength="13"
+                           placeholder="RUC 13 dígitos"
+                           (input)="onIdentificacionInput($event)">
+                    
                     <div class="edit-actions">
                       <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
-                        <i class="fas fa-check"></i>
+                        ✓
                       </button>
                       <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
-                        <i class="fas fa-times"></i>
+                        ✗
                       </button>
                     </div>
                   </div>
@@ -260,10 +276,10 @@
                     </select>
                     <div class="edit-actions">
                       <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
-                        <i class="fas fa-check"></i>
+                        ✓
                       </button>
                       <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
-                        <i class="fas fa-times"></i>
+                        ✗
                       </button>
                     </div>
                   </div>
@@ -282,10 +298,10 @@
                     </select>
                     <div class="edit-actions">
                       <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
-                        <i class="fas fa-check"></i>
+                        ✓
                       </button>
                       <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
-                        <i class="fas fa-times"></i>
+                        ✗
                       </button>
                     </div>
                   </div>

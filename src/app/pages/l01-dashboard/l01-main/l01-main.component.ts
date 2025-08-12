@@ -79,6 +79,73 @@ export class L01MainComponent implements OnInit {
   clasificacionesL01: any[] = [];
   codigosExtranjeros: any[] = [];
 
+  // Propiedades para códigos extranjeros
+  codigosExtranjerosL01: any[] = [];
+  
+  // Método para obtener el tipo de identificación actual de una fila
+  getTipoIdentificacionActual(rowIndex: number): string {
+    if (rowIndex >= 0 && rowIndex < this.datosL01.length) {
+      return this.datosL01[rowIndex].tipoIdentificacion;
+    }
+    return '';
+  }
+  
+  // Método para manejar input de identificación con validación en tiempo real
+  onIdentificacionInput(event: any): void {
+    const value = event.target.value;
+    const tipoId = this.getTipoIdentificacionActual(this.editingRow || 0);
+    
+    // Validación en tiempo real
+    if (tipoId === 'R') {
+      // Solo números para RUC
+      const numericValue = value.replace(/\D/g, '');
+      if (numericValue !== value) {
+        event.target.value = numericValue;
+        this.editValue = numericValue;
+      }
+      
+      // Limitar a 13 dígitos
+      if (numericValue.length > 13) {
+        event.target.value = numericValue.substring(0, 13);
+        this.editValue = numericValue.substring(0, 13);
+      }
+    } else if (tipoId === 'X') {
+      // Solo números para códigos extranjeros
+      const numericValue = value.replace(/\D/g, '');
+      if (numericValue !== value) {
+        event.target.value = numericValue;
+        this.editValue = numericValue;
+      }
+      
+      // Limitar a 7 dígitos
+      if (numericValue.length > 7) {
+        event.target.value = numericValue.substring(0, 7);
+        this.editValue = numericValue.substring(0, 7);
+      }
+    }
+  }
+  
+  // Cargar códigos extranjeros del catálogo t164
+  loadCodigosExtranjeros(): void {
+    this.catalogService.getTabla164ForL01().subscribe({
+      next: (codigos) => {
+        this.codigosExtranjerosL01 = codigos;
+        this.txtLogger.info('L01MainComponent', 'Códigos extranjeros cargados exitosamente', {
+          count: codigos.length
+        });
+      },
+      error: (error) => {
+        this.txtLogger.error('L01MainComponent', 'Error al cargar códigos extranjeros', error);
+        // Fallback a datos mock si falla la API
+        this.codigosExtranjerosL01 = [
+          { codigo: '1000001', descripcion: 'Código Extranjero 1' },
+          { codigo: '1000002', descripcion: 'Código Extranjero 2' },
+          { codigo: '1000003', descripcion: 'Código Extranjero 3' }
+        ];
+      }
+    });
+  }
+
   // Inline editing properties
   editingRow: number | null = null;
   editingField: string | null = null;
@@ -198,6 +265,7 @@ export class L01MainComponent implements OnInit {
       this.catalogService.getTabla164ForL01().subscribe({
         next: (codigos) => {
           this.codigosExtranjeros = codigos;
+          this.codigosExtranjerosL01 = codigos; // También para el select
           this.txtLogger.info('L01MainComponent', `Tabla 164 cargada: ${codigos.length} códigos extranjeros`);
         },
         error: (error) => {
@@ -626,6 +694,101 @@ export class L01MainComponent implements OnInit {
     this.txtLogger.debug('L01MainComponent', 'Edición cancelada');
   }
   
+  // Enhanced validation with real-time feedback
+  validateFieldRealTime(field: string, value: any): { isValid: boolean; message: string } {
+    switch (field) {
+      case 'tipoIdentificacion':
+        return this.validateTipoIdentificacionRealTime(value);
+      case 'identificacion':
+        return this.validateIdentificacionRealTime(value);
+      case 'clasificacion':
+        return this.validateClasificacionRealTime(value);
+      case 'tipoEmisor':
+        return this.validateTipoEmisorRealTime(value);
+      default:
+        return { isValid: false, message: 'Campo no válido' };
+    }
+  }
+  
+  validateTipoIdentificacionRealTime(value: string): { isValid: boolean; message: string } {
+    if (value === 'R' || value === 'X') {
+      return { isValid: true, message: 'Tipo válido' };
+    }
+    return { isValid: false, message: 'Solo se permiten R (Nacional) o X (Extranjero)' };
+  }
+  
+  validateIdentificacionRealTime(value: string): { isValid: boolean; message: string } {
+    if (!value || typeof value !== 'string') {
+      return { isValid: false, message: 'Valor requerido' };
+    }
+    
+    // Check if it's a valid RUC (13 digits) or foreign code (7 digits)
+    const isRUC = value.length === 13 && /^\d{13}$/.test(value);
+    const isForeignCode = value.length === 7 && /^\d{7}$/.test(value);
+    
+    if (isRUC) {
+      const rucValidation = this.validateRUCRealTime(value);
+      return rucValidation;
+    }
+    
+    if (isForeignCode) {
+      return { isValid: true, message: 'Código extranjero válido' };
+    }
+    
+    if (value.length < 7) {
+      return { isValid: false, message: 'Mínimo 7 dígitos para código extranjero' };
+    }
+    
+    if (value.length > 13) {
+      return { isValid: false, message: 'Máximo 13 dígitos para RUC' };
+    }
+    
+    if (!/^\d+$/.test(value)) {
+      return { isValid: false, message: 'Solo se permiten números' };
+    }
+    
+    return { isValid: false, message: 'Formato inválido' };
+  }
+  
+  validateRUCRealTime(ruc: string): { isValid: boolean; message: string } {
+    if (ruc.length !== 13) {
+      return { isValid: false, message: 'RUC debe tener exactamente 13 dígitos' };
+    }
+    
+    if (!/^\d{13}$/.test(ruc)) {
+      return { isValid: false, message: 'RUC solo debe contener números' };
+    }
+    
+    const tipo = ruc.substring(2, 3);
+    const validTipos = ['6', '9']; // 6: Empresas, 9: Organizaciones
+    
+    if (!validTipos.includes(tipo)) {
+      return { isValid: false, message: `Tipo de RUC ${tipo} no válido para L01. Solo se permiten tipos 6 (Empresas) y 9 (Organizaciones)` };
+    }
+    
+    return { isValid: true, message: 'RUC válido' };
+  }
+  
+  validateClasificacionRealTime(value: string): { isValid: boolean; message: string } {
+    const validClasificaciones = ['1', '2', '3', '4'];
+    if (validClasificaciones.includes(value)) {
+      const desc = this.getClasificacionDesc(parseInt(value));
+      return { isValid: true, message: `Clasificación válida: ${desc}` };
+    }
+    return { isValid: false, message: 'Solo se permiten valores 1, 2, 3, 4' };
+  }
+  
+  validateTipoEmisorRealTime(value: string): { isValid: boolean; message: string } {
+    // Check if value exists in the loaded catalog
+    const exists = this.tiposEmisorL01.some(tipo => tipo.codigo === value);
+    if (exists) {
+      const desc = this.getTipoEmisorDesc(parseInt(value));
+      return { isValid: true, message: `Tipo válido: ${desc}` };
+    }
+    return { isValid: false, message: 'Tipo de emisor no válido para L01' };
+  }
+  
+  // Enhanced save with validation feedback
   saveEdit(): void {
     if (this.editingRow === null || this.editingField === null) {
       return;
@@ -634,11 +797,16 @@ export class L01MainComponent implements OnInit {
     const newValue = this.editValue;
     const oldValue = this.originalValue;
     
-    // Validate field before saving
-    if (!this.validateField(this.editingField, newValue)) {
+    // Validate field before saving with real-time feedback
+    const validation = this.validateFieldRealTime(this.editingField, newValue);
+    
+    if (!validation.isValid) {
+      // Show validation error to user
+      this.showValidationError(validation.message);
       this.txtLogger.warn('L01MainComponent', `Validación fallida para campo ${this.editingField}`, {
         field: this.editingField,
-        value: newValue
+        value: newValue,
+        message: validation.message
       });
       return;
     }
@@ -658,6 +826,9 @@ export class L01MainComponent implements OnInit {
             newValue: newValue,
             response: response
           });
+          
+          // Show success message
+          this.showSuccessMessage(`Campo ${this.editingField} actualizado exitosamente`);
           
           // Exit edit mode
           this.editingRow = null;
@@ -680,70 +851,26 @@ export class L01MainComponent implements OnInit {
           }
           this.isSaving = false;
           
-          // Show error to user (you can implement a toast/notification service)
-          console.error('Error al guardar:', error);
+          // Show error message
+          this.showErrorMessage(`Error al guardar: ${error.message || 'Error desconocido'}`);
         }
       });
   }
   
-  validateField(field: string, value: any): boolean {
-    switch (field) {
-      case 'tipoIdentificacion':
-        return this.validateTipoIdentificacion(value);
-      case 'identificacion':
-        return this.validateIdentificacion(value);
-      case 'clasificacion':
-        return this.validateClasificacion(value);
-      case 'tipoEmisor':
-        return this.validateTipoEmisor(value);
-      default:
-        return false;
-    }
+  // User feedback methods
+  showValidationError(message: string): void {
+    // Simple alert for now, can be enhanced with toast notifications
+    alert(`Error de validación: ${message}`);
   }
   
-  validateTipoIdentificacion(value: string): boolean {
-    return value === 'R' || value === 'X';
+  showSuccessMessage(message: string): void {
+    // Simple alert for now, can be enhanced with toast notifications
+    alert(`✅ ${message}`);
   }
   
-  validateIdentificacion(value: string): boolean {
-    if (!value || typeof value !== 'string') return false;
-    
-    // Check if it's a valid RUC (13 digits) or foreign code (7 digits)
-    const isRUC = value.length === 13 && /^\d{13}$/.test(value);
-    const isForeignCode = value.length === 7 && /^\d{7}$/.test(value);
-    
-    if (isRUC) {
-      return this.validateRUC(value);
-    }
-    
-    return isForeignCode;
-  }
-  
-  validateRUC(ruc: string): boolean {
-    if (ruc.length !== 13 || !/^\d{13}$/.test(ruc)) {
-      return false;
-    }
-    
-    // Basic RUC validation (you can enhance this with full digit verification)
-    const tipo = ruc.substring(2, 3);
-    const validTipos = ['6', '9']; // 6: Empresas, 9: Organizaciones
-    
-    if (!validTipos.includes(tipo)) {
-      return false;
-    }
-    
-    // Additional validation can be added here
-    return true;
-  }
-  
-  validateClasificacion(value: string): boolean {
-    const validClasificaciones = ['1', '2', '3', '4'];
-    return validClasificaciones.includes(value);
-  }
-  
-  validateTipoEmisor(value: string): boolean {
-    // Check if value exists in the loaded catalog
-    return this.tiposEmisorL01.some(tipo => tipo.codigo === value);
+  showErrorMessage(message: string): void {
+    // Simple alert for now, can be enhanced with toast notifications
+    alert(`❌ ${message}`);
   }
   
   persistToBackend(rowIndex: number, field: string, newValue: any, oldValue: any): Observable<any> {
