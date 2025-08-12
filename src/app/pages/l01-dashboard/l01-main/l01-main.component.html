@@ -1,0 +1,306 @@
+<!-- COMPONENTE L01 MAIN - DASHBOARD PRINCIPAL -->
+<!-- Manual de Control de Inversiones - Marzo 2017 -->
+<!-- Superintendencia de Bancos del Ecuador -->
+
+<div class="l01-main-container">
+  <!-- CABECERA -->
+  <div class="header">
+    <h1>L01 - Emisores, Custodios y Contrapartes</h1>
+    <p class="subtitle">Registro de emisores, custodios de inversiones, depositarios de fondos disponibles y contrapartes en operaciones de reporto</p>
+  </div>
+
+  <!-- INDICADOR DE MODO DE DATOS -->
+  <div class="data-mode-indicator" [class]="isUsingMockData ? 'mock-mode' : 'real-mode'">
+    <div class="mode-badge">
+      <i class="fas" [class]="isUsingMockData ? 'fa-flask' : 'fa-database'"></i>
+      <span>{{ isUsingMockData ? 'DATOS MOCK (Desarrollo)' : 'DATOS REALES (Producción)' }}</span>
+      <button *ngIf="!isProduction" (click)="toggleDataMode()" class="btn btn-sm btn-outline-light">
+        <i class="fas fa-exchange-alt"></i>
+        Cambiar a {{ isUsingMockData ? 'Datos Reales' : 'Datos Mock' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- INFORMACIÓN DE ESTRUCTURA -->
+  <div class="structure-info">
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Información de la Estructura L01</h3>
+      </div>
+      <div class="card-content">
+        <p><strong>Descripción:</strong> {{ tooltips.description }}</p>
+        <p><strong>Periodicidad:</strong> {{ tooltips.periodicity }}</p>
+        <p><strong>Plazo entrega:</strong> {{ tooltips.deadline }}</p>
+        <p><strong>Código Banco:</strong> {{ tooltips.bankCode }}</p>
+        <p><strong>Formato archivo:</strong> {{ tooltips.fileFormat }}</p>
+        <p><strong>Fuente:</strong> {{ tooltips.source }}</p>
+        
+        <div class="requirements">
+          <strong>Requisitos:</strong>
+          <ul>
+            <li *ngFor="let req of tooltips.requirements">{{ req }}</li>
+          </ul>
+        </div>
+
+        <div class="fields-info">
+          <strong>Campos Oficiales (💡 hover para detalles):</strong>
+          <div class="fields-grid">
+            <div *ngFor="let field of tooltips.fields" class="field-item">
+              <span class="field-position">{{ field.position }}.</span>
+              <span class="field-name">{{ field.name }}</span>
+              <span class="field-table">({{ field.table }})</span>
+              <div class="field-description">{{ field.description }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filters-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Filtros de Reporte</h3>
+      </div>
+      <div class="card-content">
+        <div class="filters-grid">
+          <div class="form-field">
+            <label>Fecha Inicio:</label>
+            <input type="date" [(ngModel)]="fechaInicio" class="form-control">
+          </div>
+          <div class="form-field">
+            <label>Fecha Fin:</label>
+            <input type="date" [(ngModel)]="fechaFin" class="form-control">
+          </div>
+          <div class="form-field">
+            <label>Tipo Identificación:</label>
+            <select [(ngModel)]="tipoIdentificacion" class="form-control">
+              <option value="">Todos</option>
+              <option *ngFor="let tipo of tiposIdentificacionL01" [value]="tipo.codigo">
+                {{tipo.codigo}} - {{tipo.descripcion}}
+              </option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Clasificación:</label>
+            <select [(ngModel)]="clasificacion" class="form-control">
+              <option value="">Todas</option>
+              <option *ngFor="let clasificacion of clasificacionesL01" [value]="clasificacion.codigo">
+                {{clasificacion.codigo}} - {{clasificacion.descripcion | titlecase}}
+              </option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Tipo Emisor:</label>
+            <select [(ngModel)]="tipoEmisor" class="form-control">
+              <option value="">Todos</option>
+              <option *ngFor="let tipo of tiposEmisorL01" [value]="tipo.codigo">
+                {{tipo.codigo}} - {{tipo.descripcion | titlecase}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <button (click)="refreshData()" [disabled]="loading" class="btn btn-secondary">
+            <i class="fas fa-sync-alt"></i>
+            Actualizar
+          </button>
+          <button (click)="generateReport()" [disabled]="loading" class="btn btn-primary">
+            {{ loading ? 'Generando...' : 'Generar Reporte' }}
+          </button>
+          <button (click)="loadHistory()" class="btn btn-secondary">
+            {{ showHistorial ? 'Ocultar Historial' : 'Ver Historial' }}
+          </button>
+          <button (click)="exportReport()" class="btn btn-success">
+            Exportar Reporte
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERRORES -->
+  <div *ngIf="error" class="error-message">
+    <div class="alert alert-danger">
+      <strong>Error:</strong> {{ error }}
+    </div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div *ngIf="datosL01.length > 0" class="summary-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>📊 Resumen del Reporte</h3>
+      </div>
+      <div class="card-content">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <label>Total Registros:</label>
+            <span>{{ getTotalRegistros() }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Fecha Generación:</label>
+            <span>{{ getFechaGeneracion() }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Emisores:</label>
+            <span>{{ getCountByClasificacion(1) }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Custodios:</label>
+            <span>{{ getCountByClasificacion(2) }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Depositarios:</label>
+            <span>{{ getCountByClasificacion(3) }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Contrapartes:</label>
+            <span>{{ getCountByClasificacion(4) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div *ngIf="showHistorial" class="history-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>📜 Historial de Actividades</h3>
+      </div>
+      <div class="card-content">
+        <div class="history-list">
+          <div *ngFor="let item of historial" class="history-item">
+            <div class="history-date">{{ item.fecha }}</div>
+            <div class="history-user">{{ item.usuario }}</div>
+            <div class="history-action">{{ item.accion }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA DE DATOS -->
+  <div *ngIf="datosL01.length > 0" class="data-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Datos del Reporte L01</h3>
+      </div>
+      <div class="card-content">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th *ngFor="let column of displayedColumns" 
+                    (mouseenter)="showFieldTooltip(column, $event)"
+                    (mouseleave)="hideTooltip()">
+                  {{ getColumnTitle(column) }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of datosL01">
+                <td>{{ item.tipoIdentificacion }}</td>
+                <td>{{ item.identificacion }}</td>
+                <td>{{ getClasificacionDesc(item.clasificacion) }}</td>
+                <td>{{ getTipoEmisorDesc(item.tipoEmisor) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOLTIP L01 -->
+  <div *ngIf="showTooltip && currentTooltip" 
+       class="tooltip-popup" 
+       [style.left.px]="tooltipPosition.x + 10"
+       [style.top.px]="tooltipPosition.y - 10">
+    <div class="tooltip-content">
+      <h4>{{ currentTooltip.title }}</h4>
+      <p>{{ currentTooltip.description }}</p>
+      
+      <div class="tooltip-details">
+        <div class="tooltip-row">
+          <strong>Formato:</strong> {{ currentTooltip.format }}
+        </div>
+        <div class="tooltip-row">
+          <strong>Validación:</strong> {{ currentTooltip.validation }}
+        </div>
+        <div class="tooltip-row">
+          <strong>Ejemplo:</strong> {{ currentTooltip.example }}
+        </div>
+        <div class="tooltip-row">
+          <strong>Fuente:</strong> {{ currentTooltip.source }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPONENTE DE EXPORTACIÓN L01 -->
+  <div class="export-section" *ngIf="!loading && exportData.length > 0">
+    <app-l01-export
+      [data]="exportData"
+      [fechaCorte]="fechaCorte"
+      [usuario]="usuarioActual"
+      (exportCompleted)="onExportCompleted($event)"
+      (exportError)="onExportError($event)">
+    </app-l01-export>
+  </div>
+
+  <!-- CONTROLES DE PRUEBA Y DEBUG -->
+  <div class="debug-controls" *ngIf="!loading && showLogMonitor">
+    <div class="card">
+      <div class="card-header">
+        <h5>
+          <i class="fas fa-tools me-2"></i>
+          Controles de Prueba
+        </h5>
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-outline-danger btn-sm w-100" (click)="testError()">
+              <i class="fas fa-bug me-2"></i>
+              Simular Error
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-outline-warning btn-sm w-100" (click)="testWarning()">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              Simular Advertencia
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-outline-info btn-sm w-100" (click)="refreshData()">
+              <i class="fas fa-sync-alt me-2"></i>
+              Refrescar Datos
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-outline-secondary btn-sm w-100" (click)="toggleLogMonitor()">
+              <i class="fas fa-eye me-2"></i>
+              {{ showLogMonitor ? 'Ocultar' : 'Mostrar' }} Monitor
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONITOR DE LOGS -->
+  <div class="log-monitor-section" *ngIf="showLogMonitor">
+    <app-log-monitor></app-log-monitor>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Generando reporte L01...</p>
+    </div>
+  </div>
+</div>

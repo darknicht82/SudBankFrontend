@@ -1,0 +1,78 @@
+{
+  "timestamp": "2025-08-09T01:27:52.070Z",
+  "test_type": "simple_validation",
+  "summary": {
+    "total_tests": 12,
+    "passed": 12,
+    "failed": 0,
+    "warnings": 0
+  },
+  "results": [
+    {
+      "status": "success",
+      "message": "Servidor Angular disponible",
+      "timestamp": "2025-08-09T01:27:52.017Z"
+    },
+    {
+      "status": "success",
+      "message": "Archivo presente: src/app/services/l01-file-generator.service.ts",
+      "timestamp": "2025-08-09T01:27:52.030Z"
+    },
+    {
+      "status": "success",
+      "message": "Código banco 1038 encontrado en src/app/services/l01-file-generator.service.ts",
+      "timestamp": "2025-08-09T01:27:52.032Z"
+    },
+    {
+      "status": "success",
+      "message": "Archivo presente: src/app/services/l01-rvc.service.ts",
+      "timestamp": "2025-08-09T01:27:52.033Z"
+    },
+    {
+      "status": "success",
+      "message": "Código banco 1038 encontrado en src/app/services/l01-rvc.service.ts",
+      "timestamp": "2025-08-09T01:27:52.038Z"
+    },
+    {
+      "status": "success",
+      "message": "Archivo presente: src/app/services/l01-catalog.service.ts",
+      "timestamp": "2025-08-09T01:27:52.041Z"
+    },
+    {
+      "status": "success",
+      "message": "Archivo presente: src/app/services/logger.service.ts",
+      "timestamp": "2025-08-09T01:27:52.045Z"
+    },
+    {
+      "status": "success",
+      "message": "Archivo presente: src/app/components/l01/l01-export/l01-export.component.ts",
+      "timestamp": "2025-08-09T01:27:52.049Z"
+    },
+    {
+      "status": "success",
+      "message": "Archivo presente: src/app/models/l01-export.model.ts",
+      "timestamp": "2025-08-09T01:27:52.050Z"
+    },
+    {
+      "status": "success",
+      "message": "Código banco 1038 encontrado en src/app/models/l01-export.model.ts",
+      "timestamp": "2025-08-09T01:27:52.058Z"
+    },
+    {
+      "status": "success",
+      "message": "Archivo presente: src/environments/environment.ts",
+      "timestamp": "2025-08-09T01:27:52.064Z"
+    },
+    {
+      "status": "success",
+      "message": "Código banco 1038 encontrado en src/environments/environment.ts",
+      "timestamp": "2025-08-09T01:27:52.066Z"
+    }
+  ],
+  "errors": [],
+  "environment": {
+    "node_version": "v20.11.1",
+    "platform": "win32",
+    "base_url": "http://localhost:4200"
+  }
+}

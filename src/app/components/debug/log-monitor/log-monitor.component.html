@@ -1,0 +1,168 @@
+<!-- Monitor de Logs en Tiempo Real -->
+<div class="log-monitor-container">
+  <!-- Cabecera del monitor -->
+  <div class="monitor-header">
+    <h3>
+      <i class="fas fa-bug me-2"></i>
+      Monitor de Logs - Sistema L01
+    </h3>
+    <div class="header-controls">
+      <button 
+        class="btn btn-sm btn-outline-primary me-2"
+        (click)="refreshNow()">
+        <i class="fas fa-sync-alt"></i>
+        Refrescar
+      </button>
+      
+      <button 
+        class="btn btn-sm me-2"
+        [class.btn-success]="autoRefresh"
+        [class.btn-outline-secondary]="!autoRefresh"
+        (click)="toggleAutoRefresh()">
+        <i class="fas" [class.fa-play]="!autoRefresh" [class.fa-pause]="autoRefresh"></i>
+        {{ autoRefresh ? 'Pausar' : 'Iniciar' }}
+      </button>
+      
+      <button 
+        class="btn btn-sm btn-outline-info me-2"
+        (click)="downloadLogs()">
+        <i class="fas fa-download"></i>
+        Descargar
+      </button>
+      
+      <button 
+        class="btn btn-sm btn-outline-danger"
+        (click)="clearLogs()">
+        <i class="fas fa-trash"></i>
+        Limpiar
+      </button>
+    </div>
+  </div>
+
+  <!-- Resumen de estadísticas -->
+  <div class="log-summary mb-3">
+    <div class="row">
+      <div class="col-md-2">
+        <div class="stat-card">
+          <div class="stat-number">{{ logSummary.total || 0 }}</div>
+          <div class="stat-label">Total</div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stat-card stat-error">
+          <div class="stat-number">{{ logSummary.errors || 0 }}</div>
+          <div class="stat-label">Errores</div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stat-card stat-warning">
+          <div class="stat-number">{{ logSummary.warnings || 0 }}</div>
+          <div class="stat-label">Advertencias</div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stat-card stat-info">
+          <div class="stat-number">{{ logSummary.info || 0 }}</div>
+          <div class="stat-label">Info</div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stat-card stat-debug">
+          <div class="stat-number">{{ logSummary.debug || 0 }}</div>
+          <div class="stat-label">Debug</div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="stat-card">
+          <div class="stat-number">{{ filteredLogs.length }}</div>
+          <div class="stat-label">Filtrados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="log-filters mb-3">
+    <div class="row">
+      <div class="col-md-6">
+        <label class="form-label">Nivel:</label>
+        <select 
+          class="form-select form-select-sm"
+          [(ngModel)]="selectedLevel"
+          (change)="onLevelChange(selectedLevel)">
+          <option *ngFor="let level of levels" [value]="level">
+            {{ level }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Componente:</label>
+        <select 
+          class="form-select form-select-sm"
+          [(ngModel)]="selectedComponent"
+          (change)="onComponentChange(selectedComponent)">
+          <option *ngFor="let component of components" [value]="component">
+            {{ component }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de logs -->
+  <div class="logs-container">
+    <div class="logs-header">
+      <strong>Logs ({{ filteredLogs.length }})</strong>
+      <small class="text-muted ms-2">
+        Actualización automática: {{ autoRefresh ? 'Activa' : 'Inactiva' }}
+      </small>
+    </div>
+    
+    <div class="logs-list">
+      <div 
+        *ngFor="let log of filteredLogs; trackBy: trackByTimestamp"
+        class="log-entry"
+        [ngClass]="getLogLevelClass(log.level)">
+        
+        <div class="log-header">
+          <span class="log-timestamp">{{ formatTimestamp(log.timestamp) }}</span>
+          <span class="badge ms-2" [ngClass]="getBadgeClass(log.level)">
+            {{ log.level }}
+          </span>
+          <span class="log-component ms-2">{{ log.component }}</span>
+        </div>
+        
+        <div class="log-message">{{ log.message }}</div>
+        
+        <div *ngIf="log.data" class="log-data">
+          <strong>Datos:</strong>
+          <pre>{{ formatData(log.data) }}</pre>
+        </div>
+        
+        <div *ngIf="log.error" class="log-error-detail">
+          <strong>Error:</strong>
+          <pre>{{ formatData(log.error) }}</pre>
+        </div>
+      </div>
+      
+      <!-- Mensaje cuando no hay logs -->
+      <div *ngIf="filteredLogs.length === 0" class="no-logs">
+        <i class="fas fa-info-circle me-2"></i>
+        No hay logs que coincidan con los filtros seleccionados.
+      </div>
+    </div>
+  </div>
+
+  <!-- Errores recientes (panel lateral) -->
+  <div class="recent-errors" *ngIf="logSummary.errors > 0">
+    <h6>
+      <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+      Errores Recientes
+    </h6>
+    <div class="recent-error" *ngFor="let error of getRecentErrors()">
+      <div class="error-time">{{ formatTimestamp(error.timestamp) }}</div>
+      <div class="error-component">{{ error.component }}</div>
+      <div class="error-message">{{ error.message }}</div>
+    </div>
+  </div>
+</div>

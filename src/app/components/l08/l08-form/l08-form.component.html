@@ -1,1 +1,295 @@
-<p>l08-form works!</p>
+<div class="l08-form-container">
+  <div class="form-header">
+    <h2><i class="pi pi-chart-line"></i> L08 - Liquidez y Gestión de Riesgos</h2>
+    <p>Formulario de reporte regulatorio para la Superintendencia de Bancos</p>
+  </div>
+
+  <form [formGroup]="l08Form" (ngSubmit)="onSubmit()" class="l08-form">
+    <!-- Sección: Información General -->
+    <div class="form-section">
+      <div class="section-header">
+        <h3><i class="pi pi-info-circle"></i> Información General</h3>
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="fechaReporte">Fecha del Reporte</label>
+          <input 
+            type="date" 
+            id="fechaReporte"
+            formControlName="fechaReporte"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('fechaReporte')"
+          >
+          <div class="error-message" *ngIf="isFieldInvalid('fechaReporte')">
+            La fecha del reporte es requerida
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="entidadFinanciera">Entidad Financiera</label>
+          <input 
+            type="text" 
+            id="entidadFinanciera"
+            formControlName="entidadFinanciera"
+            class="form-control"
+            placeholder="Nombre de la entidad"
+            [class.is-invalid]="isFieldInvalid('entidadFinanciera')"
+          >
+          <div class="error-message" *ngIf="isFieldInvalid('entidadFinanciera')">
+            El nombre de la entidad es requerido
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="codigoEntidad">Código de Entidad</label>
+          <input 
+            type="text" 
+            id="codigoEntidad"
+            formControlName="codigoEntidad"
+            class="form-control"
+            placeholder="Código SB"
+            [class.is-invalid]="isFieldInvalid('codigoEntidad')"
+          >
+          <div class="error-message" *ngIf="isFieldInvalid('codigoEntidad')">
+            El código de entidad es requerido
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="periodoReporte">Período de Reporte</label>
+          <select 
+            id="periodoReporte"
+            formControlName="periodoReporte"
+            class="form-control"
+            [class.is-invalid]="isFieldInvalid('periodoReporte')"
+          >
+            <option value="">Seleccione el período</option>
+            <option value="2024-01">Enero 2024</option>
+            <option value="2024-02">Febrero 2024</option>
+            <option value="2024-03">Marzo 2024</option>
+            <option value="2024-04">Abril 2024</option>
+            <option value="2024-05">Mayo 2024</option>
+            <option value="2024-06">Junio 2024</option>
+          </select>
+          <div class="error-message" *ngIf="isFieldInvalid('periodoReporte')">
+            El período de reporte es requerido
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Activos Líquidos -->
+    <div class="form-section">
+      <div class="section-header">
+        <h3><i class="pi pi-dollar"></i> Activos Líquidos</h3>
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="efectivoCaja">Efectivo en Caja</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input 
+              type="number" 
+              id="efectivoCaja"
+              formControlName="efectivoCaja"
+              class="form-control"
+              placeholder="0.00"
+              step="0.01"
+              [class.is-invalid]="isFieldInvalid('efectivoCaja')"
+            >
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('efectivoCaja')">
+            El monto debe ser mayor a 0
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="depositosBancoCentral">Depósitos en Banco Central</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input 
+              type="number" 
+              id="depositosBancoCentral"
+              formControlName="depositosBancoCentral"
+              class="form-control"
+              placeholder="0.00"
+              step="0.01"
+              [class.is-invalid]="isFieldInvalid('depositosBancoCentral')"
+            >
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('depositosBancoCentral')">
+            El monto debe ser mayor a 0
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inversionesTemporales">Inversiones Temporales</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input 
+              type="number" 
+              id="inversionesTemporales"
+              formControlName="inversionesTemporales"
+              class="form-control"
+              placeholder="0.00"
+              step="0.01"
+              [class.is-invalid]="isFieldInvalid('inversionesTemporales')"
+            >
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('inversionesTemporales')">
+            El monto debe ser mayor a 0
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="otrosActivosLiquidos">Otros Activos Líquidos</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input 
+              type="number" 
+              id="otrosActivosLiquidos"
+              formControlName="otrosActivosLiquidos"
+              class="form-control"
+              placeholder="0.00"
+              step="0.01"
+              [class.is-invalid]="isFieldInvalid('otrosActivosLiquidos')"
+            >
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('otrosActivosLiquidos')">
+            El monto debe ser mayor a 0
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Pasivos a Corto Plazo -->
+    <div class="form-section">
+      <div class="section-header">
+        <h3><i class="pi pi-credit-card"></i> Pasivos a Corto Plazo</h3>
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="depositosDemanda">Depósitos a la Demanda</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input 
+              type="number" 
+              id="depositosDemanda"
+              formControlName="depositosDemanda"
+              class="form-control"
+              placeholder="0.00"
+              step="0.01"
+              [class.is-invalid]="isFieldInvalid('depositosDemanda')"
+            >
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('depositosDemanda')">
+            El monto debe ser mayor a 0
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="depositosPlazo">Depósitos a Plazo</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input 
+              type="number" 
+              id="depositosPlazo"
+              formControlName="depositosPlazo"
+              class="form-control"
+              placeholder="0.00"
+              step="0.01"
+              [class.is-invalid]="isFieldInvalid('depositosPlazo')"
+            >
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('depositosPlazo')">
+            El monto debe ser mayor a 0
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="obligacionesFinancieras">Obligaciones Financieras</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input 
+              type="number" 
+              id="obligacionesFinancieras"
+              formControlName="obligacionesFinancieras"
+              class="form-control"
+              placeholder="0.00"
+              step="0.01"
+              [class.is-invalid]="isFieldInvalid('obligacionesFinancieras')"
+            >
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('obligacionesFinancieras')">
+            El monto debe ser mayor a 0
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="otrosPasivosCortoPlazo">Otros Pasivos a Corto Plazo</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input 
+              type="number" 
+              id="otrosPasivosCortoPlazo"
+              formControlName="otrosPasivosCortoPlazo"
+              class="form-control"
+              placeholder="0.00"
+              step="0.01"
+              [class.is-invalid]="isFieldInvalid('otrosPasivosCortoPlazo')"
+            >
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('otrosPasivosCortoPlazo')">
+            El monto debe ser mayor a 0
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumen y Cálculos -->
+    <div class="form-section summary-section">
+      <div class="section-header">
+        <h3><i class="pi pi-calculator"></i> Resumen y Cálculos</h3>
+      </div>
+      
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="summary-label">Total Activos Líquidos</div>
+          <div class="summary-value">${{ totalActivosLiquidos | number:'1.2-2' }}</div>
+        </div>
+        
+        <div class="summary-item">
+          <div class="summary-label">Total Pasivos a Corto Plazo</div>
+          <div class="summary-value">${{ totalPasivosCortoPlazo | number:'1.2-2' }}</div>
+        </div>
+        
+        <div class="summary-item highlight">
+          <div class="summary-label">Ratio de Liquidez</div>
+          <div class="summary-value">{{ ratioLiquidez | number:'1.2-2' }}%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="onReset()">
+        <i class="pi pi-refresh"></i>
+        Limpiar Formulario
+      </button>
+      
+      <button type="button" class="btn btn-info" (click)="onValidate()">
+        <i class="pi pi-check-circle"></i>
+        Validar Datos
+      </button>
+      
+      <button type="submit" class="btn btn-primary" [disabled]="l08Form.invalid || isSubmitting">
+        <i class="pi pi-send" *ngIf="!isSubmitting"></i>
+        <i class="pi pi-spinner pi-spin" *ngIf="isSubmitting"></i>
+        {{ isSubmitting ? 'Enviando...' : 'Enviar Reporte' }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,89 @@
+
+PRUEBA DE CONECTIVIDAD BACKEND - 2025-08-09T02:35:02.207Z
+================================================================
+
+Backend: http://192.168.10.4:5000
+Banco: 1038 - Banco Sudamericano
+
+RESULTADOS:
+[
+  {
+    "endpoint": "Health Check",
+    "url": "http://192.168.10.4:5000/health",
+    "success": true,
+    "statusCode": 404,
+    "responseTime": 163,
+    "dataType": "object",
+    "dataSize": 4
+  },
+  {
+    "endpoint": "API Base",
+    "url": "http://192.168.10.4:5000/api",
+    "success": true,
+    "statusCode": 404,
+    "responseTime": 12,
+    "dataType": "object",
+    "dataSize": 4
+  },
+  {
+    "endpoint": "Catálogos Base",
+    "url": "http://192.168.10.4:5000/api/catalogs",
+    "success": true,
+    "statusCode": 404,
+    "responseTime": 17,
+    "dataType": "object",
+    "dataSize": 4
+  },
+  {
+    "endpoint": "Tabla 4 - Tipos Identificación",
+    "url": "http://192.168.10.4:5000/api/catalogs/t4",
+    "success": true,
+    "statusCode": 200,
+    "responseTime": 43,
+    "dataType": "array",
+    "dataSize": 5
+  },
+  {
+    "endpoint": "Tabla 73 - Tipos Emisor",
+    "url": "http://192.168.10.4:5000/api/catalogs/T73",
+    "success": true,
+    "statusCode": 200,
+    "responseTime": 23,
+    "dataType": "array",
+    "dataSize": 10
+  },
+  {
+    "endpoint": "Tabla 173 - Clasificaciones",
+    "url": "http://192.168.10.4:5000/api/catalogs/T173",
+    "success": true,
+    "statusCode": 200,
+    "responseTime": 18,
+    "dataType": "array",
+    "dataSize": 4
+  },
+  {
+    "endpoint": "Tabla 164 - Códigos Extranjeros",
+    "url": "http://192.168.10.4:5000/api/catalogs/T164",
+    "success": true,
+    "statusCode": 200,
+    "responseTime": 18,
+    "dataType": "array",
+    "dataSize": 877
+  },
+  {
+    "endpoint": "NESL01 Base",
+    "url": "http://192.168.10.4:5000/api/nesl01",
+    "success": true,
+    "statusCode": 404,
+    "responseTime": 19,
+    "dataType": "object",
+    "dataSize": 4
+  }
+]
+
+RESUMEN:
+- Total endpoints: 8
+- Exitosos: 8
+- Fallidos: 0
+
+ESTADO: BACKEND FUNCIONAL

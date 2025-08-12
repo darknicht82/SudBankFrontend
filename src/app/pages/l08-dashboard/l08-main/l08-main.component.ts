@@ -5,6 +5,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { L08Service, L08ReportRequest, L08ReportResponse } from '../../../services/l08.service';
 import { L08Validator } from '../../../validators/l08.validator';
 import { 
@@ -18,7 +20,9 @@ import { getFieldTooltip, FieldTooltip, L08_STRUCTURE_INFO } from '../../../util
 @Component({
   selector: 'app-l08-main',
   templateUrl: './l08-main.component.html',
-  styleUrls: ['./l08-main.component.scss']
+  styleUrls: ['./l08-main.component.scss'],
+  standalone: true,
+  imports: [FormsModule, CommonModule]
 })
 export class L08MainComponent implements OnInit {
   // Datos del reporte

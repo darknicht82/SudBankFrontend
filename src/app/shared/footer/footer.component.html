@@ -1,0 +1,82 @@
+<footer class="footer-container">
+  <div class="footer-content">
+    <!-- Información del sistema -->
+    <div class="system-info">
+      <div class="system-details">
+        <h4>{{ systemInfo.name }}</h4>
+        <div class="version-info">
+          <span class="version">v{{ systemInfo.version }}</span>
+          <span class="environment">{{ systemInfo.environment }}</span>
+        </div>
+        <div class="update-info">
+          <small>Última actualización: {{ systemInfo.lastUpdate }}</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enlaces útiles -->
+    <div class="useful-links">
+      <h5>Enlaces Útiles</h5>
+      <ul class="links-list">
+        <li *ngFor="let link of usefulLinks">
+          <a href="{{ link.url }}" (click)="openLink(link.url)" class="footer-link">
+            <i [class]="link.icon"></i>
+            {{ link.label }}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Información de contacto -->
+    <div class="contact-info">
+      <h5>Soporte Técnico</h5>
+      <div class="contact-details">
+        <div class="contact-item">
+          <i class="pi pi-envelope"></i>
+          <span>{{ systemInfo.support }}</span>
+        </div>
+        <div class="contact-item">
+          <i class="pi pi-phone"></i>
+          <span>+593 2 234 5678</span>
+        </div>
+        <div class="contact-item">
+          <i class="pi pi-clock"></i>
+          <span>Lun - Vie: 8:00 - 17:00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado del sistema -->
+    <div class="system-status">
+      <h5>Estado del Sistema</h5>
+      <div class="status-indicators">
+        <div class="status-item">
+          <div class="status-dot online"></div>
+          <span>API Principal</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot online"></div>
+          <span>Base de Datos</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot online"></div>
+          <span>Servicios Regulatorios</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra inferior -->
+  <div class="footer-bottom">
+    <div class="footer-bottom-content">
+      <div class="copyright">
+        <p>&copy; {{ currentYear }} Banco SudBank. Todos los derechos reservados.</p>
+      </div>
+      <div class="footer-meta">
+        <span class="current-time">{{ getCurrentTime() }}</span>
+        <span class="separator">|</span>
+        <span class="session-info">Sesión activa</span>
+      </div>
+    </div>
+  </div>
+</footer>
