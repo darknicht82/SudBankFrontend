@@ -19,7 +19,7 @@ export const L01_FIELD_TOOLTIPS: L01FieldTooltip[] = [
     field: 'tipoIdentificacion',
     title: 'Tipo de Identificación',
     description: 'Formato alfabético. Se refiere al tipo de identificación del emisor, custodio, depositario o contraparte, puede ser "R" ó "X". Si es una institución del Ecuador, corresponderá el código "R". Si es del exterior el código "X".',
-    source: 'Manual SB - Control de Inversiones Marzo 2017 - Tabla 4',
+    source: 'Manual SB - Control de Inversiones Marzo 2017 - Tabla t4',
     example: 'R = RUC Nacional, X = Código Exterior',
     format: 'Caracter (1)',
     validation: 'Obligatorio - Solo R o X'
@@ -28,7 +28,7 @@ export const L01_FIELD_TOOLTIPS: L01FieldTooltip[] = [
     field: 'identificacion',
     title: 'Identificación del Emisor/Custodio/Depositario/Contraparte',
     description: 'Formato alfanumérico. Corresponde al número de identificación. Para emisores nacionales será el número de RUC (13 dígitos); para emisores del exterior la identificación se reportará conforme a la tabla No. 164 (7 dígitos).',
-    source: 'Manual SB - Control de Inversiones Marzo 2017 - Tabla 164',
+    source: 'Manual SB - Control de Inversiones Marzo 2017 - Tabla t164',
     example: 'Nacional: 1791234567001 (13 dígitos), Exterior: 1000001 (7 dígitos)',
     format: 'Caracter (13)',
     validation: 'Obligatorio - RUC 13 dígitos o código extranjero 7 dígitos'
@@ -37,7 +37,7 @@ export const L01_FIELD_TOOLTIPS: L01FieldTooltip[] = [
     field: 'clasificacion',
     title: 'Clasificación de Emisor/Custodio/Depositario/Contraparte',
     description: 'Formato numérico. Clasificación según tabla 173 del manual oficial. Define el rol de la entidad en el sistema financiero: Emisor (emite valores), Custodio (custodia inversiones), Depositario (deposita fondos), Contraparte (operaciones reporto).',
-    source: 'Manual SB - Control de Inversiones Marzo 2017 - Tabla 173',
+    source: 'Manual SB - Control de Inversiones Marzo 2017 - Tabla t173',
     example: '1 = Emisor, 2 = Custodio, 3 = Depositario, 4 = Contraparte',
     format: 'Numérico (1)',
     validation: 'Obligatorio - Solo valores 1, 2, 3 o 4'
@@ -46,7 +46,7 @@ export const L01_FIELD_TOOLTIPS: L01FieldTooltip[] = [
     field: 'tipoEmisor',
     title: 'Tipo de Emisor/Custodio/Depositario/Contraparte',
     description: 'Formato numérico. Tipo según tabla 73 del manual oficial. Clasifica la entidad por sector: Supranacionales (BCE/BIESS), Pública/Privada financiera/no financiera, Fondos, Estados Soberanos, Multilaterales. Excluye: código 1 (Persona Natural) y código 6 (Fondos jubilación) que no aplican para L01.',
-    source: 'Manual SB - Control de Inversiones Marzo 2017 - Tabla 73',
+    source: 'Manual SB - Control de Inversiones Marzo 2017 - Tabla t73',
     example: '0=Supranacionales, 2=Pública financiera, 3=Privada financiera, 4=Pública no financiera, 5=Privada no financiera, 7=Fondos inversión, 8=Estados Soberanos, 9=Multilaterales',
     format: 'Numérico (1)',
     validation: 'Obligatorio - Según tabla 73, excluyendo códigos 1 y 6'
@@ -91,25 +91,25 @@ export const L01_STRUCTURE_INFO = {
       position: 1,
       name: 'Tipo de identificación',
       description: 'R para RUC nacional, X para código exterior',
-      table: 'Tabla 4'
+             table: 'Tabla t4'
     },
     {
       position: 2,
       name: 'Identificación',
       description: 'RUC 13 dígitos (nacional) o código 7 dígitos (exterior)',
-      table: 'Tabla 164'
+             table: 'Tabla t164'
     },
     {
       position: 3,
       name: 'Clasificación',
       description: '1=Emisor, 2=Custodio, 3=Depositario, 4=Contraparte',
-      table: 'Tabla 173'
+             table: 'Tabla t173'
     },
     {
       position: 4,
       name: 'Tipo de emisor',
       description: 'Sector según tabla 73 (excluyendo códigos 1 y 6)',
-      table: 'Tabla 73'
+             table: 'Tabla t73'
     }
   ]
 };

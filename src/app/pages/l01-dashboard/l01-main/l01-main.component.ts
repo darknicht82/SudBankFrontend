@@ -15,6 +15,8 @@ import { LoggerService } from '../../../services/logger.service';
 import { TxtLoggerService } from '../../../services/txt-logger.service';
 import { environment } from '../../../../environments/environment';
 import { getL01FieldTooltip, L01FieldTooltip, L01_STRUCTURE_INFO } from '../../../utils/l01-field-tooltips';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-l01-main',
@@ -77,10 +79,18 @@ export class L01MainComponent implements OnInit {
   clasificacionesL01: any[] = [];
   codigosExtranjeros: any[] = [];
 
+  // Inline editing properties
+  editingRow: number | null = null;
+  editingField: string | null = null;
+  originalValue: any = null;
+  editValue: any = null;
+  isSaving = false;
+
   constructor(
     private catalogService: L01CatalogService,
     private logger: LoggerService,
-    private txtLogger: TxtLoggerService
+    private txtLogger: TxtLoggerService,
+    private http: HttpClient
   ) { 
     this.logger.info('L01MainComponent', 'Componente inicializado');
     this.txtLogger.info('L01MainComponent', 'Componente principal L01 inicializado con logs TXT');
@@ -547,14 +557,36 @@ export class L01MainComponent implements OnInit {
   showFieldTooltip(field: string, event: MouseEvent): void {
     this.currentTooltip = getL01FieldTooltip(field);
     if (this.currentTooltip) {
-      this.tooltipPosition = { 
-        x: event.clientX, 
-        y: event.clientY 
-      };
+      // Calcular posición inteligente para evitar que se salga de la pantalla
+      const tooltipWidth = 350; // Ancho máximo del tooltip
+      const tooltipHeight = 200; // Altura estimada del tooltip
+      const margin = 20;
+      
+      let x = event.clientX + margin;
+      let y = event.clientY - margin;
+      
+      // Ajustar si se sale por la derecha
+      if (x + tooltipWidth > window.innerWidth) {
+        x = event.clientX - tooltipWidth - margin;
+      }
+      
+      // Ajustar si se sale por abajo
+      if (y + tooltipHeight > window.innerHeight) {
+        y = event.clientY - tooltipHeight - margin;
+      }
+      
+      // Asegurar que no se salga por la izquierda o arriba
+      x = Math.max(margin, x);
+      y = Math.max(margin, y);
+      
+      this.tooltipPosition = { x, y };
       this.showTooltip = true;
+      
       this.txtLogger.debug('L01MainComponent', `Tooltip mostrado para campo: ${field}`, {
         field: field,
-        tooltip: this.currentTooltip.title
+        tooltip: this.currentTooltip.title,
+        position: { x, y },
+        windowSize: { width: window.innerWidth, height: window.innerHeight }
       });
     }
   }
@@ -565,5 +597,179 @@ export class L01MainComponent implements OnInit {
   hideTooltip(): void {
     this.showTooltip = false;
     this.currentTooltip = null;
+  }
+
+  // Inline editing methods
+  startEdit(rowIndex: number, field: string): void {
+    if (this.editingRow !== null) {
+      this.cancelEdit();
+    }
+    
+    this.editingRow = rowIndex;
+    this.editingField = field;
+    this.originalValue = this.datosL01[rowIndex][field];
+    this.editValue = this.originalValue;
+    
+    this.txtLogger.debug('L01MainComponent', `Iniciando edición inline`, {
+      row: rowIndex,
+      field: field,
+      originalValue: this.originalValue
+    });
+  }
+  
+  cancelEdit(): void {
+    this.editingRow = null;
+    this.editingField = null;
+    this.originalValue = null;
+    this.editValue = null;
+    
+    this.txtLogger.debug('L01MainComponent', 'Edición cancelada');
+  }
+  
+  saveEdit(): void {
+    if (this.editingRow === null || this.editingField === null) {
+      return;
+    }
+    
+    const newValue = this.editValue;
+    const oldValue = this.originalValue;
+    
+    // Validate field before saving
+    if (!this.validateField(this.editingField, newValue)) {
+      this.txtLogger.warn('L01MainComponent', `Validación fallida para campo ${this.editingField}`, {
+        field: this.editingField,
+        value: newValue
+      });
+      return;
+    }
+    
+    this.isSaving = true;
+    
+    // Update local data immediately for UI responsiveness
+    this.datosL01[this.editingRow][this.editingField] = newValue;
+    
+    // Persist to backend
+    this.persistToBackend(this.editingRow, this.editingField, newValue, oldValue)
+      .subscribe({
+        next: (response) => {
+          this.txtLogger.info('L01MainComponent', `Campo ${this.editingField} actualizado exitosamente`, {
+            field: this.editingField,
+            oldValue: oldValue,
+            newValue: newValue,
+            response: response
+          });
+          
+          // Exit edit mode
+          this.editingRow = null;
+          this.editingField = null;
+          this.originalValue = null;
+          this.editValue = null;
+          this.isSaving = false;
+        },
+        error: (error) => {
+          this.txtLogger.error('L01MainComponent', `Error al persistir campo ${this.editingField}`, {
+            field: this.editingField,
+            oldValue: oldValue,
+            newValue: newValue,
+            error: error
+          });
+          
+          // Revert local change on error
+          if (this.editingRow !== null && this.editingField !== null) {
+            this.datosL01[this.editingRow][this.editingField] = oldValue;
+          }
+          this.isSaving = false;
+          
+          // Show error to user (you can implement a toast/notification service)
+          console.error('Error al guardar:', error);
+        }
+      });
+  }
+  
+  validateField(field: string, value: any): boolean {
+    switch (field) {
+      case 'tipoIdentificacion':
+        return this.validateTipoIdentificacion(value);
+      case 'identificacion':
+        return this.validateIdentificacion(value);
+      case 'clasificacion':
+        return this.validateClasificacion(value);
+      case 'tipoEmisor':
+        return this.validateTipoEmisor(value);
+      default:
+        return false;
+    }
+  }
+  
+  validateTipoIdentificacion(value: string): boolean {
+    return value === 'R' || value === 'X';
+  }
+  
+  validateIdentificacion(value: string): boolean {
+    if (!value || typeof value !== 'string') return false;
+    
+    // Check if it's a valid RUC (13 digits) or foreign code (7 digits)
+    const isRUC = value.length === 13 && /^\d{13}$/.test(value);
+    const isForeignCode = value.length === 7 && /^\d{7}$/.test(value);
+    
+    if (isRUC) {
+      return this.validateRUC(value);
+    }
+    
+    return isForeignCode;
+  }
+  
+  validateRUC(ruc: string): boolean {
+    if (ruc.length !== 13 || !/^\d{13}$/.test(ruc)) {
+      return false;
+    }
+    
+    // Basic RUC validation (you can enhance this with full digit verification)
+    const tipo = ruc.substring(2, 3);
+    const validTipos = ['6', '9']; // 6: Empresas, 9: Organizaciones
+    
+    if (!validTipos.includes(tipo)) {
+      return false;
+    }
+    
+    // Additional validation can be added here
+    return true;
+  }
+  
+  validateClasificacion(value: string): boolean {
+    const validClasificaciones = ['1', '2', '3', '4'];
+    return validClasificaciones.includes(value);
+  }
+  
+  validateTipoEmisor(value: string): boolean {
+    // Check if value exists in the loaded catalog
+    return this.tiposEmisorL01.some(tipo => tipo.codigo === value);
+  }
+  
+  persistToBackend(rowIndex: number, field: string, newValue: any, oldValue: any): Observable<any> {
+    const record = this.datosL01[rowIndex];
+    const updateData = {
+      id: record?.id || rowIndex, // Use ID if available, otherwise row index
+      field: field,
+      oldValue: oldValue,
+      newValue: newValue,
+      timestamp: new Date().toISOString(),
+      user: 'current_user' // This should come from authentication service
+    };
+    
+    // POST to backend API
+    return this.http.post(`${environment.backendEndpoint}/nesl01/update`, updateData);
+  }
+  
+  isEditing(rowIndex: number, field: string): boolean {
+    return this.editingRow === rowIndex && this.editingField === field;
+  }
+  
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.saveEdit();
+    } else if (event.key === 'Escape') {
+      this.cancelEdit();
+    }
   }
 }

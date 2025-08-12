@@ -201,11 +201,95 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of datosL01">
-                <td>{{ item.tipoIdentificacion }}</td>
-                <td>{{ item.identificacion }}</td>
-                <td>{{ getClasificacionDesc(item.clasificacion) }}</td>
-                <td>{{ getTipoEmisorDesc(item.tipoEmisor) }}</td>
+              <tr *ngFor="let item of datosL01; let i = index">
+                <td>
+                  <div *ngIf="!isEditing(i, 'tipoIdentificacion')" 
+                       (click)="startEdit(i, 'tipoIdentificacion')" 
+                       class="editable-cell">
+                    {{ item.tipoIdentificacion }}
+                  </div>
+                  <div *ngIf="isEditing(i, 'tipoIdentificacion')" class="edit-mode">
+                    <select [(ngModel)]="editValue" class="form-control form-control-sm">
+                      <option value="R">R - RUC Nacional</option>
+                      <option value="X">X - Código Exterior</option>
+                    </select>
+                    <div class="edit-actions">
+                      <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
+                        <i class="fas fa-check"></i>
+                      </button>
+                      <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="!isEditing(i, 'identificacion')" 
+                       (click)="startEdit(i, 'identificacion')" 
+                       class="editable-cell">
+                    {{ item.identificacion }}
+                  </div>
+                  <div *ngIf="isEditing(i, 'identificacion')" class="edit-mode">
+                    <input type="text" 
+                           [(ngModel)]="editValue" 
+                           class="form-control form-control-sm"
+                           (keydown)="onKeyDown($event)"
+                           placeholder="RUC 13 dígitos o código 7 dígitos">
+                    <div class="edit-actions">
+                      <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
+                        <i class="fas fa-check"></i>
+                      </button>
+                      <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="!isEditing(i, 'clasificacion')" 
+                       (click)="startEdit(i, 'clasificacion')" 
+                       class="editable-cell">
+                    {{ getClasificacionDesc(item.clasificacion) }}
+                  </div>
+                  <div *ngIf="isEditing(i, 'clasificacion')" class="edit-mode">
+                    <select [(ngModel)]="editValue" class="form-control form-control-sm">
+                      <option value="1">1 - Emisor</option>
+                      <option value="2">2 - Custodio</option>
+                      <option value="3">3 - Depositario</option>
+                      <option value="4">4 - Contraparte</option>
+                    </select>
+                    <div class="edit-actions">
+                      <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
+                        <i class="fas fa-check"></i>
+                      </button>
+                      <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="!isEditing(i, 'tipoEmisor')" 
+                       (click)="startEdit(i, 'tipoEmisor')" 
+                       class="editable-cell">
+                    {{ getTipoEmisorDesc(item.tipoEmisor) }}
+                  </div>
+                  <div *ngIf="isEditing(i, 'tipoEmisor')" class="edit-mode">
+                    <select [(ngModel)]="editValue" class="form-control form-control-sm">
+                      <option *ngFor="let tipo of tiposEmisorL01" [value]="tipo.codigo">
+                        {{tipo.codigo}} - {{tipo.descripcion}}
+                      </option>
+                    </select>
+                    <div class="edit-actions">
+                      <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
+                        <i class="fas fa-check"></i>
+                      </button>
+                      <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>

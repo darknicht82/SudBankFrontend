@@ -8,6 +8,73 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* TOOLTIP FLOTANTE L01 */
+.tooltip-popup {
+  position: fixed;
+  z-index: 1000;
+  max-width: 350px;
+  background: #2c3e50;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  padding: 15px;
+  font-size: 0.9em;
+  line-height: 1.4;
+  pointer-events: none;
+
+  .tooltip-content {
+    h4 {
+      margin: 0 0 10px 0;
+      color: #ecf0f1;
+      font-size: 1.1em;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 8px 0;
+      color: #bdc3c7;
+      line-height: 1.5;
+    }
+
+    .tooltip-details {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #34495e;
+
+      .tooltip-row {
+        margin: 6px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+
+        strong {
+          color: #ecf0f1;
+          min-width: 80px;
+          font-size: 0.85em;
+        }
+
+        span {
+          color: #bdc3c7;
+          font-size: 0.85em;
+          flex: 1;
+        }
+      }
+    }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #2c3e50;
+  }
+}
+
 /* CABECERA */
 .header {
   text-align: center;
@@ -484,5 +551,111 @@
 
   .card-content {
     padding: 20px;
+  }
+}
+
+/* Estilos para edición inline */
+.editable-cell {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+  }
+}
+
+.edit-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  .form-control-sm {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    
+    &:focus {
+      border-color: #0056b3;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+  }
+  
+  .edit-actions {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      min-width: 32px;
+      
+      &.btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        
+        &:hover {
+          background-color: #218838;
+          border-color: #1e7e34;
+        }
+        
+        &:disabled {
+          background-color: #6c757d;
+          border-color: #6c757d;
+        }
+      }
+      
+      &.btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        
+        &:hover {
+          background-color: #c82333;
+          border-color: #bd2130;
+        }
+        
+        &:disabled {
+          background-color: #6c757d;
+          border-color: #6c757d;
+        }
+      }
+    }
+  }
+}
+
+/* Indicador de guardando */
+.is-saving {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Animación para transiciones de edición */
+.edit-mode {
+  animation: slideIn 0.2s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive para botones de edición */
+@media (max-width: 768px) {
+  .edit-actions {
+    flex-direction: column;
+    
+    .btn-sm {
+      min-width: 100%;
+    }
   }
 }

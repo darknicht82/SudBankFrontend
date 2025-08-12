@@ -103,7 +103,7 @@ export class L01CatalogService {
             })
           );
       case 't164':
-        return this.http.get<L01Catalog[]>(`${this.baseUrl}/T164`)
+        return this.http.get<L01Catalog[]>(`${this.baseUrl}/t164`)
           .pipe(
             map(catalogs => {
               const catalog = catalogs.find(c => c.codigo === codigo);
@@ -124,17 +124,17 @@ export class L01CatalogService {
             map(catalogs => catalogs.some(c => c.codigo === codigo))
           );
       case 't73':
-        return this.http.get<L01Catalog[]>(`${this.baseUrl}/T73`)
+        return this.http.get<L01Catalog[]>(`${this.baseUrl}/t73`)
           .pipe(
             map(catalogs => catalogs.some(c => c.codigo === codigo))
           );
       case 't173':
-        return this.http.get<L01Catalog[]>(`${this.baseUrl}/T173`)
+        return this.http.get<L01Catalog[]>(`${this.baseUrl}/t173`)
           .pipe(
             map(catalogs => catalogs.some(c => c.codigo === codigo))
           );
       case 't164':
-        return this.http.get<L01Catalog[]>(`${this.baseUrl}/T164`)
+        return this.http.get<L01Catalog[]>(`${this.baseUrl}/t164`)
           .pipe(
             map(catalogs => catalogs.some(c => c.codigo === codigo))
           );
@@ -169,13 +169,13 @@ export class L01CatalogService {
    * Obtener tipos de emisor aplicables a L01 (excluyendo los que no aplican)
    * Según backend: excluir códigos que indican "no aplica L01"
    */
-  getTabla73ForL01(): Observable<L01Catalog[]> {
+    getTabla73ForL01(): Observable<L01Catalog[]> {
     if (this.useMockData) {
       return this.getMockTabla73ForL01();
     }
-    return this.http.get<L01Catalog[]>(`${this.baseUrl}/T73`)
+    return this.http.get<L01Catalog[]>(`${this.baseUrl}/t73`)
       .pipe(
-        map(tipos => tipos.filter(t => 
+        map(tipos => tipos.filter(t =>
           !t.descripcion.toLowerCase().includes('no aplica l01') &&
           !t.descripcion.toLowerCase().includes('no aplica en estructura l01')
         )),
