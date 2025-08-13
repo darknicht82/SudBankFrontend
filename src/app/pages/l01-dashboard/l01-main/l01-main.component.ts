@@ -10,7 +10,9 @@ import { CommonModule } from '@angular/common';
 import { L01ExportComponent } from '../../../components/l01/l01-export/l01-export.component';
 import { L01ExportData, L01ExportResult } from '../../../models/l01-export.model';
 import { L01CatalogService } from '../../../services/l01-catalog.service';
+import { L01AuditService } from '../../../services/l01-audit.service';
 import { LogMonitorComponent } from '../../../components/debug/log-monitor/log-monitor.component';
+import { L01ConfirmationComponent, ConfirmationData } from '../../../components/l01/l01-confirmation/l01-confirmation.component';
 import { LoggerService } from '../../../services/logger.service';
 import { TxtLoggerService } from '../../../services/txt-logger.service';
 import { environment } from '../../../../environments/environment';
@@ -23,7 +25,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './l01-main.component.html',
   styleUrls: ['./l01-main.component.scss'],
   standalone: true,
-  imports: [FormsModule, CommonModule, L01ExportComponent, LogMonitorComponent]
+  imports: [FormsModule, CommonModule, L01ExportComponent, LogMonitorComponent, L01ConfirmationComponent]
 })
 export class L01MainComponent implements OnInit {
   // Datos del reporte
@@ -81,6 +83,25 @@ export class L01MainComponent implements OnInit {
 
   // Propiedades para códigos extranjeros
   codigosExtranjerosL01: any[] = [];
+  
+  // NUEVO: Estados del componente de confirmación
+  showConfirmationModal = false;
+  confirmationData: ConfirmationData | null = null;
+  confirmationLoading = false;
+  
+  // NUEVO: Estados para creación de registros
+  showCreationForm = false;
+  newRecord: any = {};
+  
+  // NUEVO: Estados para edición inline
+  editingRow: number | null = null;
+  editingField: string | null = null;
+  originalValue: any = null;
+  editValue: any = null;
+  isSaving = false;
+  
+  // NUEVO: Estados para eliminación
+  recordToDelete: any = null;
   
   // Método para obtener el tipo de identificación actual de una fila
   getTipoIdentificacionActual(rowIndex: number): string {
@@ -146,15 +167,9 @@ export class L01MainComponent implements OnInit {
     });
   }
 
-  // Inline editing properties
-  editingRow: number | null = null;
-  editingField: string | null = null;
-  originalValue: any = null;
-  editValue: any = null;
-  isSaving = false;
-
   constructor(
     private catalogService: L01CatalogService,
+    private auditService: L01AuditService,
     private logger: LoggerService,
     private txtLogger: TxtLoggerService,
     private http: HttpClient
@@ -196,9 +211,9 @@ export class L01MainComponent implements OnInit {
     // Cargar catálogos dinámicos primero
     this.loadCatalogsForL01().then(() => {
       // Luego cargar datos
-      setTimeout(() => {
+    setTimeout(() => {
         try {
-          this.generateMockData();
+      this.generateMockData();
           this.prepareExportData();
           this.loading = false;
           this.logger.info('L01MainComponent', 'Datos iniciales cargados exitosamente', {
@@ -211,10 +226,10 @@ export class L01MainComponent implements OnInit {
             }
           });
         } catch (error) {
-          this.loading = false;
+      this.loading = false;
           this.logger.error('L01MainComponent', 'Error al cargar datos iniciales', error);
         }
-      }, 1000);
+    }, 1000);
     }).catch(error => {
       this.loading = false;
       this.logger.error('L01MainComponent', 'Error al cargar catálogos', error);
@@ -288,6 +303,7 @@ export class L01MainComponent implements OnInit {
   generateMockData(): void {
     this.datosL01 = [
       {
+        id: 1,
         tipoIdentificacion: 'R',              // Campo 1: R = RUC Nacional
         identificacion: '1791234567001',      // Campo 2: RUC de 13 dígitos
         clasificacion: 1,                     // Campo 3: 1 = Emisor
@@ -296,6 +312,7 @@ export class L01MainComponent implements OnInit {
         usuarioCreacion: 'Christian Aguirre'
       },
       {
+        id: 2,
         tipoIdentificacion: 'X',              // Campo 1: X = Código Extranjero
         identificacion: '1000001',            // Campo 2: Código extranjero de 7 dígitos
         clasificacion: 2,                     // Campo 3: 2 = Custodio
@@ -304,6 +321,7 @@ export class L01MainComponent implements OnInit {
         usuarioCreacion: 'Christian Aguirre'
       },
       {
+        id: 3,
         tipoIdentificacion: 'R',              // Campo 1: R = RUC Nacional
         identificacion: '0992345678001',      // Campo 2: RUC de 13 dígitos
         clasificacion: 3,                     // Campo 3: 3 = Depositario
@@ -312,6 +330,7 @@ export class L01MainComponent implements OnInit {
         usuarioCreacion: 'Christian Aguirre'
       },
       {
+        id: 4,
         tipoIdentificacion: 'X',              // Campo 1: X = Código Extranjero
         identificacion: '1000002',            // Campo 2: Código extranjero de 7 dígitos
         clasificacion: 4,                     // Campo 3: 4 = Contraparte
@@ -417,7 +436,7 @@ export class L01MainComponent implements OnInit {
       tipoIdentificacion: 'Tipo Identificación',  // Campo 1: R/X
       identificacion: 'Identificación',           // Campo 2: RUC/Código Extranjero
       clasificacion: 'Clasificación',             // Campo 3: 1-4
-      tipo: 'Tipo de Emisor'                     // Campo 4: 0,2,3,4,5,7,8,9
+      tipoEmisor: 'Tipo de Emisor'               // Campo 4: 0,2,3,4,5,7,8,9
     };
     return titles[column] || column;
   }
@@ -506,7 +525,7 @@ export class L01MainComponent implements OnInit {
       tipoIdentificacion: item.tipoIdentificacion,
       identificacion: item.identificacion,
       clasificacion: item.clasificacion,
-      tipoEmisor: item.tipo
+      tipoEmisor: item.tipoEmisor
     }));
   }
 
@@ -667,7 +686,143 @@ export class L01MainComponent implements OnInit {
     this.currentTooltip = null;
   }
 
-  // Inline editing methods
+  // ========================================
+  // NUEVO: MÉTODOS DEL FLUJO DE CONFIRMACIÓN
+  // ========================================
+
+  /**
+   * NUEVO: Crear nuevo registro L01
+   */
+  createNewRecord(): void {
+    this.showCreationForm = true;
+    this.newRecord = {
+      tipoIdentificacion: 'R',
+      identificacion: '',
+      clasificacion: 1,
+      tipoEmisor: 3,
+      estado: 'ACTIVO',
+      fechaCreacion: new Date(),
+      usuarioCreacion: this.usuarioActual,
+      version: 1
+    };
+  }
+
+  /**
+   * NUEVO: Guardar nuevo registro con confirmación
+   */
+  saveNewRecord(): void {
+    // Validar formulario completo
+    const validation = this.validateCompleteRecord(this.newRecord);
+    
+    if (!validation.isValid) {
+      this.showValidationError(validation.message);
+      return;
+    }
+    
+    // Mostrar ventana de confirmación
+    this.showCreationConfirmation(this.newRecord);
+  }
+
+  /**
+   * NUEVO: Mostrar confirmación de creación
+   */
+  showCreationConfirmation(record: any): void {
+    this.confirmationData = {
+      type: 'creation',
+      title: 'Confirmar Nuevo Registro L01',
+      message: '¿Está seguro de que desea crear este nuevo registro L01?',
+      details: record
+    };
+    
+    this.showConfirmationModal = true;
+  }
+
+  /**
+   * NUEVO: Confirmar creación de registro
+   */
+  onCreationConfirmed(data: ConfirmationData): void {
+    this.confirmationLoading = true;
+    
+    // Simular persistencia en BD
+    setTimeout(() => {
+      // Agregar ID único
+      const newRecord = {
+        ...data.details,
+        id: Date.now()
+      };
+      
+      // Agregar a la lista local
+      this.datosL01.push(newRecord);
+      
+      // Log de auditoría
+      this.auditService.logCreation(newRecord).subscribe({
+        next: (auditResult) => {
+          this.txtLogger.info('L01MainComponent', 'Registro L01 creado exitosamente', {
+            record: newRecord,
+            auditResult: auditResult
+          });
+        },
+        error: (error) => {
+          this.txtLogger.error('L01MainComponent', 'Error al registrar auditoría de creación', error);
+        }
+      });
+      
+      // Actualizar datos de exportación
+      this.prepareExportData();
+      
+      // Cerrar modal y limpiar
+      this.showConfirmationModal = false;
+      this.confirmationData = null;
+      this.confirmationLoading = false;
+      this.showCreationForm = false;
+      this.newRecord = {};
+      
+      // Mostrar mensaje de éxito
+      this.showSuccessMessage('Registro L01 creado exitosamente');
+      
+    }, 1000);
+  }
+
+  /**
+   * NUEVO: Cancelar creación
+   */
+  onCreationCancelled(): void {
+    this.showCreationForm = false;
+    this.newRecord = {};
+  }
+
+  /**
+   * NUEVO: Validación completa del registro
+   */
+  validateCompleteRecord(record: any): { isValid: boolean; message: string } {
+    // Validar cada campo individualmente
+    const validations = [
+      this.validateTipoIdentificacionRealTime(record.tipoIdentificacion),
+      this.validateIdentificacionRealTime(record.identificacion),
+      this.validateClasificacionRealTime(record.clasificacion?.toString()),
+      this.validateTipoEmisorRealTime(record.tipoEmisor?.toString())
+    ];
+    
+    // Verificar que todas las validaciones pasen
+    const failedValidations = validations.filter(v => !v.isValid);
+    
+    if (failedValidations.length > 0) {
+      return {
+        isValid: false,
+        message: `Errores de validación:\n${failedValidations.map(v => v.message).join('\n')}`
+      };
+    }
+    
+    return { isValid: true, message: 'Registro válido' };
+  }
+
+  // ========================================
+  // NUEVO: FLUJO DE EDICIÓN CON CONFIRMACIÓN
+  // ========================================
+
+  /**
+   * NUEVO: Iniciar edición inline
+   */
   startEdit(rowIndex: number, field: string): void {
     if (this.editingRow !== null) {
       this.cancelEdit();
@@ -685,6 +840,9 @@ export class L01MainComponent implements OnInit {
     });
   }
   
+  /**
+   * NUEVO: Cancelar edición
+   */
   cancelEdit(): void {
     this.editingRow = null;
     this.editingField = null;
@@ -694,6 +852,231 @@ export class L01MainComponent implements OnInit {
     this.txtLogger.debug('L01MainComponent', 'Edición cancelada');
   }
   
+  /**
+   * NUEVO: Guardar cambios con confirmación
+   */
+  saveEdit(): void {
+    if (this.editingRow === null || this.editingField === null) {
+      return;
+    }
+    
+    const newValue = this.editValue;
+    const oldValue = this.originalValue;
+    
+    // Validate field before saving with real-time feedback
+    const validation = this.validateFieldRealTime(this.editingField, newValue);
+    
+    if (!validation.isValid) {
+      // Show validation error to user
+      this.showValidationError(validation.message);
+      this.txtLogger.warn('L01MainComponent', `Validación fallida para campo ${this.editingField}`, {
+        field: this.editingField,
+        value: newValue,
+        message: validation.message
+      });
+      return;
+    }
+    
+    // Mostrar ventana de confirmación
+    this.showEditConfirmation(this.editingRow, this.editingField, oldValue, newValue, validation);
+  }
+
+  /**
+   * NUEVO: Mostrar confirmación de edición
+   */
+  showEditConfirmation(rowIndex: number, field: string, oldValue: any, newValue: any, validation: any): void {
+    this.confirmationData = {
+      type: 'edit',
+      title: 'Confirmar Cambios en Registro L01',
+      message: '¿Está seguro de que desea aplicar estos cambios?',
+      details: { rowIndex, field, oldValue, newValue }, // Added missing details property
+      changes: {
+        field: field,
+        oldValue: oldValue,
+        newValue: newValue,
+        validation: validation
+      }
+    };
+    
+    this.showConfirmationModal = true;
+  }
+
+  /**
+   * NUEVO: Confirmar edición
+   */
+  onEditConfirmed(data: ConfirmationData): void {
+    if (!data.changes) return;
+    
+    this.confirmationLoading = true;
+    
+    // Simular persistencia en BD
+    setTimeout(() => {
+      const { field, newValue, oldValue } = data.changes!; // Added non-null assertion
+      const rowIndex = this.editingRow!;
+      
+      // Update local data immediately for UI responsiveness
+      this.datosL01[rowIndex][field] = newValue;
+      
+      // Log de auditoría
+      this.auditService.logFieldChange(
+        this.datosL01[rowIndex].id,
+        field,
+        oldValue,
+        newValue,
+        this.usuarioActual
+      ).subscribe({
+        next: (auditResult) => {
+          this.txtLogger.info('L01MainComponent', `Campo ${field} actualizado exitosamente`, {
+            field: field,
+            oldValue: oldValue,
+            newValue: newValue,
+            auditResult: auditResult
+          });
+        },
+        error: (error) => {
+          this.txtLogger.error('L01MainComponent', `Error al registrar auditoría de modificación`, error);
+        }
+      });
+      
+      // Actualizar datos de exportación
+      this.prepareExportData();
+      
+      // Cerrar modal y limpiar
+      this.showConfirmationModal = false;
+      this.confirmationData = null;
+      this.confirmationLoading = false;
+      
+      // Exit edit mode
+      this.editingRow = null;
+      this.editingField = null;
+      this.originalValue = null;
+      this.editValue = null;
+      this.isSaving = false;
+      
+      // Show success message
+      this.showSuccessMessage(`Campo ${field} actualizado exitosamente`);
+      
+    }, 1000);
+  }
+
+  // ========================================
+  // NUEVO: FLUJO DE ELIMINACIÓN CON CONFIRMACIÓN
+  // ========================================
+
+  /**
+   * NUEVO: Confirmar eliminación de registro
+   */
+  confirmDeletion(record: any): void {
+    this.recordToDelete = record;
+    
+    this.confirmationData = {
+      type: 'deletion',
+      title: 'Confirmar Eliminación de Registro L01',
+      message: '¿Está seguro de que desea eliminar este registro?',
+      details: { record }, // Added missing details property
+      record: record
+    };
+    
+    this.showConfirmationModal = true;
+  }
+
+  /**
+   * NUEVO: Confirmar eliminación
+   */
+  onDeletionConfirmed(data: ConfirmationData): void {
+    if (!data.record) return;
+    
+    this.confirmationLoading = true;
+    
+    // Simular eliminación en BD
+    setTimeout(() => {
+      const record = data.record;
+      
+      // Eliminar del array local
+      const index = this.datosL01.findIndex(d => d.id === record.id);
+      if (index > -1) {
+        this.datosL01.splice(index, 1);
+        
+        // Log de auditoría
+        this.auditService.logDeletion(record, this.usuarioActual).subscribe({
+          next: (auditResult) => {
+            this.txtLogger.info('L01MainComponent', 'Registro L01 eliminado exitosamente', {
+              record: record,
+              auditResult: auditResult
+            });
+          },
+          error: (error) => {
+            this.txtLogger.error('L01MainComponent', 'Error al registrar auditoría de eliminación', error);
+          }
+        });
+        
+        // Actualizar datos de exportación
+        this.prepareExportData();
+        
+        // Mostrar mensaje de éxito
+        this.showSuccessMessage(`Registro de ${record.identificacion} eliminado exitosamente`);
+      }
+      
+      // Cerrar modal y limpiar
+      this.showConfirmationModal = false;
+      this.confirmationData = null;
+      this.confirmationLoading = false;
+      this.recordToDelete = null;
+      
+    }, 1000);
+  }
+
+  // ========================================
+  // NUEVO: MÉTODOS DE CONFIRMACIÓN
+  // ========================================
+
+  /**
+   * NUEVO: Manejar confirmación del modal
+   */
+  onConfirmationConfirmed(data: ConfirmationData): void {
+    switch (data.type) {
+      case 'creation':
+        this.onCreationConfirmed(data);
+        break;
+      case 'edit':
+        this.onEditConfirmed(data);
+        break;
+      case 'deletion':
+        this.onDeletionConfirmed(data);
+        break;
+    }
+  }
+
+  /**
+   * NUEVO: Manejar cancelación del modal
+   */
+  onConfirmationCancelled(): void {
+    this.showConfirmationModal = false;
+    this.confirmationData = null;
+    this.confirmationLoading = false;
+    
+    // Si estaba editando, cancelar edición
+    if (this.editingRow !== null) {
+      this.cancelEdit();
+    }
+    
+    // Si estaba creando, cancelar creación
+    if (this.showCreationForm) {
+      this.onCreationCancelled();
+    }
+  }
+
+  /**
+   * NUEVO: Cerrar modal de confirmación
+   */
+  onConfirmationClosed(): void {
+    this.onConfirmationCancelled();
+  }
+
+  // ========================================
+  // MÉTODOS DE VALIDACIÓN EXISTENTES (MANTENER)
+  // ========================================
+
   // Enhanced validation with real-time feedback
   validateFieldRealTime(field: string, value: any): { isValid: boolean; message: string } {
     switch (field) {
@@ -711,9 +1094,14 @@ export class L01MainComponent implements OnInit {
   }
   
   validateTipoIdentificacionRealTime(value: string): { isValid: boolean; message: string } {
-    if (value === 'R' || value === 'X') {
-      return { isValid: true, message: 'Tipo válido' };
+    // Validar solo contra códigos válidos, no contra objetos completos
+    const validCodes = this.getTipoIdentificacionCodes();
+    
+    if (validCodes.includes(value)) {
+      const desc = value === 'R' ? 'RUC Nacional' : 'Código Extranjero';
+      return { isValid: true, message: `Tipo válido: ${desc}` };
     }
+    
     return { isValid: false, message: 'Solo se permiten R (Nacional) o X (Extranjero)' };
   }
   
@@ -732,7 +1120,14 @@ export class L01MainComponent implements OnInit {
     }
     
     if (isForeignCode) {
-      return { isValid: true, message: 'Código extranjero válido' };
+      // Para códigos extranjeros, validar que exista en el catálogo t164
+      const validForeignCodes = this.codigosExtranjerosL01.map(codigo => codigo.codigo.toString());
+      
+      if (validForeignCodes.includes(value)) {
+        return { isValid: true, message: 'Código extranjero válido' };
+      } else {
+        return { isValid: false, message: 'Código extranjero no existe en el catálogo t164' };
+      }
     }
     
     if (value.length < 7) {
@@ -770,93 +1165,62 @@ export class L01MainComponent implements OnInit {
   }
   
   validateClasificacionRealTime(value: string): { isValid: boolean; message: string } {
-    const validClasificaciones = ['1', '2', '3', '4'];
-    if (validClasificaciones.includes(value)) {
+    // Validar solo contra códigos válidos, no contra objetos completos
+    const validCodes = ['1', '2', '3', '4'];
+    
+    if (validCodes.includes(value)) {
       const desc = this.getClasificacionDesc(parseInt(value));
       return { isValid: true, message: `Clasificación válida: ${desc}` };
     }
+    
     return { isValid: false, message: 'Solo se permiten valores 1, 2, 3, 4' };
   }
   
   validateTipoEmisorRealTime(value: string): { isValid: boolean; message: string } {
-    // Check if value exists in the loaded catalog
-    const exists = this.tiposEmisorL01.some(tipo => tipo.codigo === value);
-    if (exists) {
+    // Validar solo contra códigos válidos, no contra objetos completos
+    const validCodes = this.tiposEmisorL01.map(tipo => tipo.codigo.toString());
+    
+    if (validCodes.includes(value)) {
       const desc = this.getTipoEmisorDesc(parseInt(value));
       return { isValid: true, message: `Tipo válido: ${desc}` };
     }
+    
     return { isValid: false, message: 'Tipo de emisor no válido para L01' };
   }
   
-  // Enhanced save with validation feedback
-  saveEdit(): void {
-    if (this.editingRow === null || this.editingField === null) {
-      return;
-    }
-    
-    const newValue = this.editValue;
-    const oldValue = this.originalValue;
-    
-    // Validate field before saving with real-time feedback
-    const validation = this.validateFieldRealTime(this.editingField, newValue);
-    
-    if (!validation.isValid) {
-      // Show validation error to user
-      this.showValidationError(validation.message);
-      this.txtLogger.warn('L01MainComponent', `Validación fallida para campo ${this.editingField}`, {
-        field: this.editingField,
-        value: newValue,
-        message: validation.message
-      });
-      return;
-    }
-    
-    this.isSaving = true;
-    
-    // Update local data immediately for UI responsiveness
-    this.datosL01[this.editingRow][this.editingField] = newValue;
-    
-    // Persist to backend
-    this.persistToBackend(this.editingRow, this.editingField, newValue, oldValue)
-      .subscribe({
-        next: (response) => {
-          this.txtLogger.info('L01MainComponent', `Campo ${this.editingField} actualizado exitosamente`, {
-            field: this.editingField,
-            oldValue: oldValue,
-            newValue: newValue,
-            response: response
-          });
-          
-          // Show success message
-          this.showSuccessMessage(`Campo ${this.editingField} actualizado exitosamente`);
-          
-          // Exit edit mode
-          this.editingRow = null;
-          this.editingField = null;
-          this.originalValue = null;
-          this.editValue = null;
-          this.isSaving = false;
-        },
-        error: (error) => {
-          this.txtLogger.error('L01MainComponent', `Error al persistir campo ${this.editingField}`, {
-            field: this.editingField,
-            oldValue: oldValue,
-            newValue: newValue,
-            error: error
-          });
-          
-          // Revert local change on error
-          if (this.editingRow !== null && this.editingField !== null) {
-            this.datosL01[this.editingRow][this.editingField] = oldValue;
-          }
-          this.isSaving = false;
-          
-          // Show error message
-          this.showErrorMessage(`Error al guardar: ${error.message || 'Error desconocido'}`);
-        }
-      });
+  // Método auxiliar para obtener códigos válidos de clasificación
+  getClasificacionCodes(): string[] {
+    return ['1', '2', '3', '4'];
   }
   
+  // Método auxiliar para obtener códigos válidos de tipo emisor
+  getTipoEmisorCodes(): string[] {
+    return this.tiposEmisorL01.map(tipo => tipo.codigo.toString());
+  }
+  
+  // Método auxiliar para obtener códigos válidos de tipo identificación
+  getTipoIdentificacionCodes(): string[] {
+    return ['R', 'X'];
+  }
+  
+  // Método auxiliar para obtener códigos válidos de códigos extranjeros
+  getCodigosExtranjerosCodes(): string[] {
+    return this.codigosExtranjerosL01.map(codigo => codigo.codigo.toString());
+  }
+  
+  // Método para validar que un código existe en un catálogo específico
+  validateCodeInCatalog(value: string, catalogCodes: string[], fieldName: string): { isValid: boolean; message: string } {
+    if (catalogCodes.includes(value)) {
+      return { isValid: true, message: `${fieldName} válido` };
+    }
+    
+    return { isValid: false, message: `${fieldName} no válido` };
+  }
+
+  // ========================================
+  // MÉTODOS DE FEEDBACK AL USUARIO
+  // ========================================
+
   // User feedback methods
   showValidationError(message: string): void {
     // Simple alert for now, can be enhanced with toast notifications
@@ -872,7 +1236,11 @@ export class L01MainComponent implements OnInit {
     // Simple alert for now, can be enhanced with toast notifications
     alert(`❌ ${message}`);
   }
-  
+
+  // ========================================
+  // MÉTODOS DE PERSISTENCIA
+  // ========================================
+
   persistToBackend(rowIndex: number, field: string, newValue: any, oldValue: any): Observable<any> {
     const record = this.datosL01[rowIndex];
     const updateData = {

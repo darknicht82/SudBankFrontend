@@ -182,6 +182,97 @@
     </div>
   </div>
 
+  <!-- NUEVO: Formulario de Creación de Registros -->
+  <div class="creation-section" *ngIf="showCreationForm">
+    <div class="section-header">
+      <h3>➕ Crear Nuevo Registro L01</h3>
+      <button class="close-button" (click)="onCreationCancelled()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+    
+    <div class="creation-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="newTipoIdentificacion">Tipo Identificación *</label>
+          <select id="newTipoIdentificacion" 
+                  [(ngModel)]="newRecord.tipoIdentificacion" 
+                  class="form-control">
+            <option value="R">R - RUC Nacional</option>
+            <option value="X">X - Código Extranjero</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="newIdentificacion">Identificación *</label>
+          <input type="text" 
+                 id="newIdentificacion" 
+                 [(ngModel)]="newRecord.identificacion" 
+                 class="form-control"
+                 [maxlength]="newRecord.tipoIdentificacion === 'R' ? 13 : 7"
+                 placeholder="Ingrese identificación">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="newClasificacion">Clasificación *</label>
+          <select id="newClasificacion" 
+                  [(ngModel)]="newRecord.clasificacion" 
+                  class="form-control">
+            <option value="1">1 - Emisor</option>
+            <option value="2">2 - Custodio</option>
+            <option value="3">3 - Depositario</option>
+            <option value="4">4 - Contraparte</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="newTipoEmisor">Tipo Emisor *</label>
+          <select id="newTipoEmisor" 
+                  [(ngModel)]="newRecord.tipoEmisor" 
+                  class="form-control">
+            <option value="0">0 - Supranacionales</option>
+            <option value="2">2 - Pública financiera</option>
+            <option value="3">3 - Privada financiera</option>
+            <option value="4">4 - Pública no financiera</option>
+            <option value="5">5 - Privada no financiera</option>
+            <option value="7">7 - Fondos de inversión</option>
+            <option value="8">8 - Estados Soberanos</option>
+            <option value="9">9 - Multilaterales</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button class="btn btn-success" (click)="saveNewRecord()" type="button">
+          ✅ Guardar Registro
+        </button>
+        <button class="btn btn-secondary" (click)="onCreationCancelled()" type="button">
+          ❌ Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUEVO: Botón para Crear Nuevo Registro -->
+  <div class="action-buttons" *ngIf="!showCreationForm">
+    <button class="btn btn-primary" (click)="createNewRecord()" type="button">
+      ➕ Crear Nuevo Registro L01
+    </button>
+  </div>
+
+  <!-- NUEVO: Componente de Confirmación -->
+  <app-l01-confirmation
+    [showModal]="showConfirmationModal"
+    [confirmationData]="confirmationData"
+    [loading]="confirmationLoading"
+    (confirmed)="onConfirmationConfirmed($event)"
+    (cancelled)="onConfirmationCancelled()"
+    (closed)="onConfirmationClosed()">
+  </app-l01-confirmation>
+
+
   <!-- TABLA DE DATOS -->
   <div *ngIf="datosL01.length > 0" class="data-section">
     <div class="card">
@@ -201,109 +292,125 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of datosL01; let i = index">
-                <td>
-                  <div *ngIf="!isEditing(i, 'tipoIdentificacion')" 
-                       (click)="startEdit(i, 'tipoIdentificacion')" 
-                       class="editable-cell">
-                    {{ item.tipoIdentificacion }}
+              <tr *ngFor="let item of datosL01; let i = index" class="data-row">
+                <!-- Tipo Identificación -->
+                <td class="editable-cell" 
+                    [class.edit-mode]="isEditing(i, 'tipoIdentificacion')"
+                    (click)="startEdit(i, 'tipoIdentificacion')">
+                  <div *ngIf="!isEditing(i, 'tipoIdentificacion')" class="cell-content">
+                    <span class="cell-value">{{ item.tipoIdentificacion === 'R' ? 'R - RUC Nacional' : 'X - Código Extranjero' }}</span>
+                    <span class="edit-icon">✏️</span>
                   </div>
-                  <div *ngIf="isEditing(i, 'tipoIdentificacion')" class="edit-mode">
-                    <select [(ngModel)]="editValue" class="form-control form-control-sm">
+                  <div *ngIf="isEditing(i, 'tipoIdentificacion')" class="edit-controls">
+                    <select [(ngModel)]="editValue" class="edit-select">
                       <option value="R">R - RUC Nacional</option>
-                      <option value="X">X - Código Exterior</option>
+                      <option value="X">X - Código Extranjero</option>
                     </select>
                     <div class="edit-actions">
-                      <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
-                        ✓
-                      </button>
-                      <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
-                        ✗
-                      </button>
+                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
+                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
                     </div>
                   </div>
                 </td>
-                <td>
-                  <div *ngIf="!isEditing(i, 'identificacion')" 
-                       (click)="startEdit(i, 'identificacion')" 
-                       class="editable-cell">
-                    {{ item.identificacion }}
+
+                <!-- Identificación -->
+                <td class="editable-cell" 
+                    [class.edit-mode]="isEditing(i, 'identificacion')"
+                    (click)="startEdit(i, 'identificacion')">
+                  <div *ngIf="!isEditing(i, 'identificacion')" class="cell-content">
+                    <span class="cell-value">{{ item.identificacion }}</span>
+                    <span class="edit-icon">✏️</span>
                   </div>
-                  <div *ngIf="isEditing(i, 'identificacion')" class="edit-mode">
-                    <!-- Select para códigos extranjeros cuando Tipo ID es X -->
-                    <select *ngIf="getTipoIdentificacionActual(i) === 'X'"
+                  <div *ngIf="isEditing(i, 'identificacion')" class="edit-controls">
+                    <!-- Select para códigos extranjeros, input para RUC -->
+                    <select *ngIf="getTipoIdentificacionActual(i) === 'X'" 
                             [(ngModel)]="editValue" 
-                            class="form-control form-control-sm"
-                            (keydown)="onKeyDown($event)">
-                      <option value="">Seleccionar código extranjero</option>
-                      <option *ngFor="let codigo of codigosExtranjerosL01" [value]="codigo.codigo">
-                        {{codigo.codigo}} - {{codigo.descripcion}}
+                            class="edit-select">
+                      <option *ngFor="let codigo of codigosExtranjerosL01" 
+                              [value]="codigo.codigo">
+                        {{ codigo.codigo }} - {{ codigo.descripcion }}
                       </option>
                     </select>
-                    
-                    <!-- Input para RUC cuando Tipo ID es R -->
-                    <input *ngIf="getTipoIdentificacionActual(i) === 'R'"
+                    <input *ngIf="getTipoIdentificacionActual(i) === 'R'" 
                            type="text" 
                            [(ngModel)]="editValue" 
-                           class="form-control form-control-sm"
-                           (keydown)="onKeyDown($event)"
+                           class="edit-input"
                            maxlength="13"
-                           placeholder="RUC 13 dígitos"
-                           (input)="onIdentificacionInput($event)">
-                    
+                           (input)="onIdentificacionInput($event)"
+                           placeholder="Ingrese RUC">
                     <div class="edit-actions">
-                      <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
-                        ✓
-                      </button>
-                      <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
-                        ✗
-                      </button>
+                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
+                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
                     </div>
                   </div>
                 </td>
-                <td>
-                  <div *ngIf="!isEditing(i, 'clasificacion')" 
-                       (click)="startEdit(i, 'clasificacion')" 
-                       class="editable-cell">
-                    {{ getClasificacionDesc(item.clasificacion) }}
+
+                <!-- Clasificación -->
+                <td class="editable-cell" 
+                    [class.edit-mode]="isEditing(i, 'clasificacion')"
+                    (click)="startEdit(i, 'clasificacion')">
+                  <div *ngIf="!isEditing(i, 'clasificacion')" class="cell-content">
+                    <span class="cell-value">{{ getClasificacionDesc(item.clasificacion) }}</span>
+                    <span class="edit-icon">✏️</span>
                   </div>
-                  <div *ngIf="isEditing(i, 'clasificacion')" class="edit-mode">
-                    <select [(ngModel)]="editValue" class="form-control form-control-sm">
+                  <div *ngIf="isEditing(i, 'clasificacion')" class="edit-controls">
+                    <select [(ngModel)]="editValue" class="edit-select">
                       <option value="1">1 - Emisor</option>
                       <option value="2">2 - Custodio</option>
                       <option value="3">3 - Depositario</option>
                       <option value="4">4 - Contraparte</option>
                     </select>
                     <div class="edit-actions">
-                      <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
-                        ✓
-                      </button>
-                      <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
-                        ✗
-                      </button>
+                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
+                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
                     </div>
                   </div>
                 </td>
-                <td>
-                  <div *ngIf="!isEditing(i, 'tipoEmisor')" 
-                       (click)="startEdit(i, 'tipoEmisor')" 
-                       class="editable-cell">
-                    {{ getTipoEmisorDesc(item.tipoEmisor) }}
+
+                <!-- Tipo Emisor -->
+                <td class="editable-cell" 
+                    [class.edit-mode]="isEditing(i, 'tipoEmisor')"
+                    (click)="startEdit(i, 'tipoEmisor')">
+                  <div *ngIf="!isEditing(i, 'tipoEmisor')" class="cell-content">
+                    <span class="cell-value">{{ getTipoEmisorDesc(item.tipoEmisor) }}</span>
+                    <span class="edit-icon">✏️</span>
                   </div>
-                  <div *ngIf="isEditing(i, 'tipoEmisor')" class="edit-mode">
-                    <select [(ngModel)]="editValue" class="form-control form-control-sm">
-                      <option *ngFor="let tipo of tiposEmisorL01" [value]="tipo.codigo">
-                        {{tipo.codigo}} - {{tipo.descripcion}}
-                      </option>
+                  <div *ngIf="isEditing(i, 'tipoEmisor')" class="edit-controls">
+                    <select [(ngModel)]="editValue" class="edit-select">
+                      <option value="0">0 - Supranacionales</option>
+                      <option value="2">2 - Pública financiera</option>
+                      <option value="3">3 - Privada financiera</option>
+                      <option value="4">4 - Pública no financiera</option>
+                      <option value="5">5 - Privada no financiera</option>
+                      <option value="7">7 - Fondos de inversión</option>
+                      <option value="8">8 - Estados Soberanos</option>
+                      <option value="9">9 - Multilaterales</option>
                     </select>
                     <div class="edit-actions">
-                      <button (click)="saveEdit()" [disabled]="isSaving" class="btn btn-sm btn-success">
-                        ✓
-                      </button>
-                      <button (click)="cancelEdit()" [disabled]="isSaving" class="btn btn-sm btn-danger">
-                        ✗
-                      </button>
+                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
+                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
                     </div>
+                  </div>
+                </td>
+
+                <!-- Acciones -->
+                <td class="action-cell">
+                  <div class="action-buttons">
+                    <button class="btn btn-info btn-sm" 
+                            (click)="verDetalle(item)" 
+                            title="Ver detalle">
+                      👁️
+                    </button>
+                    <button class="btn btn-warning btn-sm" 
+                            (click)="editar(item)" 
+                            title="Editar registro completo">
+                      ✏️
+                    </button>
+                    <button class="btn btn-danger btn-sm" 
+                            (click)="confirmDeletion(item)" 
+                            title="Eliminar registro">
+                      🗑️
+                    </button>
                   </div>
                 </td>
               </tr>
