@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { L01CatalogService } from './l01-catalog.service';
-import { map } from 'rxjs/operators';
-
-export interface ValidationError {
-  field: string;
-  message: string;
-  code: string;
-}
+import { L01RegulatoryData } from './l01-regulatory.service';
 
 export interface ValidationResult {
-  isValid: boolean;
-  errors: ValidationError[];
+  valid: boolean;
   message: string;
+  field?: string;
+  severity: 'error' | 'warning' | 'info';
+}
+
+export interface ValidationRule {
+  field: string;
+  rule: string;
+  validator: (value: any, data?: L01RegulatoryData) => ValidationResult;
 }
 
 @Injectable({
@@ -20,274 +19,268 @@ export interface ValidationResult {
 })
 export class L01ValidationService {
 
-  constructor(private catalogService: L01CatalogService) {}
+  constructor() {}
 
-  // Validar RUC ecuatoriano
-  validarRUC(ruc: string): ValidationResult {
-    const errors: ValidationError[] = [];
-
-    // Verificar longitud
-    if (ruc.length !== 13) {
-      errors.push({
-        field: 'identificacion',
-        message: 'El RUC debe tener exactamente 13 dígitos',
-        code: 'RUC_LENGTH'
-      });
-      return { isValid: false, errors, message: 'RUC inválido' };
-    }
-
-    // Verificar que sean solo números
-    if (!/^\d{13}$/.test(ruc)) {
-      errors.push({
-        field: 'identificacion',
-        message: 'El RUC debe contener solo números',
-        code: 'RUC_NUMERIC'
-      });
-      return { isValid: false, errors, message: 'RUC inválido' };
-    }
-
-    // Verificar tipo de contribuyente (primeros 2 dígitos)
-    const tipoContribuyente = ruc.substring(0, 2);
-    const tiposValidos = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90', '91', '92', '93', '94', '95', '96', '97', '98', '99'];
-
-    if (!tiposValidos.includes(tipoContribuyente)) {
-      errors.push({
-        field: 'identificacion',
-        message: 'Tipo de contribuyente inválido en el RUC',
-        code: 'RUC_TIPO_CONTRIBUYENTE'
-      });
-      return { isValid: false, errors, message: 'RUC inválido' };
-    }
-
-    // Algoritmo de validación de RUC
-    const coeficientes = [4, 3, 2, 7, 6, 5, 4, 3, 2];
-    const verificador = parseInt(ruc.charAt(9));
-    const suma = coeficientes.reduce((acc, coef, index) => {
-      return acc + (parseInt(ruc.charAt(index)) * coef);
-    }, 0);
+  /**
+   * Valida un registro L01 completo según el manual SB Marzo 2017
+   */
+  validateL01Record(data: L01RegulatoryData): ValidationResult[] {
+    const results: ValidationResult[] = [];
     
-    const residuo = suma % 11;
-    const digitoVerificador = residuo === 0 ? 0 : 11 - residuo;
-
-    if (digitoVerificador !== verificador) {
-      errors.push({
-        field: 'identificacion',
-        message: 'Dígito verificador del RUC inválido',
-        code: 'RUC_VERIFICADOR'
-      });
-      return { isValid: false, errors, message: 'RUC inválido' };
-    }
-
-    return { isValid: true, errors: [], message: 'RUC válido' };
+    // Validar cada campo individualmente
+    results.push(...this.validateTipoIdentificacion(data.tipoIdentificacion));
+    results.push(...this.validateIdentificacion(data.identificacion, data.tipoIdentificacion));
+    results.push(...this.validateClasificacion(data.clasificacion));
+    results.push(...this.validateTipoEmisor(data.tipoEmisor));
+    
+    // Validaciones de negocio
+    results.push(...this.validateBusinessRules(data));
+    
+    return results;
   }
 
-  // Validar código extranjero
-  validarCodigoExtranjero(codigo: string): Observable<ValidationResult> {
-    const errors: ValidationError[] = [];
-
-    // Verificar longitud exacta de 7 dígitos según manual oficial SB
-    if (codigo.length !== 7) {
-      errors.push({
-        field: 'identificacion',
-        message: 'El código extranjero debe tener exactamente 7 dígitos',
-        code: 'CODIGO_EXTRANJERO_LENGTH'
-      });
-      return of({ isValid: false, errors, message: 'Código extranjero inválido' });
-    }
-
-    // Verificar que sean solo números
-    if (!/^\d{7}$/.test(codigo)) {
-      errors.push({
-        field: 'identificacion',
-        message: 'El código extranjero debe contener solo números',
-        code: 'CODIGO_EXTRANJERO_NUMERIC'
-      });
-      return of({ isValid: false, errors, message: 'Código extranjero inválido' });
-    }
-
-    // Validar contra tabla 164
-    return this.catalogService.validarCodigo('t164', codigo).pipe(
-      map(isValid => {
-        if (isValid) {
-          return { isValid: true, errors: [], message: 'Código extranjero válido' };
-        } else {
-          return {
-            isValid: false,
-            errors: [{
-              field: 'identificacion',
-              message: 'Código extranjero no encontrado en la tabla 164',
-              code: 'CODIGO_EXTRANJERO_INVALIDO'
-            }],
-            message: 'Código extranjero inválido'
-          };
-        }
-      })
-    );
-  }
-
-  // Validar tipo de identificación
-  validarTipoIdentificacion(tipo: string): Observable<ValidationResult> {
-    return this.catalogService.validarCodigo('t4', tipo).pipe(
-      map(isValid => {
-        if (isValid) {
-          return { isValid: true, errors: [], message: 'Tipo de identificación válido' };
-        } else {
-          return {
-            isValid: false,
-            errors: [{
-              field: 'tipoIdentificacion',
-              message: 'Tipo de identificación no válido',
-              code: 'TIPO_IDENTIFICACION_INVALIDO'
-            }],
-            message: 'Tipo de identificación inválido'
-          };
-        }
-      })
-    );
-  }
-
-  // Validar clasificación
-  validarClasificacion(clasificacion: number): Observable<ValidationResult> {
-    return this.catalogService.validarCodigo('t173', clasificacion.toString()).pipe(
-      map(isValid => {
-        if (isValid) {
-          return { isValid: true, errors: [], message: 'Clasificación válida' };
-        } else {
-          return {
-            isValid: false,
-            errors: [{
-              field: 'clasificacion',
-              message: 'Clasificación no válida',
-              code: 'CLASIFICACION_INVALIDA'
-            }],
-            message: 'Clasificación inválida'
-          };
-        }
-      })
-    );
-  }
-
-  // Validar tipo de emisor
-  validarTipoEmisor(tipo: number): Observable<ValidationResult> {
-    return this.catalogService.validarCodigo('t73', tipo.toString()).pipe(
-      map(isValid => {
-        if (isValid) {
-          return { isValid: true, errors: [], message: 'Tipo de emisor válido' };
-        } else {
-          return {
-            isValid: false,
-            errors: [{
-              field: 'tipo',
-              message: 'Tipo de emisor no válido',
-              code: 'TIPO_EMISOR_INVALIDO'
-            }],
-            message: 'Tipo de emisor inválido'
-          };
-        }
-      })
-    );
-  }
-
-  // Validar identificación completa
-  validarIdentificacion(tipoIdentificacion: string, identificacion: string): Observable<ValidationResult> {
-    const errors: ValidationError[] = [];
-
-    // Validar tipo de identificación
-    if (tipoIdentificacion === 'R') {
-      // Validar RUC
-      const rucValidation = this.validarRUC(identificacion);
-      if (!rucValidation.isValid) {
-        errors.push(...rucValidation.errors);
-      }
-    } else if (tipoIdentificacion === 'X') {
-      // Validar código extranjero
-      return this.validarCodigoExtranjero(identificacion);
-    } else {
-      errors.push({
-        field: 'identificacion',
-        message: 'Tipo de identificación no soportado para validación',
-        code: 'TIPO_IDENTIFICACION_NO_SOPORTADO'
-      });
-    }
-
-    if (errors.length > 0) {
-      return of({ isValid: false, errors, message: 'Identificación inválida' });
-    }
-
-    return of({ isValid: true, errors: [], message: 'Identificación válida' });
-  }
-
-  // Validar formulario completo L01
-  validarFormularioL01(formData: any): Observable<ValidationResult> {
-    const errors: ValidationError[] = [];
-
-    // Validar campos requeridos
-    if (!formData.tipoIdentificacion) {
-      errors.push({
-        field: 'tipoIdentificacion',
+  /**
+   * Valida el tipo de identificación (R/X)
+   */
+  private validateTipoIdentificacion(tipo: string): ValidationResult[] {
+    const results: ValidationResult[] = [];
+    
+    if (!tipo) {
+      results.push({
+        valid: false,
         message: 'El tipo de identificación es obligatorio',
-        code: 'CAMPO_REQUERIDO'
+        field: 'tipoIdentificacion',
+        severity: 'error'
+      });
+      return results;
+    }
+    
+    if (!['R', 'X'].includes(tipo)) {
+      results.push({
+        valid: false,
+        message: 'El tipo de identificación debe ser R (RUC) o X (Extranjero)',
+        field: 'tipoIdentificacion',
+        severity: 'error'
       });
     }
-
-    if (!formData.identificacion) {
-      errors.push({
-        field: 'identificacion',
-        message: 'La identificación es obligatoria',
-        code: 'CAMPO_REQUERIDO'
-      });
-    }
-
-    if (!formData.clasificacion) {
-      errors.push({
-        field: 'clasificacion',
-        message: 'La clasificación es obligatoria',
-        code: 'CAMPO_REQUERIDO'
-      });
-    }
-
-    if (!formData.tipo) {
-      errors.push({
-        field: 'tipo',
-        message: 'El tipo de emisor es obligatorio',
-        code: 'CAMPO_REQUERIDO'
-      });
-    }
-
-    if (errors.length > 0) {
-      return of({ isValid: false, errors, message: 'Formulario incompleto' });
-    }
-
-    // Validar identificación
-    return this.validarIdentificacion(formData.tipoIdentificacion, formData.identificacion).pipe(
-      map(identificacionValidation => {
-        if (!identificacionValidation.isValid) {
-          errors.push(...identificacionValidation.errors);
-        }
-        return { isValid: errors.length === 0, errors, message: errors.length === 0 ? 'Formulario válido' : 'Formulario inválido' };
-      })
-    );
+    
+    return results;
   }
 
-  // Validar duplicados
-  validarDuplicado(tipoIdentificacion: string, identificacion: string, registrosExistentes: any[]): ValidationResult {
-    const duplicado = registrosExistentes.find(reg => 
-      reg.tipoIdentificacion === tipoIdentificacion && 
-      reg.identificacion === identificacion
-    );
-
-    if (duplicado) {
-      return {
-        isValid: false,
-        errors: [{
-          field: 'identificacion',
-          message: 'Ya existe un registro con esta identificación',
-          code: 'DUPLICADO'
-        }],
-        message: 'Registro duplicado'
-      };
+  /**
+   * Valida la identificación según el tipo
+   */
+  private validateIdentificacion(identificacion: string, tipo: string): ValidationResult[] {
+    const results: ValidationResult[] = [];
+    
+    if (!identificacion) {
+      results.push({
+        valid: false,
+        message: 'La identificación es obligatoria',
+        field: 'identificacion',
+        severity: 'error'
+      });
+      return results;
     }
+    
+    if (tipo === 'R') {
+      // Validar RUC (13 dígitos)
+      if (!/^\d{13}$/.test(identificacion)) {
+        results.push({
+          valid: false,
+          message: 'El RUC debe tener exactamente 13 dígitos',
+        field: 'identificacion',
+          severity: 'error'
+        });
+      }
+      
+      // Validar que empiece con 17 (Ecuador)
+      if (!identificacion.startsWith('17')) {
+        results.push({
+          valid: false,
+          message: 'El RUC debe empezar con 17 (Ecuador)',
+              field: 'identificacion',
+          severity: 'error'
+        });
+      }
+      
+      // Validar dígito verificador (algoritmo básico)
+      if (!this.validateRUCVerifier(identificacion)) {
+        results.push({
+          valid: false,
+          message: 'El RUC no es válido (dígito verificador incorrecto)',
+          field: 'identificacion',
+          severity: 'error'
+        });
+      }
+    } else if (tipo === 'X') {
+      // Validar código extranjero (máximo 7 caracteres)
+      if (identificacion.length > 7) {
+        results.push({
+          valid: false,
+          message: 'El código extranjero no puede exceder 7 caracteres',
+          field: 'identificacion',
+          severity: 'error'
+        });
+      }
+      
+      // Validar que no esté vacío
+      if (identificacion.trim().length === 0) {
+        results.push({
+          valid: false,
+          message: 'El código extranjero no puede estar vacío',
+          field: 'identificacion',
+          severity: 'error'
+        });
+      }
+    }
+    
+    return results;
+  }
 
-    return { isValid: true, errors: [], message: 'No hay duplicados' };
+  /**
+   * Valida la clasificación (1-4)
+   */
+  private validateClasificacion(clasificacion: number): ValidationResult[] {
+    const results: ValidationResult[] = [];
+    
+    if (!clasificacion && clasificacion !== 0) {
+      results.push({
+        valid: false,
+        message: 'La clasificación es obligatoria',
+        field: 'clasificacion',
+        severity: 'error'
+      });
+      return results;
+    }
+    
+    if (![1, 2, 3, 4].includes(clasificacion)) {
+      results.push({
+        valid: false,
+        message: 'La clasificación debe ser 1 (Emisor), 2 (Custodio), 3 (Depositario) o 4 (Contraparte)',
+        field: 'clasificacion',
+        severity: 'error'
+      });
+    }
+    
+    return results;
+  }
+
+  /**
+   * Valida el tipo de emisor (0,2,3,4,5,7,8,9)
+   */
+  private validateTipoEmisor(tipo: number): ValidationResult[] {
+    const results: ValidationResult[] = [];
+    
+    if (!tipo && tipo !== 0) {
+      results.push({
+        valid: false,
+        message: 'El tipo de emisor es obligatorio',
+        field: 'tipoEmisor',
+        severity: 'error'
+      });
+      return results;
+    }
+    
+    const tiposValidos = [0, 2, 3, 4, 5, 7, 8, 9];
+    if (!tiposValidos.includes(tipo)) {
+      results.push({
+        valid: false,
+        message: 'El tipo de emisor debe ser uno de los valores válidos: 0,2,3,4,5,7,8,9',
+        field: 'tipoEmisor',
+        severity: 'error'
+      });
+    }
+    
+    return results;
+  }
+
+  /**
+   * Validaciones de negocio específicas
+   */
+  private validateBusinessRules(data: L01RegulatoryData): ValidationResult[] {
+    const results: ValidationResult[] = [];
+    
+    // Validar que si es tipo X (extranjero), tenga clasificación válida
+    if (data.tipoIdentificacion === 'X') {
+      if (data.clasificacion === 1) { // Emisor
+        if (![0, 2, 3, 4, 5, 7, 8, 9].includes(data.tipoEmisor)) {
+          results.push({
+            valid: false,
+            message: 'Los emisores extranjeros deben tener un tipo de emisor válido',
+            field: 'tipoEmisor',
+            severity: 'error'
+          });
+        }
+      }
+    }
+    
+    // Validar que si es RUC, tenga formato correcto
+    if (data.tipoIdentificacion === 'R') {
+      if (data.identificacion && data.identificacion.length === 13) {
+        // Validar que el tercer dígito sea válido para tipo de contribuyente
+        const tercerDigito = parseInt(data.identificacion.charAt(2));
+        if (![6, 9].includes(tercerDigito)) {
+          results.push({
+            valid: false,
+            message: 'El tercer dígito del RUC debe ser 6 (empresa) o 9 (persona jurídica)',
+            field: 'identificacion',
+            severity: 'error'
+          });
+        }
+      }
+    }
+    
+    return results;
+  }
+
+  /**
+   * Valida el dígito verificador del RUC
+   */
+  private validateRUCVerifier(ruc: string): boolean {
+    if (ruc.length !== 13) return false;
+    
+    // Algoritmo simplificado de validación RUC
+    const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1];
+    let suma = 0;
+    
+    for (let i = 0; i < 12; i++) {
+      const producto = parseInt(ruc[i]) * coeficientes[i];
+      suma += Math.floor(producto / 10) + (producto % 10);
+    }
+    
+    const residuo = suma % 10;
+    const digitoVerificador = residuo === 0 ? 0 : 10 - residuo;
+    
+    return digitoVerificador === parseInt(ruc[12]);
+  }
+
+  /**
+   * Valida si un registro puede ser enviado al backend
+   */
+  canSendToBackend(data: L01RegulatoryData): boolean {
+    const validations = this.validateL01Record(data);
+    return validations.every(v => v.severity !== 'error');
+  }
+
+  /**
+   * Obtiene solo los errores críticos
+   */
+  getCriticalErrors(validations: ValidationResult[]): ValidationResult[] {
+    return validations.filter(v => v.severity === 'error');
+  }
+
+  /**
+   * Obtiene solo las advertencias
+   */
+  getWarnings(validations: ValidationResult[]): ValidationResult[] {
+    return validations.filter(v => v.severity === 'warning');
+  }
+
+  /**
+   * Formatea los mensajes de validación para mostrar al usuario
+   */
+  formatValidationMessages(validations: ValidationResult[]): string[] {
+    return validations.map(v => `${v.field ? `[${v.field}] ` : ''}${v.message}`);
   }
 }

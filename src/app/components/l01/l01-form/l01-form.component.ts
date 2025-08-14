@@ -110,15 +110,19 @@ export class L01FormComponent implements OnInit {
   validateForm(): void {
     if (this.l01Form.valid) {
       const formData = this.l01Form.value;
-      this.validationService.validarFormularioL01(formData).subscribe({
-        next: (result) => {
-          this.validationResult = result;
-          this.showValidationResult = true;
-        },
-        error: (error) => {
-          console.error('Error en validación:', error);
-        }
-      });
+      const validations = this.validationService.validateL01Record(formData);
+      const criticalErrors = this.validationService.getCriticalErrors(validations);
+      
+      if (criticalErrors.length > 0) {
+        this.validationResult = criticalErrors[0]; // Mostrar el primer error crítico
+      } else {
+        this.validationResult = {
+          valid: true,
+          message: 'Formulario válido',
+          severity: 'info'
+        };
+      }
+      this.showValidationResult = true;
     } else {
       this.validationResult = null;
       this.showValidationResult = false;
@@ -131,15 +135,20 @@ export class L01FormComponent implements OnInit {
     const identificacion = this.l01Form.get('identificacion')?.value;
 
     if (tipoIdentificacion && identificacion) {
-      this.validationService.validarIdentificacion(tipoIdentificacion, identificacion).subscribe({
-        next: (result) => {
-          if (!result.isValid) {
-            this.l01Form.get('identificacion')?.setErrors({ invalid: true });
-          } else {
-            this.l01Form.get('identificacion')?.setErrors(null);
-          }
-        }
+      const validations = this.validationService.validateL01Record({
+        tipoIdentificacion,
+        identificacion,
+        clasificacion: 1,
+        tipo: 1,
+        tipoEmisor: 1
       });
+      
+      const identificacionErrors = validations.filter(v => v.field === 'identificacion');
+      if (identificacionErrors.length > 0) {
+        this.l01Form.get('identificacion')?.setErrors({ invalid: true });
+      } else {
+        this.l01Form.get('identificacion')?.setErrors(null);
+      }
     }
   }
 
@@ -201,20 +210,21 @@ export class L01FormComponent implements OnInit {
         identificacion: this.l01Form.value.identificacion,
         clasificacion: this.l01Form.value.clasificacion,
         tipo: this.l01Form.value.tipo,
+        tipoEmisor: this.l01Form.value.tipo, // Usar el mismo valor que tipo
         usuarioCreacion: 'Christian Aguirre' // Usuario por defecto
       };
 
       // Validar duplicados antes de enviar
       this.l01Service.listarTodos().subscribe({
         next: (registrosExistentes) => {
-          const duplicadoValidation = this.validationService.validarDuplicado(
-            formData.tipoIdentificacion,
-            formData.identificacion,
-            registrosExistentes
+          // Verificar duplicados
+          const duplicado = registrosExistentes.find(r => 
+            r.tipoIdentificacion === formData.tipoIdentificacion && 
+            r.identificacion === formData.identificacion
           );
 
-          if (!duplicadoValidation.isValid) {
-            alert(`❌ ${duplicadoValidation.message}`);
+          if (duplicado) {
+            alert(`❌ Ya existe un registro con el mismo tipo de identificación y número`);
             this.isSubmitting = false;
             return;
           }

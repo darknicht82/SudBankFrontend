@@ -27,8 +27,8 @@ export class L01CatalogService {
     return this.http.get<L01Catalog[]>(`${this.baseUrl}/t4`)
       .pipe(
         catchError(error => {
-          console.warn('Error al obtener Tabla 4, usando datos mock:', error);
-          return this.getMockTabla4();
+          console.error('Error al obtener Tabla 4:', error);
+          throw error; // Propagar el error
         })
       );
   }
@@ -38,11 +38,11 @@ export class L01CatalogService {
     if (this.useMockData) {
       return this.getMockTabla73();
     }
-    return this.http.get<L01Catalog[]>(`${this.baseUrl}/T73`)
+    return this.http.get<L01Catalog[]>(`${this.baseUrl}/t73`)
       .pipe(
         catchError(error => {
-          console.warn('Error al obtener Tabla 73, usando datos mock:', error);
-          return this.getMockTabla73();
+          console.error('Error al obtener Tabla 73:', error);
+          throw error; // Propagar el error
         })
       );
   }
@@ -52,11 +52,11 @@ export class L01CatalogService {
     if (this.useMockData) {
       return this.getMockTabla173();
     }
-    return this.http.get<L01Catalog[]>(`${this.baseUrl}/T173`)
+    return this.http.get<L01Catalog[]>(`${this.baseUrl}/t173`)
       .pipe(
         catchError(error => {
-          console.warn('Error al obtener Tabla 173, usando datos mock:', error);
-          return this.getMockTabla173();
+          console.error('Error al obtener Tabla 173:', error);
+          throw error; // Propagar el error en lugar de usar mock
         })
       );
   }
@@ -66,11 +66,11 @@ export class L01CatalogService {
     if (this.useMockData) {
       return this.getMockTabla164();
     }
-    return this.http.get<L01Catalog[]>(`${this.baseUrl}/T164`)
+    return this.http.get<L01Catalog[]>(`${this.baseUrl}/t164`)
       .pipe(
         catchError(error => {
-          console.warn('Error al obtener Tabla 164, usando datos mock:', error);
-          return this.getMockTabla164();
+          console.error('Error al obtener Tabla 164:', error);
+          throw error; // Propagar el error
         })
       );
   }
@@ -87,7 +87,7 @@ export class L01CatalogService {
             })
           );
       case 't73':
-        return this.http.get<L01Catalog[]>(`${this.baseUrl}/T73`)
+        return this.http.get<L01Catalog[]>(`${this.baseUrl}/t73`)
           .pipe(
             map(catalogs => {
               const catalog = catalogs.find(c => c.codigo === codigo);
@@ -95,7 +95,7 @@ export class L01CatalogService {
             })
           );
       case 't173':
-        return this.http.get<L01Catalog[]>(`${this.baseUrl}/T173`)
+        return this.http.get<L01Catalog[]>(`${this.baseUrl}/t173`)
           .pipe(
             map(catalogs => {
               const catalog = catalogs.find(c => c.codigo === codigo);

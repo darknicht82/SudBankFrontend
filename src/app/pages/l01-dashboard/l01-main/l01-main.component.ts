@@ -11,6 +11,7 @@ import { L01ExportComponent } from '../../../components/l01/l01-export/l01-expor
 import { L01ExportData, L01ExportResult } from '../../../models/l01-export.model';
 import { L01CatalogService } from '../../../services/l01-catalog.service';
 import { L01AuditService } from '../../../services/l01-audit.service';
+import { L01RegulatoryService, L01RegulatoryData } from '../../../services/l01-regulatory.service';
 import { LogMonitorComponent } from '../../../components/debug/log-monitor/log-monitor.component';
 import { L01ConfirmationComponent, ConfirmationData } from '../../../components/l01/l01-confirmation/l01-confirmation.component';
 import { LoggerService } from '../../../services/logger.service';
@@ -30,7 +31,7 @@ import { HttpClient } from '@angular/common/http';
 export class L01MainComponent implements OnInit {
   // Datos del reporte
   reportData: any = null;
-  datosL01: any[] = [];
+  datosL01: L01RegulatoryData[] = [];
   loading = false;
   error = '';
 
@@ -42,8 +43,7 @@ export class L01MainComponent implements OnInit {
   tipoEmisor = '';
   
   // Propiedades según especificación oficial L01 - Manual SB Marzo 2017
-  // (Eliminadas propiedades incorrectas tipoCliente y estadoCliente)
-  
+   
   // Historial
   historial: any[] = [];
   showHistorial = false;
@@ -60,7 +60,7 @@ export class L01MainComponent implements OnInit {
     'tipoIdentificacion',    // Campo 1: Tipo de identificación del emisor/custodio/depositario/contraparte (R/X) - Tabla 4
     'identificacion',        // Campo 2: Identificación del emisor/custodio/depositario/contraparte (RUC 13 dígitos o código extranjero) - Tabla 164
     'clasificacion',         // Campo 3: Clasificación de emisor/custodio/depositario/contraparte (1-4) - Tabla 173
-    'tipoEmisor'            // Campo 4: Tipo de emisor/custodio/depositario/contraparte (1,2,3,4,5) - Tabla 73
+    'tipo'                   // Campo 4: Tipo de emisor/custodio/depositario/contraparte (1,2,3,4,5) - Tabla 73
   ];
 
   // Datos para exportación
@@ -170,6 +170,7 @@ export class L01MainComponent implements OnInit {
   constructor(
     private catalogService: L01CatalogService,
     private auditService: L01AuditService,
+    private regulatoryService: L01RegulatoryService,
     private logger: LoggerService,
     private txtLogger: TxtLoggerService,
     private http: HttpClient
@@ -210,10 +211,16 @@ export class L01MainComponent implements OnInit {
     
     // Cargar catálogos dinámicos primero
     this.loadCatalogsForL01().then(() => {
-      // Luego cargar datos
-    setTimeout(() => {
+      // Luego cargar datos reales del backend
+      setTimeout(() => {
         try {
-      this.generateMockData();
+          if (this.isUsingMockData) {
+            // Si está en modo mock, generar datos de prueba
+            this.generateMockData();
+          } else {
+            // Si está en modo PROD, cargar datos reales del backend
+            this.loadRealDataFromBackend();
+          }
           this.prepareExportData();
           this.loading = false;
           this.logger.info('L01MainComponent', 'Datos iniciales cargados exitosamente', {
@@ -223,16 +230,62 @@ export class L01MainComponent implements OnInit {
               tiposId: this.tiposIdentificacionL01.length,
               tiposEmisor: this.tiposEmisorL01.length,
               clasificaciones: this.clasificacionesL01.length
-            }
+            },
+            modo: this.isUsingMockData ? 'MOCK' : 'REAL'
           });
         } catch (error) {
-      this.loading = false;
+          this.loading = false;
           this.logger.error('L01MainComponent', 'Error al cargar datos iniciales', error);
         }
-    }, 1000);
+      }, 1000);
     }).catch(error => {
       this.loading = false;
       this.logger.error('L01MainComponent', 'Error al cargar catálogos', error);
+    });
+  }
+
+  /**
+   * Cargar datos reales del backend
+   */
+  private loadRealDataFromBackend(): void {
+    this.txtLogger.info('L01MainComponent', 'Cargando datos reales del backend');
+    
+    // Cargar datos reales de L01 desde el backend
+    this.regulatoryService.listarTodos().subscribe({
+      next: (data) => {
+        this.datosL01 = data;
+        this.error = ''; // Limpiar errores previos
+        this.txtLogger.info('L01MainComponent', 'Datos reales del backend cargados exitosamente', {
+          totalRegistros: this.datosL01.length,
+          datos: data
+        });
+      },
+      error: (error) => {
+        this.txtLogger.error('L01MainComponent', 'Error al cargar datos reales del backend', error);
+        
+        // Mostrar mensaje de error específico
+        if (error.status === 0) {
+          this.error = 'Error de conectividad: No se puede conectar al servidor.';
+        } else if (error.status === 404) {
+          this.error = 'Endpoint no encontrado. Verifique la configuración del backend.';
+        } else if (error.status === 500) {
+          this.error = 'Error interno del servidor. Contacte al administrador.';
+        } else {
+          this.error = `Error ${error.status}: ${error.message || 'Error desconocido al cargar datos'}`;
+        }
+        
+        // Si falla, mostrar mensaje de "no hay datos" o usar datos mock como fallback
+        this.datosL01 = [];
+        
+        // Log detallado del error para debugging
+        console.error('Error detallado al cargar datos L01:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url,
+          timestamp: new Date().toISOString()
+        });
+      }
     });
   }
 
@@ -244,40 +297,55 @@ export class L01MainComponent implements OnInit {
     
     try {
       // Cargar Tabla 4 (Tipos de Identificación) - Solo R y X para L01
-      this.catalogService.getTabla4ForL01().subscribe({
+      this.catalogService.getTabla4().subscribe({
         next: (tipos) => {
           this.tiposIdentificacionL01 = tipos;
           this.txtLogger.info('L01MainComponent', `Tabla 4 cargada: ${tipos.length} tipos de identificación`, tipos);
         },
         error: (error) => {
           this.txtLogger.error('L01MainComponent', 'Error al cargar Tabla 4', error);
+          console.error('Error específico Tabla 4:', {
+            status: error.status,
+            message: error.message,
+            url: error.url
+          });
         }
       });
 
       // Cargar Tabla 73 (Tipos de Emisor) - Solo aplicables a L01
-      this.catalogService.getTabla73ForL01().subscribe({
+      this.catalogService.getTabla73().subscribe({
         next: (tipos) => {
           this.tiposEmisorL01 = tipos;
           this.txtLogger.info('L01MainComponent', `Tabla 73 cargada: ${tipos.length} tipos de emisor`, tipos);
         },
         error: (error) => {
           this.txtLogger.error('L01MainComponent', 'Error al cargar Tabla 73', error);
+          console.error('Error específico Tabla 73:', {
+            status: error.status,
+            message: error.message,
+            url: error.url
+          });
         }
       });
 
       // Cargar Tabla 173 (Clasificaciones L01)
-      this.catalogService.getTabla173ForL01().subscribe({
+      this.catalogService.getTabla173().subscribe({
         next: (clasificaciones) => {
           this.clasificacionesL01 = clasificaciones;
           this.txtLogger.info('L01MainComponent', `Tabla 173 cargada: ${clasificaciones.length} clasificaciones`, clasificaciones);
         },
         error: (error) => {
           this.txtLogger.error('L01MainComponent', 'Error al cargar Tabla 173', error);
+          console.error('Error específico Tabla 173:', {
+            status: error.status,
+            message: error.message,
+            url: error.url
+          });
         }
       });
 
       // Cargar Tabla 164 (Códigos Extranjeros) - Para referencia
-      this.catalogService.getTabla164ForL01().subscribe({
+      this.catalogService.getTabla164().subscribe({
         next: (codigos) => {
           this.codigosExtranjeros = codigos;
           this.codigosExtranjerosL01 = codigos; // También para el select
@@ -285,6 +353,11 @@ export class L01MainComponent implements OnInit {
         },
         error: (error) => {
           this.txtLogger.error('L01MainComponent', 'Error al cargar Tabla 164', error);
+          console.error('Error específico Tabla 164:', {
+            status: error.status,
+            message: error.message,
+            url: error.url
+          });
         }
       });
 
@@ -307,35 +380,39 @@ export class L01MainComponent implements OnInit {
         tipoIdentificacion: 'R',              // Campo 1: R = RUC Nacional
         identificacion: '1791234567001',      // Campo 2: RUC de 13 dígitos
         clasificacion: 1,                     // Campo 3: 1 = Emisor
+        tipo: 3,
         tipoEmisor: 3,                       // Campo 4: 3 = Privada financiera
-        fechaCreacion: '2024-01-15',
+        fechaCreacion: new Date('2024-01-15'),
         usuarioCreacion: 'Christian Aguirre'
       },
       {
         id: 2,
         tipoIdentificacion: 'X',              // Campo 1: X = Código Extranjero
-        identificacion: '1000001',            // Campo 2: Código extranjero de 7 dígitos
+        identificacion: '100001',            // Campo 2: Código extranjero de 7 dígitos
         clasificacion: 2,                     // Campo 3: 2 = Custodio
+        tipo: 8,
         tipoEmisor: 8,                       // Campo 4: 8 = Estados Soberanos
-        fechaCreacion: '2024-02-20',
+        fechaCreacion: new Date('2024-02-20'),
         usuarioCreacion: 'Christian Aguirre'
       },
       {
         id: 3,
         tipoIdentificacion: 'R',              // Campo 1: R = RUC Nacional
-        identificacion: '0992345678001',      // Campo 2: RUC de 13 dígitos
+        identificacion: '1798765432001',      // Campo 2: RUC de 13 dígitos
         clasificacion: 3,                     // Campo 3: 3 = Depositario
+        tipo: 5,
         tipoEmisor: 5,                       // Campo 4: 5 = Privada no financiera
-        fechaCreacion: '2024-03-10',
+        fechaCreacion: new Date('2024-03-10'),
         usuarioCreacion: 'Christian Aguirre'
       },
       {
         id: 4,
         tipoIdentificacion: 'X',              // Campo 1: X = Código Extranjero
-        identificacion: '1000002',            // Campo 2: Código extranjero de 7 dígitos
+        identificacion: '100002',            // Campo 2: Código extranjero de 7 dígitos
         clasificacion: 4,                     // Campo 3: 4 = Contraparte
+        tipo: 9,
         tipoEmisor: 9,                       // Campo 4: 9 = Multilaterales
-        fechaCreacion: '2024-04-05',
+        fechaCreacion: new Date('2024-04-05'),
         usuarioCreacion: 'Christian Aguirre'
       }
     ];
@@ -919,7 +996,7 @@ export class L01MainComponent implements OnInit {
       
       // Log de auditoría
       this.auditService.logFieldChange(
-        this.datosL01[rowIndex].id,
+        this.datosL01[rowIndex].id || 0,
         field,
         oldValue,
         newValue,

@@ -159,17 +159,15 @@
         <h3><i class="pi pi-check-circle"></i> Resultado de Validación</h3>
       </div>
       
-      <div class="validation-result" [class]="validationResult.isValid ? 'valid' : 'invalid'">
+      <div class="validation-result" [class]="validationResult.valid ? 'valid' : 'invalid'">
         <div class="validation-icon">
-          <i class="pi" [class]="validationResult.isValid ? 'pi-check-circle' : 'pi-times-circle'"></i>
+          <i class="pi" [class]="validationResult.valid ? 'pi-check-circle' : 'pi-times-circle'"></i>
         </div>
         <div class="validation-content">
           <div class="validation-message">{{ validationResult.message }}</div>
-          <div class="validation-errors" *ngIf="!validationResult.isValid && validationResult.errors && validationResult.errors.length > 0">
-            <div class="error-item" *ngFor="let error of validationResult.errors">
-              <i class="pi pi-exclamation-triangle"></i>
-              {{ error.message }}
-            </div>
+          <div class="validation-field" *ngIf="validationResult.field">
+            <i class="pi pi-map-marker"></i>
+            Campo: {{ validationResult.field }}
           </div>
         </div>
       </div>
