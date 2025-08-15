@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError, timer } from 'rxjs';
-import { catchError, delay, retry, switchMap, tap } from 'rxjs/operators';
+import { catchError, delay, retry, switchMap, tap, map } from 'rxjs/operators';
 import { L01RegulatoryService, L01RegulatoryData } from './l01-regulatory.service';
 import { L01LocalStorageService, PendingChange } from './l01-local-storage.service';
 import { environment } from '../../environments/environment';
@@ -36,7 +36,7 @@ export class L01SyncService {
    * Verifica la conectividad con el backend
    */
   checkBackendConnectivity(): Observable<boolean> {
-    return this.regulatoryService.listarTodos().pipe(
+    return this.regulatoryService.getAllL01Data().pipe(
       map(() => {
         this.isOnline = true;
         return true;
@@ -108,7 +108,7 @@ export class L01SyncService {
 
     switch (change.type) {
       case 'create':
-        return this.regulatoryService.crear(change.data).pipe(
+        return this.regulatoryService.createL01Data(change.data).pipe(
           tap(() => this.localStorageService.markChangeAsSynced(change.id)),
           map(() => true),
           catchError(error => {
@@ -122,7 +122,7 @@ export class L01SyncService {
           this.localStorageService.markChangeAsError(change.id, 'ID no válido para actualización');
           return throwError(new Error('ID no válido'));
         }
-        return this.regulatoryService.actualizar(change.data.id, change.data).pipe(
+        return this.regulatoryService.updateL01Data(change.data.id, change.data).pipe(
           tap(() => this.localStorageService.markChangeAsSynced(change.id)),
           map(() => true),
           catchError(error => {
@@ -136,7 +136,7 @@ export class L01SyncService {
           this.localStorageService.markChangeAsError(change.id, 'ID no válido para eliminación');
           return throwError(new Error('ID no válido'));
         }
-        return this.regulatoryService.eliminar(change.data.id).pipe(
+        return this.regulatoryService.deleteL01Data(change.data.id).pipe(
           tap(() => this.localStorageService.markChangeAsSynced(change.id)),
           map(() => true),
           catchError(error => {
@@ -156,7 +156,7 @@ export class L01SyncService {
    */
   createWithSync(data: L01RegulatoryData): Observable<L01RegulatoryData> {
     if (this.isOnline) {
-      return this.regulatoryService.crear(data).pipe(
+      return this.regulatoryService.createL01Data(data).pipe(
         catchError(error => {
           // Si falla, guardar localmente
           const changeId = this.localStorageService.savePendingChange({
@@ -182,7 +182,7 @@ export class L01SyncService {
    */
   updateWithSync(id: number, data: L01RegulatoryData): Observable<L01RegulatoryData> {
     if (this.isOnline) {
-      return this.regulatoryService.actualizar(id, data).pipe(
+      return this.regulatoryService.updateL01Data(id, data).pipe(
         catchError(error => {
           // Si falla, guardar localmente
           const changeId = this.localStorageService.savePendingChange({
@@ -208,7 +208,7 @@ export class L01SyncService {
    */
   deleteWithSync(id: number): Observable<void> {
     if (this.isOnline) {
-      return this.regulatoryService.eliminar(id).pipe(
+      return this.regulatoryService.deleteL01Data(id).pipe(
         catchError(error => {
           // Si falla, guardar localmente
           const changeId = this.localStorageService.savePendingChange({

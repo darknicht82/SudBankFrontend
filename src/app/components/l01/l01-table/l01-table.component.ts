@@ -94,13 +94,13 @@ export class L01TableComponent implements OnInit {
     this.isLoading = true;
     this.error = '';
 
-    this.l01Service.listarTodos().subscribe({
-      next: (data) => {
+    this.l01Service.getAllL01Data().subscribe({
+      next: (data: L01RegulatoryData[]) => {
         this.registros = data;
         this.aplicarFiltros();
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error cargando datos L01:', error);
         this.error = 'Error al cargar los datos';
         this.isLoading = false;
@@ -129,7 +129,7 @@ export class L01TableComponent implements OnInit {
     // Filtro por tipo
     if (this.filtros.tipo) {
       datosFiltrados = datosFiltrados.filter(item => 
-        item.tipo.toString() === this.filtros.tipo
+        item.tipoEmisor?.toString() === this.filtros.tipo
       );
     }
 
@@ -292,18 +292,14 @@ export class L01TableComponent implements OnInit {
   }
 
   onExport(): void {
-    const request = { fecha: new Date().toISOString().split('T')[0] };
-    
-    this.l01Service.exportToExcel(request).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `L01_${new Date().toISOString().split('T')[0]}.xlsx`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (error) => {
+    // Usar el servicio de exportación L01
+    import('../../../services/l01-export.service').then(({ L01ExportService }) => {
+      const exportService = new L01ExportService();
+      const filename = exportService.generateL01Filename();
+      
+      try {
+        exportService.downloadTxt(this.registrosFiltrados, filename);
+      } catch (error) {
         console.error('Error exportando:', error);
         alert('❌ Error al exportar el archivo');
       }
@@ -361,13 +357,13 @@ export class L01TableComponent implements OnInit {
   eliminar(item: L01RegulatoryData): void {
     if (confirm(`¿Está seguro de eliminar el registro de ${item.identificacion}?`)) {
       if (item.id) {
-        this.l01Service.eliminar(item.id).subscribe({
+        this.l01Service.deleteL01Data(item.id).subscribe({
           next: () => {
             console.log('Registro eliminado:', item);
             this.loadData();
             alert('✅ Registro eliminado exitosamente');
           },
-          error: (error) => {
+          error: (error: any) => {
             console.error('Error eliminando:', error);
             alert('❌ Error al eliminar el registro');
           }

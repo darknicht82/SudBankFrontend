@@ -9,18 +9,6 @@
     <p class="subtitle">Registro de emisores, custodios de inversiones, depositarios de fondos disponibles y contrapartes en operaciones de reporto</p>
   </div>
 
-  <!-- INDICADOR DE MODO DE DATOS >
-  <div class="data-mode-indicator" [class]="isUsingMockData ? 'mock-mode' : 'real-mode'">
-    <div class="mode-badge">
-      <i class="fas" [class]="isUsingMockData ? 'fa-flask' : 'fa-database'"></i>
-      <span>{{ isUsingMockData ? 'DATOS MOCK (Desarrollo)' : 'DATOS REALES (Producción)' }}</span>
-      <button *ngIf="!isProduction" (click)="toggleDataMode()" class="btn btn-sm btn-outline-light">
-        <i class="fas fa-exchange-alt"></i>
-        Cambiar a {{ isUsingMockData ? 'Datos Reales' : 'Datos Mock' }}
-      </button>
-    </div>
-  </div-->
-
   <!-- INFORMACIÓN DE ESTRUCTURA -->
   <div class="structure-info">
     <div class="card">
@@ -28,28 +16,49 @@
         <h3>📋 Información de la Estructura L01</h3>
       </div>
       <div class="card-content">
-        <p><strong>Descripción:</strong> {{ tooltips.description }}</p>
-        <p><strong>Periodicidad:</strong> {{ tooltips.periodicity }}</p>
-        <p><strong>Plazo entrega:</strong> {{ tooltips.deadline }}</p>
-        <p><strong>Código Banco:</strong> {{ tooltips.bankCode }}</p>
-        <p><strong>Formato archivo:</strong> {{ tooltips.fileFormat }}</p>
-        <p><strong>Fuente:</strong> {{ tooltips.source }}</p>
+        <p><strong>Descripción:</strong> Emisores, Custodios de Inversiones, Depositarios de Fondos Disponibles y Contrapartes en Operaciones de Reporto</p>
+        <p><strong>Periodicidad:</strong> Eventual (solo cuando hay nuevos datos)</p>
+        <p><strong>Plazo entrega:</strong> Según requerimientos de la SB</p>
+        <p><strong>Código Banco:</strong> 1038</p>
+        <p><strong>Formato archivo:</strong> L01Exxxxddmmaaaa.txt</p>
+        <p><strong>Fuente:</strong> Manual de Control de Inversiones - SB Marzo 2017</p>
         
         <div class="requirements">
           <strong>Requisitos:</strong>
           <ul>
-            <li *ngFor="let req of tooltips.requirements">{{ req }}</li>
+            <li>Estructura eventual (no mensual)</li>
+            <li>4 campos oficiales obligatorios</li>
+            <li>Formato TXT con separador tabulador</li>
+            <li>Validaciones según manual SB</li>
           </ul>
         </div>
 
         <div class="fields-info">
-          <strong>Campos Oficiales (💡 hover para detalles):</strong>
+          <strong>Campos Oficiales L01:</strong>
           <div class="fields-grid">
-            <div *ngFor="let field of tooltips.fields" class="field-item">
-              <span class="field-position">{{ field.position }}.</span>
-              <span class="field-name">{{ field.name }}</span>
-              <span class="field-table">({{ field.table }})</span>
-              <div class="field-description">{{ field.description }}</div>
+            <div class="field-item">
+              <span class="field-position">1.</span>
+              <span class="field-name">Tipo de Identificación</span>
+              <span class="field-table">(Tabla 4)</span>
+              <div class="field-description">R (RUC Nacional) o X (Extranjero)</div>
+            </div>
+            <div class="field-item">
+              <span class="field-position">2.</span>
+              <span class="field-name">Identificación</span>
+              <span class="field-table">(Tabla 164)</span>
+              <div class="field-description">RUC 13 dígitos o código extranjero</div>
+            </div>
+            <div class="field-item">
+              <span class="field-position">3.</span>
+              <span class="field-name">Clasificación</span>
+              <span class="field-table">(Tabla 173)</span>
+              <div class="field-description">1=Emisor, 2=Custodio, 3=Depositario, 4=Contraparte</div>
+            </div>
+            <div class="field-item">
+              <span class="field-position">4.</span>
+              <span class="field-name">Tipo de Emisor</span>
+              <span class="field-table">(Tabla 73)</span>
+              <div class="field-description">Sector económico según tabla 73</div>
             </div>
           </div>
         </div>
@@ -57,56 +66,26 @@
     </div>
   </div>
 
-  <!-- FILTROS -->
-  <div class="filters-section">
+  <!-- ACCIONES PRINCIPALES DEL DASHBOARD -->
+  <div class="actions-section">
     <div class="card">
       <div class="card-header">
-        <h3>🔍 Filtros de Reporte</h3>
+        <h3>🚀 Acciones del Reporte L01</h3>
+        <p class="action-description">Acciones principales para la gestión de la estructura L01 según manual SB.</p>
       </div>
       <div class="card-content">
-        <div class="filters-grid">
-          <div class="form-field">
-            <label>Fecha Inicio:</label>
-            <input type="date" [(ngModel)]="fechaInicio" class="form-control">
-          </div>
-          <div class="form-field">
-            <label>Fecha Fin:</label>
-            <input type="date" [(ngModel)]="fechaFin" class="form-control">
-          </div>
-          <div class="form-field">
-            <label>Tipo Identificación:</label>
-            <select [(ngModel)]="tipoIdentificacion" class="form-control">
-              <option value="">Todos</option>
-              <option *ngFor="let tipo of tiposIdentificacionL01" [value]="tipo.codigo">
-                {{tipo.codigo}} - {{tipo.descripcion}}
-              </option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label>Clasificación:</label>
-            <select [(ngModel)]="clasificacion" class="form-control">
-              <option value="">Todas</option>
-              <option *ngFor="let clasificacion of clasificacionesL01" [value]="clasificacion.codigo">
-                {{clasificacion.codigo}} - {{clasificacion.descripcion | titlecase}}
-              </option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label>Tipo Emisor:</label>
-            <select [(ngModel)]="tipoEmisor" class="form-control">
-              <option value="">Todos</option>
-              <option *ngFor="let tipo of tiposEmisorL01" [value]="tipo.codigo">
-                {{tipo.codigo}} - {{tipo.descripcion | titlecase}}
-              </option>
-            </select>
-          </div>
-        </div>
         <div class="actions">
-          <button (click)="generateReport()" [disabled]="loading" class="btn btn-primary">
-            {{ loading ? 'Generando...' : 'Generar Reporte' }}
+          <button (click)="validateAndGenerateReport()" [disabled]="loading" class="btn btn-primary">
+            <i class="pi pi-check-circle"></i>
+            {{ loading ? 'Validando...' : 'Validar y Generar Reporte L01 Completo' }}
           </button>
-          <button (click)="exportReport()" class="btn btn-success">
-            Exportar Reporte
+          <button (click)="exportToTxt()" class="btn btn-success">
+            <i class="pi pi-download"></i>
+            Exportar TXT
+          </button>
+          <button (click)="openCreateModal()" class="btn btn-info">
+            <i class="pi pi-plus"></i>
+            Crear Nuevo Registro
           </button>
         </div>
       </div>
@@ -157,104 +136,6 @@
     </div>
   </div>
 
-  <!-- HISTORIAL -->
-  <div *ngIf="showHistorial" class="history-section">
-    <div class="card">
-      <div class="card-header">
-        <h3>📜 Historial de Actividades</h3>
-      </div>
-      <div class="card-content">
-        <div class="history-list">
-          <div *ngFor="let item of historial" class="history-item">
-            <div class="history-date">{{ item.fecha }}</div>
-            <div class="history-user">{{ item.usuario }}</div>
-            <div class="history-action">{{ item.accion }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- NUEVO: Formulario de Creación de Registros -->
-  <div class="creation-section" *ngIf="showCreationForm">
-    <div class="section-header">
-      <h3>➕ Crear Nuevo Registro L01</h3>
-      <button class="close-button" (click)="onCreationCancelled()" type="button">
-        <span>&times;</span>
-      </button>
-    </div>
-    
-    <div class="creation-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="newTipoIdentificacion">Tipo Identificación *</label>
-          <select id="newTipoIdentificacion" 
-                  [(ngModel)]="newRecord.tipoIdentificacion" 
-                  class="form-control">
-            <option value="R">R - RUC Nacional</option>
-            <option value="X">X - Código Extranjero</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="newIdentificacion">Identificación *</label>
-          <input type="text" 
-                 id="newIdentificacion" 
-                 [(ngModel)]="newRecord.identificacion" 
-                 class="form-control"
-                 [maxlength]="newRecord.tipoIdentificacion === 'R' ? 13 : 7"
-                 placeholder="Ingrese identificación">
-        </div>
-      </div>
-      
-      <div class="form-row">
-        <div class="form-group">
-          <label for="newClasificacion">Clasificación *</label>
-          <select id="newClasificacion" 
-                  [(ngModel)]="newRecord.clasificacion" 
-                  class="form-control">
-            <option value="1">1 - Emisor</option>
-            <option value="2">2 - Custodio</option>
-            <option value="3">3 - Depositario</option>
-            <option value="4">4 - Contraparte</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="newTipoEmisor">Tipo Emisor *</label>
-          <select id="newTipoEmisor" 
-                  [(ngModel)]="newRecord.tipoEmisor" 
-                  class="form-control">
-            <option value="0">0 - Supranacionales</option>
-            <option value="2">2 - Pública financiera</option>
-            <option value="3">3 - Privada financiera</option>
-            <option value="4">4 - Pública no financiera</option>
-            <option value="5">5 - Privada no financiera</option>
-            <option value="7">7 - Fondos de inversión</option>
-            <option value="8">8 - Estados Soberanos</option>
-            <option value="9">9 - Multilaterales</option>
-          </select>
-        </div>
-      </div>
-      
-      <div class="form-actions">
-        <button class="btn btn-success" (click)="saveNewRecord()" type="button">
-          ✅ Guardar Registro
-        </button>
-        <button class="btn btn-secondary" (click)="onCreationCancelled()" type="button">
-          ❌ Cancelar
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- NUEVO: Botón para Crear Nuevo Registro -->
-  <div class="action-buttons" *ngIf="!showCreationForm">
-    <button class="btn btn-primary" (click)="createNewRecord()" type="button">
-      ➕ Crear Nuevo Registro L01
-    </button>
-  </div>
-
   <!-- NUEVO: Componente de Confirmación -->
   <app-l01-confirmation
     [showModal]="showConfirmationModal"
@@ -265,6 +146,15 @@
     (closed)="onConfirmationClosed()">
   </app-l01-confirmation>
 
+  <!-- NUEVO: Componente de Resumen del Reporte L01 -->
+  <app-l01-report-summary
+    [showModal]="showReportSummaryModal"
+    [reportData]="reportSummaryData"
+    [loading]="loading"
+    (modalClosed)="onReportSummaryModalClosed()"
+    (exportTxt)="onReportSummaryExportTxt($event)"
+    (createNewRecord)="onReportSummaryCreateNewRecord()">
+  </app-l01-report-summary>
 
   <!-- TABLA DE DATOS -->
   <div *ngIf="datosL01.length > 0" class="data-section">
@@ -273,6 +163,62 @@
         <h3>📋 Datos del Reporte L01</h3>
       </div>
       <div class="card-content">
+        
+        <!-- FILTROS PARA VISTA DEL GRID -->
+        <div class="grid-filters">
+          <h4>🔍 Filtros para Vista del Grid</h4>
+          <p class="filter-description">Utilice estos filtros para analizar y contar registros por categoría en la vista actual.</p>
+          <div class="filters-grid">
+            <div class="form-field">
+              <label>Tipo Identificación:</label>
+              <select [(ngModel)]="tipoIdentificacion" class="form-control" (change)="applyGridFilters()">
+                <option value="">Todos</option>
+                <option *ngFor="let tipo of tiposIdentificacionL01" [value]="tipo.codigo">
+                  {{tipo.codigo}} - {{tipo.descripcion}}
+                </option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Clasificación:</label>
+              <select [(ngModel)]="clasificacion" class="form-control" (change)="applyGridFilters()">
+                <option value="">Todas</option>
+                <option *ngFor="let clasificacion of clasificacionesL01" [value]="clasificacion.codigo">
+                  {{clasificacion.codigo}} - {{clasificacion.descripcion | titlecase}}
+                </option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Tipo Emisor:</label>
+              <select [(ngModel)]="tipoEmisor" class="form-control" (change)="applyGridFilters()">
+                <option value="">Todos</option>
+                <option *ngFor="let tipo of tiposEmisorL01" [value]="tipo.codigo">
+                  {{tipo.codigo}} - {{tipo.descripcion | titlecase}}
+                </option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- RESUMEN DE FILTROS APLICADOS -->
+          <div class="filters-summary" *ngIf="tipoIdentificacion || clasificacion || tipoEmisor">
+            <h5>📊 Resumen de Filtros Aplicados:</h5>
+            <div class="summary-items">
+              <span *ngIf="tipoIdentificacion" class="summary-item">
+                Tipo: {{ getTipoIdentificacionDesc(tipoIdentificacion) }}
+              </span>
+              <span *ngIf="clasificacion" class="summary-item">
+                Clasificación: {{ getClasificacionDesc(+clasificacion) }}
+              </span>
+              <span *ngIf="tipoEmisor" class="summary-item">
+                Tipo Emisor: {{ getTipoEmisorDesc(+tipoEmisor) }}
+              </span>
+            </div>
+            <button (click)="clearGridFilters()" class="btn btn-sm btn-outline-secondary">
+              <i class="pi pi-times"></i>
+              Limpiar Filtros
+            </button>
+          </div>
+        </div>
+
         <div class="table-container">
           <table class="data-table">
             <thead>
@@ -285,124 +231,37 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of datosL01; let i = index" class="data-row">
+              <tr *ngFor="let item of filteredDataL01; let i = index" class="data-row">
                 <!-- Tipo Identificación -->
-                <td class="editable-cell" 
-                    [class.edit-mode]="isEditing(i, 'tipoIdentificacion')"
-                    (click)="startEdit(i, 'tipoIdentificacion')">
-                  <div *ngIf="!isEditing(i, 'tipoIdentificacion')" class="cell-content">
-                    <span class="cell-value">{{ item.tipoIdentificacion === 'R' ? 'R - RUC Nacional' : 'X - Código Extranjero' }}</span>
-                    <span class="edit-icon">✏️</span>
-                  </div>
-                  <div *ngIf="isEditing(i, 'tipoIdentificacion')" class="edit-controls">
-                    <select [(ngModel)]="editValue" class="edit-select">
-                      <option value="R">R - RUC Nacional</option>
-                      <option value="X">X - Código Extranjero</option>
-                    </select>
-                    <div class="edit-actions">
-                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
-                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
-                    </div>
-                  </div>
+                <td class="data-cell">
+                  <span class="cell-value">{{ item.tipoIdentificacion === 'R' ? 'R - RUC Nacional' : 'X - Código Extranjero' }}</span>
                 </td>
 
                 <!-- Identificación -->
-                <td class="editable-cell" 
-                    [class.edit-mode]="isEditing(i, 'identificacion')"
-                    (click)="startEdit(i, 'identificacion')">
-                  <div *ngIf="!isEditing(i, 'identificacion')" class="cell-content">
-                    <span class="cell-value">{{ item.identificacion }}</span>
-                    <span class="edit-icon">✏️</span>
-                  </div>
-                  <div *ngIf="isEditing(i, 'identificacion')" class="edit-controls">
-                    <!-- Select para códigos extranjeros, input para RUC -->
-                    <select *ngIf="getTipoIdentificacionActual(i) === 'X'" 
-                            [(ngModel)]="editValue" 
-                            class="edit-select">
-                      <option *ngFor="let codigo of codigosExtranjerosL01" 
-                              [value]="codigo.codigo">
-                        {{ codigo.codigo }} - {{ codigo.descripcion }}
-                      </option>
-                    </select>
-                    <input *ngIf="getTipoIdentificacionActual(i) === 'R'" 
-                           type="text" 
-                           [(ngModel)]="editValue" 
-                           class="edit-input"
-                           maxlength="13"
-                           (input)="onIdentificacionInput($event)"
-                           placeholder="Ingrese RUC">
-                    <div class="edit-actions">
-                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
-                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
-                    </div>
-                  </div>
+                <td class="data-cell">
+                  <span class="cell-value">{{ item.identificacion }}</span>
                 </td>
 
                 <!-- Clasificación -->
-                <td class="editable-cell" 
-                    [class.edit-mode]="isEditing(i, 'clasificacion')"
-                    (click)="startEdit(i, 'clasificacion')">
-                  <div *ngIf="!isEditing(i, 'clasificacion')" class="cell-content">
+                <td class="data-cell">
+                  <div class="cell-content">
                     <span class="cell-value">{{ getClasificacionDesc(item.clasificacion) }}</span>
-                    <span class="edit-icon">✏️</span>
-                  </div>
-                  <div *ngIf="isEditing(i, 'clasificacion')" class="edit-controls">
-                    <select [(ngModel)]="editValue" class="edit-select">
-                      <option value="1">1 - Emisor</option>
-                      <option value="2">2 - Custodio</option>
-                      <option value="3">3 - Depositario</option>
-                      <option value="4">4 - Contraparte</option>
-                    </select>
-                    <div class="edit-actions">
-                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
-                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
-                    </div>
+                    <button class="btn btn-sm btn-outline-primary edit-btn" 
+                            (click)="openEditModal(item)" 
+                            title="Editar registro">
+                      ✏️
+                    </button>
                   </div>
                 </td>
 
                 <!-- Tipo Emisor -->
-                <td class="editable-cell" 
-                    [class.edit-mode]="isEditing(i, 'tipoEmisor')"
-                    (click)="startEdit(i, 'tipoEmisor')">
-                  <div *ngIf="!isEditing(i, 'tipoEmisor')" class="cell-content">
+                <td class="data-cell">
+                  <div class="cell-content">
                     <span class="cell-value">{{ getTipoEmisorDesc(item.tipoEmisor) }}</span>
-                    <span class="edit-icon">✏️</span>
-                  </div>
-                  <div *ngIf="isEditing(i, 'tipoEmisor')" class="edit-controls">
-                    <select [(ngModel)]="editValue" class="edit-select">
-                      <option value="0">0 - Supranacionales</option>
-                      <option value="2">2 - Pública financiera</option>
-                      <option value="3">3 - Privada financiera</option>
-                      <option value="4">4 - Pública no financiera</option>
-                      <option value="5">5 - Privada no financiera</option>
-                      <option value="7">7 - Fondos de inversión</option>
-                      <option value="8">8 - Estados Soberanos</option>
-                      <option value="9">9 - Multilaterales</option>
-                    </select>
-                    <div class="edit-actions">
-                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
-                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
-                    </div>
-                  </div>
-                </td>
-
-                <!-- Acciones -->
-                <td class="action-cell">
-                  <div class="action-buttons">
-                    <button class="btn btn-info btn-sm" 
-                            (click)="verDetalle(item)" 
-                            title="Ver detalle">
-                      👁️
-                    </button>
-                    <button class="btn btn-warning btn-sm" 
-                            (click)="editar(item)" 
-                            title="Editar registro completo">
+                    <button class="btn btn-sm btn-outline-primary edit-btn" 
+                            (click)="openEditModal(item)" 
+                            title="Editar registro">
                       ✏️
-                    </button>
-                    <button class="btn btn-danger btn-sm" 
-                            (click)="confirmDeletion(item)" 
-                            title="Eliminar registro">
-                      🗑️
                     </button>
                   </div>
                 </td>
@@ -503,4 +362,22 @@
       <p>Generando reporte L01...</p>
     </div>
   </div>
+
+  <!-- MODAL DEL FORMULARIO L01 -->
+  <app-l01-modal-form
+    [isVisible]="showModalForm"
+    [editData]="editData"
+    (modalClosed)="onModalClosed()"
+    (dataSaved)="onModalDataSaved($event)">
+  </app-l01-modal-form>
+
+  <!-- MODAL DE RESULTADOS DE VALIDACIÓN L01 -->
+  <app-l01-validation-results
+    [showModal]="showValidationModal"
+    [validationResults]="validationResults"
+    [loading]="loading"
+    (modalClosed)="onValidationModalClosed()"
+    (proceedWithReport)="onValidationProceedWithReport($event)"
+    (fixErrors)="onValidationFixErrors()">
+  </app-l01-validation-results>
 </div>

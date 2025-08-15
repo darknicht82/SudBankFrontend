@@ -135,21 +135,26 @@ export class L01FormComponent implements OnInit {
     const identificacion = this.l01Form.get('identificacion')?.value;
 
     if (tipoIdentificacion && identificacion) {
-      const validations = this.validationService.validateL01Record({
-        tipoIdentificacion,
-        identificacion,
-        clasificacion: 1,
-        tipo: 1,
-        tipoEmisor: 1
-      });
-      
-      const identificacionErrors = validations.filter(v => v.field === 'identificacion');
-      if (identificacionErrors.length > 0) {
+      // Validación básica - el servicio de validación se implementará después
+      const isValid = this.validateBasicIdentificacion(tipoIdentificacion, identificacion);
+      if (!isValid) {
         this.l01Form.get('identificacion')?.setErrors({ invalid: true });
       } else {
         this.l01Form.get('identificacion')?.setErrors(null);
       }
     }
+  }
+
+  // Validación básica de identificación
+  private validateBasicIdentificacion(tipo: string, identificacion: string): boolean {
+    if (tipo === 'R') {
+      // RUC: 13 dígitos numéricos
+      return /^\d{13}$/.test(identificacion);
+    } else if (tipo === 'X') {
+      // Código extranjero: máximo 7 dígitos
+      return /^\d{1,7}$/.test(identificacion);
+    }
+    return false;
   }
 
   // Obtener descripción de catálogo
@@ -206,17 +211,22 @@ export class L01FormComponent implements OnInit {
       this.isSubmitting = true;
       
       const formData: L01RegulatoryData = {
+        id: 0,
         tipoIdentificacion: this.l01Form.value.tipoIdentificacion,
         identificacion: this.l01Form.value.identificacion,
         clasificacion: this.l01Form.value.clasificacion,
         tipo: this.l01Form.value.tipo,
         tipoEmisor: this.l01Form.value.tipo, // Usar el mismo valor que tipo
+        codigoTipoIdentificacion: this.l01Form.value.tipoIdentificacion === 'R' ? 1 : 2,
+        codigoEmisor: 0,
+        codigoClasificacionEmisor: this.l01Form.value.clasificacion,
+        codigoTipoEmisor: this.l01Form.value.tipo,
         usuarioCreacion: 'Christian Aguirre' // Usuario por defecto
       };
 
       // Validar duplicados antes de enviar
-      this.l01Service.listarTodos().subscribe({
-        next: (registrosExistentes) => {
+      this.l01Service.getAllL01Data().subscribe({
+        next: (registrosExistentes: L01RegulatoryData[]) => {
           // Verificar duplicados
           const duplicado = registrosExistentes.find(r => 
             r.tipoIdentificacion === formData.tipoIdentificacion && 
@@ -230,14 +240,14 @@ export class L01FormComponent implements OnInit {
           }
 
           // Enviar al backend
-          this.l01Service.crear(formData).subscribe({
-            next: (response) => {
+          this.l01Service.createL01Data(formData).subscribe({
+            next: (response: L01RegulatoryData) => {
               console.log('Registro L01 creado:', response);
               this.isSubmitting = false;
               alert('✅ Registro L01 creado exitosamente');
               this.onReset();
             },
-            error: (error) => {
+            error: (error: any) => {
               console.error('Error creando registro L01:', error);
               this.isSubmitting = false;
               alert('❌ Error al crear el registro L01');

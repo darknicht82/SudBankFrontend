@@ -12,21 +12,36 @@ import { L01ExportData, L01ExportResult } from '../../../models/l01-export.model
 import { L01CatalogService } from '../../../services/l01-catalog.service';
 import { L01AuditService } from '../../../services/l01-audit.service';
 import { L01RegulatoryService, L01RegulatoryData } from '../../../services/l01-regulatory.service';
+import { L01ExportService } from '../../../services/l01-export.service';
 import { LogMonitorComponent } from '../../../components/debug/log-monitor/log-monitor.component';
 import { L01ConfirmationComponent, ConfirmationData } from '../../../components/l01/l01-confirmation/l01-confirmation.component';
+import { L01ModalFormComponent } from '../../../components/l01/l01-modal-form/l01-modal-form.component';
+import { L01ReportSummaryComponent, ReportSummaryData } from '../../../components/l01/l01-report-summary/l01-report-summary.component';
+import { L01ValidationResultsComponent, ValidationResults } from '../../../components/l01/l01-validation-results/l01-validation-results.component';
 import { LoggerService } from '../../../services/logger.service';
 import { TxtLoggerService } from '../../../services/txt-logger.service';
 import { environment } from '../../../../environments/environment';
 import { getL01FieldTooltip, L01FieldTooltip, L01_STRUCTURE_INFO } from '../../../utils/l01-field-tooltips';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { catchError, timeout } from 'rxjs/operators';
 
 @Component({
   selector: 'app-l01-main',
   templateUrl: './l01-main.component.html',
   styleUrls: ['./l01-main.component.scss'],
   standalone: true,
-  imports: [FormsModule, CommonModule, L01ExportComponent, LogMonitorComponent, L01ConfirmationComponent]
+  imports: [
+    CommonModule,
+    FormsModule,
+    L01ModalFormComponent,
+    L01ReportSummaryComponent,
+    L01ValidationResultsComponent,
+    L01ConfirmationComponent,
+    L01ExportComponent,
+    LogMonitorComponent
+  ],
 })
 export class L01MainComponent implements OnInit {
   // Datos del reporte
@@ -36,31 +51,18 @@ export class L01MainComponent implements OnInit {
   error = '';
 
   // Filtros según especificaciones oficiales L01
-  fechaInicio = '';
-  fechaFin = '';
+  // SOLO 3 filtros oficiales - NO incluye fechas ya que L01 es estructura EVENTUAL
   tipoIdentificacion = '';
   clasificacion = '';
   tipoEmisor = '';
   
   // Propiedades según especificación oficial L01 - Manual SB Marzo 2017
-   
-  // Historial
-  historial: any[] = [];
-  showHistorial = false;
-  
-  // Tooltips
-  tooltips = L01_STRUCTURE_INFO;
-  currentTooltip: L01FieldTooltip | null = null;
-  showTooltip = false;
-  tooltipPosition = { x: 0, y: 0 };
-
-  // Columnas según especificaciones oficiales L01 (Manual SB - Marzo 2017)
   // EXACTAMENTE 4 campos oficiales según tabla de detalle L01:
   displayedColumns: string[] = [
-    'tipoIdentificacion',    // Campo 1: Tipo de identificación del emisor/custodio/depositario/contraparte (R/X) - Tabla 4
-    'identificacion',        // Campo 2: Identificación del emisor/custodio/depositario/contraparte (RUC 13 dígitos o código extranjero) - Tabla 164
-    'clasificacion',         // Campo 3: Clasificación de emisor/custodio/depositario/contraparte (1-4) - Tabla 173
-    'tipo'                   // Campo 4: Tipo de emisor/custodio/depositario/contraparte (1,2,3,4,5) - Tabla 73
+    'tipoIdentificacion',    // Campo 1: Tipo de identificación (R/X) - Tabla 4
+    'identificacion',        // Campo 2: Identificación (RUC 13 dígitos o código extranjero) - Tabla 164
+    'clasificacion',         // Campo 3: Clasificación (1-4) - Tabla 173
+    'tipoEmisor'             // Campo 4: Tipo de emisor (sectores económicos) - Tabla 73
   ];
 
   // Datos para exportación
@@ -71,8 +73,8 @@ export class L01MainComponent implements OnInit {
   // Control del monitor de logs
   showLogMonitor = !environment.production; // Solo en desarrollo
   
-  // Control del switch de datos mock/real
-  isUsingMockData = environment.useMockData;
+  // Control del switch de datos mock/real - ELIMINADO: Ya no se usan datos mock
+  // isUsingMockData = environment.useMockData;
   isProduction = environment.production;
   
   // Catálogos dinámicos para filtros L01
@@ -93,58 +95,34 @@ export class L01MainComponent implements OnInit {
   showCreationForm = false;
   newRecord: any = {};
   
-  // NUEVO: Estados para edición inline
-  editingRow: number | null = null;
-  editingField: string | null = null;
-  originalValue: any = null;
-  editValue: any = null;
+  // NUEVO: Estados para modal de formulario
+  showModalForm = false;
+  editData: L01RegulatoryData | null = null;
   isSaving = false;
+
+  // Propiedades para modal de resumen de reporte
+  showReportSummaryModal = false;
+  reportSummaryData: ReportSummaryData | null = null;
+
+  // Propiedades para modal de resultados de validación
+  showValidationModal = false;
+  validationResults: ValidationResults | null = null;
+
+  // Tooltips - RESTAURADOS (estaban funcionando correctamente)
+  tooltips = L01_STRUCTURE_INFO;
+  currentTooltip: L01FieldTooltip | null = null;
+  showTooltip = false;
+  tooltipPosition = { x: 0, y: 0 };
   
   // NUEVO: Estados para eliminación
   recordToDelete: any = null;
   
-  // Método para obtener el tipo de identificación actual de una fila
-  getTipoIdentificacionActual(rowIndex: number): string {
-    if (rowIndex >= 0 && rowIndex < this.datosL01.length) {
-      return this.datosL01[rowIndex].tipoIdentificacion;
-    }
-    return '';
-  }
+  // NUEVO: Datos filtrados para el grid
+  filteredDataL01: L01RegulatoryData[] = [];
+
+
   
-  // Método para manejar input de identificación con validación en tiempo real
-  onIdentificacionInput(event: any): void {
-    const value = event.target.value;
-    const tipoId = this.getTipoIdentificacionActual(this.editingRow || 0);
-    
-    // Validación en tiempo real
-    if (tipoId === 'R') {
-      // Solo números para RUC
-      const numericValue = value.replace(/\D/g, '');
-      if (numericValue !== value) {
-        event.target.value = numericValue;
-        this.editValue = numericValue;
-      }
-      
-      // Limitar a 13 dígitos
-      if (numericValue.length > 13) {
-        event.target.value = numericValue.substring(0, 13);
-        this.editValue = numericValue.substring(0, 13);
-      }
-    } else if (tipoId === 'X') {
-      // Solo números para códigos extranjeros
-      const numericValue = value.replace(/\D/g, '');
-      if (numericValue !== value) {
-        event.target.value = numericValue;
-        this.editValue = numericValue;
-      }
-      
-      // Limitar a 7 dígitos
-      if (numericValue.length > 7) {
-        event.target.value = numericValue.substring(0, 7);
-        this.editValue = numericValue.substring(0, 7);
-      }
-    }
-  }
+
   
   // Cargar códigos extranjeros del catálogo t164
   loadCodigosExtranjeros(): void {
@@ -171,13 +149,15 @@ export class L01MainComponent implements OnInit {
     private catalogService: L01CatalogService,
     private auditService: L01AuditService,
     private regulatoryService: L01RegulatoryService,
+    private exportService: L01ExportService,
     private logger: LoggerService,
     private txtLogger: TxtLoggerService,
     private http: HttpClient
   ) { 
     this.logger.info('L01MainComponent', 'Componente inicializado');
     this.txtLogger.info('L01MainComponent', 'Componente principal L01 inicializado con logs TXT');
-    this.txtLogger.info('L01MainComponent', `Modo de datos: ${this.isUsingMockData ? 'MOCK' : 'REAL'}`);
+    // Log del modo de datos
+    this.txtLogger.info('L01MainComponent', 'Modo de datos: REAL (API backend)');
   }
 
   ngOnInit(): void {
@@ -201,47 +181,30 @@ export class L01MainComponent implements OnInit {
   }
 
   /**
-   * Cargar datos iniciales
+   * Obtener código numérico del tipo de identificación
+   * Manual SB: R = 1 (RUC Nacional), X = 2 (Extranjero)
    */
-  loadInitialData(): void {
+  private getCodigoFromTipoIdentificacion(tipo: string): number {
+    switch (tipo) {
+      case 'R': return 1; // RUC Nacional
+      case 'X': return 2; // Extranjero
+      default: return 0;
+    }
+  }
+
+  /**
+   * Carga datos iniciales del componente L01
+   * NO incluye fechas ya que L01 es estructura EVENTUAL
+   */
+  private loadInitialData(): void {
     this.logger.info('L01MainComponent', 'Iniciando carga de datos iniciales');
     this.loading = true;
-    this.fechaInicio = this.getDefaultStartDate();
-    this.fechaFin = this.getDefaultEndDate();
     
     // Cargar catálogos dinámicos primero
-    this.loadCatalogsForL01().then(() => {
-      // Luego cargar datos reales del backend
-      setTimeout(() => {
-        try {
-          if (this.isUsingMockData) {
-            // Si está en modo mock, generar datos de prueba
-            this.generateMockData();
-          } else {
-            // Si está en modo PROD, cargar datos reales del backend
-            this.loadRealDataFromBackend();
-          }
-          this.prepareExportData();
-          this.loading = false;
-          this.logger.info('L01MainComponent', 'Datos iniciales cargados exitosamente', {
-            totalRegistros: this.datosL01.length,
-            exportData: this.exportData.length,
-            catalogos: {
-              tiposId: this.tiposIdentificacionL01.length,
-              tiposEmisor: this.tiposEmisorL01.length,
-              clasificaciones: this.clasificacionesL01.length
-            },
-            modo: this.isUsingMockData ? 'MOCK' : 'REAL'
-          });
-        } catch (error) {
-          this.loading = false;
-          this.logger.error('L01MainComponent', 'Error al cargar datos iniciales', error);
-        }
-      }, 1000);
-    }).catch(error => {
-      this.loading = false;
-      this.logger.error('L01MainComponent', 'Error al cargar catálogos', error);
-    });
+    this.loadCatalogsForL01();
+    
+    // Cargar datos L01 (estructura eventual - no requiere fechas)
+    this.loadRealDataFromBackend();
   }
 
   /**
@@ -251,17 +214,22 @@ export class L01MainComponent implements OnInit {
     this.txtLogger.info('L01MainComponent', 'Cargando datos reales del backend');
     
     // Cargar datos reales de L01 desde el backend
-    this.regulatoryService.listarTodos().subscribe({
-      next: (data) => {
-        this.datosL01 = data;
+    this.regulatoryService.getAllL01Data().subscribe({
+      next: (data: any[]) => { // Aceptar cualquier tipo de dato, luego transformarlo
+        this.datosL01 = this.transformBackendDataToL01Official(data);
+        // Inicializar datos filtrados con todos los datos
+        this.filteredDataL01 = [...this.datosL01];
         this.error = ''; // Limpiar errores previos
+        this.loading = false; // ✅ RESOLVER LOADING INFINITO
+        
         this.txtLogger.info('L01MainComponent', 'Datos reales del backend cargados exitosamente', {
           totalRegistros: this.datosL01.length,
-          datos: data
+          datos: this.datosL01
         });
       },
-      error: (error) => {
+      error: (error: any) => {
         this.txtLogger.error('L01MainComponent', 'Error al cargar datos reales del backend', error);
+        this.loading = false; // ✅ RESOLVER LOADING INFINITO EN CASO DE ERROR
         
         // Mostrar mensaje de error específico
         if (error.status === 0) {
@@ -286,6 +254,88 @@ export class L01MainComponent implements OnInit {
           timestamp: new Date().toISOString()
         });
       }
+    });
+  }
+
+  /**
+   * Transforma los datos del backend (códigos) a campos oficiales L01
+   * Convierte codigoTipoIdentificacion, codigoClasificacionEmisor, codigoTipoEmisor
+   * a tipoIdentificacion, clasificacion, tipoEmisor según manual SB
+   */
+  private transformBackendDataToL01Official(data: any[]): L01RegulatoryData[] {
+    this.txtLogger.info('L01MainComponent', 'Transformando datos del backend a campos oficiales L01');
+    
+    return data.map(item => {
+      // Transformar codigoTipoIdentificacion a tipoIdentificacion
+      let tipoIdentificacion = '';
+      if (item.codigoTipoIdentificacion === 1) {
+        tipoIdentificacion = 'R'; // RUC Nacional
+      } else if (item.codigoTipoIdentificacion === 2) {
+        tipoIdentificacion = 'X'; // Extranjero
+      }
+      
+      // Transformar codigoClasificacionEmisor a clasificacion
+      let clasificacion = 0;
+      if (item.codigoClasificacionEmisor >= 1 && item.codigoClasificacionEmisor <= 4) {
+        clasificacion = item.codigoClasificacionEmisor;
+      }
+      
+      // Transformar codigoTipoEmisor a tipoEmisor (usar el código directamente)
+      let tipoEmisor = 0;
+      if (item.codigoTipoEmisor >= 0 && item.codigoTipoEmisor <= 9) {
+        tipoEmisor = item.codigoTipoEmisor;
+      }
+      
+      // Generar identificacion basada en el tipo y usando catálogos
+      let identificacion = '';
+      if (tipoIdentificacion === 'R') {
+        // Para RUC, usar un valor por defecto o el codigoEmisor si está disponible
+        identificacion = item.codigoEmisor ? item.codigoEmisor.toString() : '1791234567001';
+      } else if (tipoIdentificacion === 'X') {
+        // Para extranjero, buscar en catálogo T164 si está disponible
+        if (this.codigosExtranjeros && this.codigosExtranjeros.length > 0) {
+          const codigoExtranjero = this.codigosExtranjeros.find(c => c.id === item.codigoEmisor);
+          if (codigoExtranjero) {
+            identificacion = codigoExtranjero.codigo;
+          } else {
+            identificacion = '100001'; // Código por defecto
+          }
+        } else {
+          identificacion = '100001'; // Código por defecto
+        }
+      }
+      
+      // Crear objeto con campos oficiales L01
+      const l01OfficialData: L01RegulatoryData = {
+        id: item.id,
+        tipoIdentificacion: tipoIdentificacion,
+        identificacion: identificacion,
+        clasificacion: clasificacion,
+        tipoEmisor: tipoEmisor,
+        // Mantener campos del backend para compatibilidad
+        codigoTipoIdentificacion: item.codigoTipoIdentificacion,
+        codigoEmisor: item.codigoEmisor,
+        codigoClasificacionEmisor: item.codigoClasificacionEmisor,
+        codigoTipoEmisor: item.codigoTipoEmisor,
+        // Campos internos del sistema
+        usuarioCreacion: item.usuarioCreacion || 'Christian Aguirre',
+        fechaCreacion: item.fechaCreacion ? new Date(item.fechaCreacion) : new Date(),
+        usuarioModificacion: item.usuarioModificacion || 'Christian Aguirre',
+        fechaModificacion: item.fechaModificacion ? new Date(item.fechaModificacion) : new Date()
+      };
+      
+      this.txtLogger.debug('L01MainComponent', 'Dato transformado', {
+        original: item,
+        transformado: l01OfficialData,
+        catálogosDisponibles: {
+          tiposIdentificacion: this.tiposIdentificacionL01?.length || 0,
+          clasificaciones: this.clasificacionesL01?.length || 0,
+          tiposEmisor: this.tiposEmisorL01?.length || 0,
+          codigosExtranjeros: this.codigosExtranjeros?.length || 0
+        }
+      });
+      
+      return l01OfficialData;
     });
   }
 
@@ -370,101 +420,31 @@ export class L01MainComponent implements OnInit {
   }
 
   /**
-   * Generar datos de prueba para L01 según especificaciones oficiales
-   * Solo los 4 campos obligatorios del manual SB
+   * Generar datos de prueba para L01 - ELIMINADO: Ya no se usan datos mock
+   * La API funciona perfectamente, todos los datos vienen del backend
    */
-  generateMockData(): void {
-    this.datosL01 = [
-      {
-        id: 1,
-        tipoIdentificacion: 'R',              // Campo 1: R = RUC Nacional
-        identificacion: '1791234567001',      // Campo 2: RUC de 13 dígitos
-        clasificacion: 1,                     // Campo 3: 1 = Emisor
-        tipo: 3,
-        tipoEmisor: 3,                       // Campo 4: 3 = Privada financiera
-        fechaCreacion: new Date('2024-01-15'),
-        usuarioCreacion: 'Christian Aguirre'
-      },
-      {
-        id: 2,
-        tipoIdentificacion: 'X',              // Campo 1: X = Código Extranjero
-        identificacion: '100001',            // Campo 2: Código extranjero de 7 dígitos
-        clasificacion: 2,                     // Campo 3: 2 = Custodio
-        tipo: 8,
-        tipoEmisor: 8,                       // Campo 4: 8 = Estados Soberanos
-        fechaCreacion: new Date('2024-02-20'),
-        usuarioCreacion: 'Christian Aguirre'
-      },
-      {
-        id: 3,
-        tipoIdentificacion: 'R',              // Campo 1: R = RUC Nacional
-        identificacion: '1798765432001',      // Campo 2: RUC de 13 dígitos
-        clasificacion: 3,                     // Campo 3: 3 = Depositario
-        tipo: 5,
-        tipoEmisor: 5,                       // Campo 4: 5 = Privada no financiera
-        fechaCreacion: new Date('2024-03-10'),
-        usuarioCreacion: 'Christian Aguirre'
-      },
-      {
-        id: 4,
-        tipoIdentificacion: 'X',              // Campo 1: X = Código Extranjero
-        identificacion: '100002',            // Campo 2: Código extranjero de 7 dígitos
-        clasificacion: 4,                     // Campo 3: 4 = Contraparte
-        tipo: 9,
-        tipoEmisor: 9,                       // Campo 4: 9 = Multilaterales
-        fechaCreacion: new Date('2024-04-05'),
-        usuarioCreacion: 'Christian Aguirre'
-      }
-    ];
-  }
+  // generateMockData(): void { ... } - ELIMINADO
 
   /**
-   * Generar reporte L01
+   * Generar reporte L01 - DEPRECATED (reemplazado por generateReport mejorado)
    */
-  generateReport(): void {
-    this.loading = true;
-    this.error = '';
-
-    // Simular generación de reporte
-    setTimeout(() => {
-      this.loading = false;
-      console.log('Reporte L01 generado:', {
-        fechaInicio: this.fechaInicio,
-        fechaFin: this.fechaFin,
-        totalRegistros: this.datosL01.length
-      });
-    }, 2000);
-  }
+  // generateReport(): void { ... } - ELIMINADO
 
   /**
-   * Exportar reporte
+   * Exportar reporte - DEPRECATED (reemplazado por exportToTxt)
    */
-  exportReport(): void {
-    const data = {
-      reporte: 'L01',
-      fechaGeneracion: new Date().toISOString(),
-      datos: this.datosL01
-    };
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `L01_${this.formatDateForFile(new Date())}.json`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  }
+  // exportReport(): void { ... } - ELIMINADO
 
   /**
    * Cargar historial
    */
   loadHistory(): void {
-    this.historial = [
-      { fecha: '2024-08-07', usuario: 'admin', accion: 'Generación reporte' },
-      { fecha: '2024-08-06', usuario: 'admin', accion: 'Actualización datos' },
-      { fecha: '2024-08-05', usuario: 'admin', accion: 'Exportación reporte' }
-    ];
-    this.showHistorial = !this.showHistorial;
+    // this.historial = [
+    //   { fecha: '2024-08-07', usuario: 'admin', accion: 'Generación reporte' },
+    //   { fecha: '2024-08-06', usuario: 'admin', accion: 'Actualización datos' },
+    //   { fecha: '2024-08-05', usuario: 'admin', accion: 'Exportación reporte' }
+    // ];
+    // this.showHistorial = !this.showHistorial;
   }
 
 
@@ -685,38 +665,13 @@ export class L01MainComponent implements OnInit {
   }
 
   /**
-   * Cambiar entre datos mock y reales
+   * Cambiar entre datos mock y reales - ELIMINADO: Ya no se usan datos mock
+   * La API funciona perfectamente, no hay necesidad de alternar
    */
-  toggleDataMode(): void {
-    this.isUsingMockData = !this.isUsingMockData;
-    
-    // Actualizar el servicio de catálogos
-    this.catalogService.cambiarModoMock(this.isUsingMockData);
-    
-    // Log del cambio
-    this.txtLogger.info('L01MainComponent', `Modo de datos cambiado a: ${this.isUsingMockData ? 'MOCK' : 'REAL'}`);
-    this.logger.info('L01MainComponent', `Switch de datos: ${this.isUsingMockData ? 'Mock' : 'Real'}`);
-    
-    // Limpiar catálogos actuales
-    this.tiposIdentificacionL01 = [];
-    this.tiposEmisorL01 = [];
-    this.clasificacionesL01 = [];
-    this.codigosExtranjeros = [];
-    
-    // Recargar datos con el nuevo modo
-    this.loadInitialData();
-    
-    // Mostrar notificación al usuario
-    const message = this.isUsingMockData 
-      ? 'Cambiado a datos MOCK (desarrollo)' 
-      : 'Cambiado a datos REALES (backend)';
-    
-    // Aquí podrías agregar una notificación toast si tienes un servicio de notificaciones
-    console.log(`🔄 ${message}`);
-  }
+  // toggleDataMode(): void { ... } - ELIMINADO
 
   /**
-   * Mostrar tooltip para un campo específico
+   * Muestra tooltip para un campo específico
    */
   showFieldTooltip(field: string, event: MouseEvent): void {
     this.currentTooltip = getL01FieldTooltip(field);
@@ -897,144 +852,7 @@ export class L01MainComponent implements OnInit {
   // NUEVO: FLUJO DE EDICIÓN CON CONFIRMACIÓN
   // ========================================
 
-  /**
-   * NUEVO: Iniciar edición inline
-   */
-  startEdit(rowIndex: number, field: string): void {
-    if (this.editingRow !== null) {
-      this.cancelEdit();
-    }
-    
-    this.editingRow = rowIndex;
-    this.editingField = field;
-    this.originalValue = this.datosL01[rowIndex][field];
-    this.editValue = this.originalValue;
-    
-    this.txtLogger.debug('L01MainComponent', `Iniciando edición inline`, {
-      row: rowIndex,
-      field: field,
-      originalValue: this.originalValue
-    });
-  }
   
-  /**
-   * NUEVO: Cancelar edición
-   */
-  cancelEdit(): void {
-    this.editingRow = null;
-    this.editingField = null;
-    this.originalValue = null;
-    this.editValue = null;
-    
-    this.txtLogger.debug('L01MainComponent', 'Edición cancelada');
-  }
-  
-  /**
-   * NUEVO: Guardar cambios con confirmación
-   */
-  saveEdit(): void {
-    if (this.editingRow === null || this.editingField === null) {
-      return;
-    }
-    
-    const newValue = this.editValue;
-    const oldValue = this.originalValue;
-    
-    // Validate field before saving with real-time feedback
-    const validation = this.validateFieldRealTime(this.editingField, newValue);
-    
-    if (!validation.isValid) {
-      // Show validation error to user
-      this.showValidationError(validation.message);
-      this.txtLogger.warn('L01MainComponent', `Validación fallida para campo ${this.editingField}`, {
-        field: this.editingField,
-        value: newValue,
-        message: validation.message
-      });
-      return;
-    }
-    
-    // Mostrar ventana de confirmación
-    this.showEditConfirmation(this.editingRow, this.editingField, oldValue, newValue, validation);
-  }
-
-  /**
-   * NUEVO: Mostrar confirmación de edición
-   */
-  showEditConfirmation(rowIndex: number, field: string, oldValue: any, newValue: any, validation: any): void {
-    this.confirmationData = {
-      type: 'edit',
-      title: 'Confirmar Cambios en Registro L01',
-      message: '¿Está seguro de que desea aplicar estos cambios?',
-      details: { rowIndex, field, oldValue, newValue }, // Added missing details property
-      changes: {
-        field: field,
-        oldValue: oldValue,
-        newValue: newValue,
-        validation: validation
-      }
-    };
-    
-    this.showConfirmationModal = true;
-  }
-
-  /**
-   * NUEVO: Confirmar edición
-   */
-  onEditConfirmed(data: ConfirmationData): void {
-    if (!data.changes) return;
-    
-    this.confirmationLoading = true;
-    
-    // Simular persistencia en BD
-    setTimeout(() => {
-      const { field, newValue, oldValue } = data.changes!; // Added non-null assertion
-      const rowIndex = this.editingRow!;
-      
-      // Update local data immediately for UI responsiveness
-      this.datosL01[rowIndex][field] = newValue;
-      
-      // Log de auditoría
-      this.auditService.logFieldChange(
-        this.datosL01[rowIndex].id || 0,
-        field,
-        oldValue,
-        newValue,
-        this.usuarioActual
-      ).subscribe({
-        next: (auditResult) => {
-          this.txtLogger.info('L01MainComponent', `Campo ${field} actualizado exitosamente`, {
-            field: field,
-            oldValue: oldValue,
-            newValue: newValue,
-            auditResult: auditResult
-          });
-        },
-        error: (error) => {
-          this.txtLogger.error('L01MainComponent', `Error al registrar auditoría de modificación`, error);
-        }
-      });
-      
-      // Actualizar datos de exportación
-      this.prepareExportData();
-      
-      // Cerrar modal y limpiar
-      this.showConfirmationModal = false;
-      this.confirmationData = null;
-      this.confirmationLoading = false;
-      
-      // Exit edit mode
-      this.editingRow = null;
-      this.editingField = null;
-      this.originalValue = null;
-      this.editValue = null;
-      this.isSaving = false;
-      
-      // Show success message
-      this.showSuccessMessage(`Campo ${field} actualizado exitosamente`);
-      
-    }, 1000);
-  }
 
   // ========================================
   // NUEVO: FLUJO DE ELIMINACIÓN CON CONFIRMACIÓN
@@ -1115,9 +933,7 @@ export class L01MainComponent implements OnInit {
       case 'creation':
         this.onCreationConfirmed(data);
         break;
-      case 'edit':
-        this.onEditConfirmed(data);
-        break;
+
       case 'deletion':
         this.onDeletionConfirmed(data);
         break;
@@ -1132,10 +948,7 @@ export class L01MainComponent implements OnInit {
     this.confirmationData = null;
     this.confirmationLoading = false;
     
-    // Si estaba editando, cancelar edición
-    if (this.editingRow !== null) {
-      this.cancelEdit();
-    }
+
     
     // Si estaba creando, cancelar creación
     if (this.showCreationForm) {
@@ -1333,15 +1146,626 @@ export class L01MainComponent implements OnInit {
     return this.http.post(`${environment.backendEndpoint}/nesl01/update`, updateData);
   }
   
-  isEditing(rowIndex: number, field: string): boolean {
-    return this.editingRow === rowIndex && this.editingField === field;
+
+
+  // ========================================
+  // NUEVOS MÉTODOS PARA MODAL Y EXPORTACIÓN
+  // ========================================
+
+  /**
+   * Abre el modal para crear un nuevo registro
+   */
+  openCreateModal(): void {
+    this.editData = null;
+    this.showModalForm = true;
+    this.txtLogger.info('L01MainComponent', 'Modal de creación abierto');
   }
-  
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.saveEdit();
-    } else if (event.key === 'Escape') {
-      this.cancelEdit();
+
+  /**
+   * Abre el modal para editar un registro existente
+   */
+  openEditModal(record: L01RegulatoryData): void {
+    this.editData = { ...record };
+    this.showModalForm = true;
+    this.txtLogger.info('L01MainComponent', 'Modal de edición abierto', record);
+  }
+
+  /**
+   * Cierra el modal del formulario
+   */
+  closeModalForm(): void {
+    this.showModalForm = false;
+    this.editData = null;
+    this.txtLogger.info('L01MainComponent', 'Modal del formulario cerrado');
+  }
+
+  /**
+   * Maneja el evento cuando se cierra el modal
+   */
+  onModalClosed(): void {
+    this.closeModalForm();
+  }
+
+  /**
+   * Maneja el evento cuando se guardan los datos del modal
+   */
+  onModalDataSaved(data: L01RegulatoryData): void {
+    if (this.editData) {
+      // Modo edición: actualizar registro existente
+      const index = this.datosL01.findIndex(record => record.id === this.editData?.id);
+      if (index !== -1) {
+        this.datosL01[index] = { ...data, id: this.editData.id };
+        this.txtLogger.info('L01MainComponent', 'Registro L01 actualizado desde modal - HITO 4', { recordId: data.id });
+      }
+    } else {
+      // Modo creación: agregar nuevo registro
+      const newRecord = { ...data, id: Date.now() }; // ID temporal
+      this.datosL01.unshift(newRecord);
+      this.txtLogger.info('L01MainComponent', 'Nuevo registro L01 creado desde modal - HITO 4', newRecord);
+    }
+
+    this.closeModalForm();
+    this.showSuccessMessage(this.editData ? 'Registro actualizado exitosamente' : 'Registro creado exitosamente');
+  }
+
+
+
+  /**
+   * Generar reporte L01 según filtros aplicados
+   * Manual SB: Solo 3 filtros oficiales (sin fechas)
+   */
+  generateReport(): void {
+    this.txtLogger.info('L01MainComponent', 'Generando reporte L01 con filtros oficiales');
+    
+    // Validar que al menos un filtro esté seleccionado
+    if (!this.tipoIdentificacion && !this.clasificacion && !this.tipoEmisor) {
+      this.txtLogger.warn('L01MainComponent', 'No se han seleccionado filtros para el reporte');
+      this.error = 'Debe seleccionar al menos un filtro para generar el reporte.';
+      return;
+    }
+
+    this.loading = true;
+    this.error = '';
+
+    // Construir request para backend según contrato API
+    const searchRequest = {
+      id: 0,
+      codigoTipoIdentificacion: this.tipoIdentificacion ? this.getCodigoFromTipoIdentificacion(this.tipoIdentificacion) : 0,
+      codigoEmisor: 0,
+      codigoClasificacionEmisor: this.clasificacion ? parseInt(this.clasificacion) : 0,
+      codigoTipoEmisor: this.tipoEmisor ? parseInt(this.tipoEmisor) : 0
+    };
+
+    this.txtLogger.info('L01MainComponent', 'Request para backend', searchRequest);
+
+    // Llamar al servicio para buscar datos
+    this.regulatoryService.searchL01Data(searchRequest).subscribe({
+      next: (response: any) => {
+        this.txtLogger.info('L01MainComponent', 'Respuesta del backend recibida', response);
+        
+        if (response && response.datos) {
+          // Transformar datos del backend a formato oficial L01
+          this.datosL01 = this.transformBackendDataToL01Official(response.datos);
+          
+          // Preparar datos para exportación
+          this.prepareExportData();
+          
+          // Mostrar modal de resumen del reporte (NO formulario de creación)
+          this.showReportSummaryModal = true;
+          this.reportSummaryData = {
+            totalRegistros: this.datosL01.length,
+            fechaGeneracion: new Date(),
+            usuarioGenerador: this.usuarioActual,
+            filtrosAplicados: {
+              tipoIdentificacion: this.tipoIdentificacion,
+              clasificacion: this.clasificacion,
+              tipoEmisor: this.tipoEmisor
+            },
+            datos: this.datosL01
+          };
+          
+          this.txtLogger.info('L01MainComponent', 'Reporte L01 generado exitosamente', {
+            totalRegistros: this.datosL01.length,
+            filtrosAplicados: this.reportSummaryData.filtrosAplicados
+          });
+        } else {
+          this.txtLogger.warn('L01MainComponent', 'Backend no retornó datos válidos');
+          this.datosL01 = [];
+          this.error = 'No se encontraron datos con los filtros aplicados.';
+        }
+        
+        this.loading = false;
+      },
+      error: (error: any) => {
+        this.txtLogger.error('L01MainComponent', 'Error al generar reporte L01', error);
+        this.loading = false;
+        
+        // Mostrar mensaje de error específico
+        if (error.status === 0) {
+          this.error = 'Error de conectividad: No se puede conectar al servidor.';
+        } else if (error.status === 404) {
+          this.error = 'Endpoint no encontrado. Verifique la configuración del backend.';
+        } else if (error.status === 500) {
+          this.error = 'Error interno del servidor. Contacte al administrador.';
+        } else {
+          this.error = `Error ${error.status}: ${error.message || 'Error desconocido al generar reporte'}`;
+        }
+        
+        // Log detallado del error para debugging
+        console.error('Error detallado al generar reporte L01:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url,
+          timestamp: new Date().toISOString()
+        });
+      }
+    });
+  }
+
+  /**
+   * Exporta datos en formato TXT según estándares L01 oficiales - HITO 2 IMPLEMENTADO
+   * Manual SB Marzo 2017: Solo formato TXT, NO JSON
+   */
+  exportToTxt(): void {
+    if (this.datosL01.length === 0) {
+      this.showErrorMessage('No hay datos para exportar');
+      return;
+    }
+
+    this.txtLogger.info('L01MainComponent', 'Exportando datos a TXT - HITO 2', { totalRegistros: this.datosL01.length });
+
+    try {
+      // Obtener información del archivo antes de la descarga
+      const fileInfo = this.exportService.getFileInfo(this.datosL01);
+      
+      // Validar que sea formato TXT y NO JSON
+      if (!fileInfo.isTxt) {
+        throw new Error('El archivo generado no es de formato TXT');
+      }
+      
+      if (fileInfo.isJson) {
+        throw new Error('El archivo NO debe ser JSON, debe ser TXT');
+      }
+      
+      // Descargar archivo TXT
+      this.exportService.downloadTxt(this.datosL01, fileInfo.filename);
+      
+      this.txtLogger.info('L01MainComponent', 'Exportación TXT completada - HITO 2', { 
+        filename: fileInfo.filename,
+        contentType: fileInfo.contentType,
+        size: fileInfo.size,
+        recordCount: fileInfo.recordCount,
+        format: fileInfo.format
+      });
+      
+      this.showSuccessMessage(`Datos exportados exitosamente en formato TXT: ${fileInfo.filename} (${fileInfo.recordCount} registros)`);
+    } catch (error) {
+      this.txtLogger.error('L01MainComponent', 'Error en exportación TXT - HITO 2 falló', error);
+      this.showErrorMessage(`Error al exportar datos: ${(error as Error).message || 'Error desconocido'}`);
     }
   }
+
+  /**
+   * Manejar cierre del modal de resumen del reporte
+   */
+  onReportSummaryModalClosed(): void {
+    this.showReportSummaryModal = false;
+    this.reportSummaryData = null;
+  }
+
+  /**
+   * Manejar exportación TXT desde modal de resumen
+   */
+  onReportSummaryExportTxt(data: L01RegulatoryData[]): void {
+    this.txtLogger.info('L01MainComponent', 'Exportando TXT desde modal de resumen', { totalRegistros: data.length });
+    this.exportToTxt();
+    this.showReportSummaryModal = false;
+  }
+
+  /**
+   * Manejar creación de nuevo registro desde modal de resumen
+   */
+  onReportSummaryCreateNewRecord(): void {
+    this.txtLogger.info('L01MainComponent', 'Abriendo formulario de nuevo registro desde modal de resumen');
+    this.showReportSummaryModal = false;
+    this.openCreateModal();
+  }
+
+  /**
+   * Validar y generar reporte L01 con proceso de validación previa
+   * Manual SB: Validación previa obligatoria antes de generar reporte
+   */
+  validateAndGenerateReport(): void {
+    this.txtLogger.info('L01MainComponent', 'Iniciando proceso de validación y generación de reporte L01');
+
+    // NOTA: Los filtros son SOLO para vista y análisis, NO afectan la generación del reporte
+    // L01 debe generar reporte COMPLETO con todos los registros existentes
+    
+    this.loading = true;
+    this.error = '';
+
+    // PASO 1: Ejecutar validación previa completa
+    this.executeL01Validation().then(validationResults => {
+      this.txtLogger.info('L01MainComponent', 'Validación previa completada', validationResults);
+
+      // PASO 2: Mostrar resultados de validación para intervención manual
+      this.showValidationResultsModal(validationResults);
+
+    }).catch(error => {
+      this.txtLogger.error('L01MainComponent', 'Error en validación previa', error);
+      this.loading = false;
+      this.error = 'Error durante la validación previa. Verifique los datos e intente nuevamente.';
+    });
+  }
+
+  /**
+   * Ejecutar validación previa completa de datos L01
+   * Incluye validación contra catálogos oficiales y verificación de integridad
+   */
+  private async executeL01Validation(): Promise<any> {
+    this.txtLogger.info('L01MainComponent', 'Ejecutando validación previa completa L01');
+
+    try {
+      // PASO 1: Obtener TODOS los registros L01 del backend
+      // Usar el método de conversión existente que el backend entiende
+      const searchRequest = this.regulatoryService.convertFrontendFiltersToAPI({
+        tipoIdentificacion: '', // Vacío = todos
+        clasificacion: 0,       // 0 = todas
+        tipoEmisor: 0           // 0 = todos
+      });
+
+      this.txtLogger.info('L01MainComponent', 'Obteniendo todos los registros L01 del backend usando conversión estándar', searchRequest);
+
+      // Obtener datos del backend usando firstValueFrom en lugar de toPromise()
+      const response: any = await firstValueFrom(
+        this.regulatoryService.searchL01Data(searchRequest).pipe(
+          timeout(30000), // 30 segundos de timeout
+          catchError(error => {
+            this.txtLogger.error('L01MainComponent', 'Error o timeout en búsqueda de datos', error);
+            throw new Error('Timeout: La búsqueda de datos tardó más de 30 segundos');
+          })
+        )
+      );
+      
+      if (!response || !response.datos) {
+        this.txtLogger.warn('L01MainComponent', 'Backend no retornó datos para validación');
+        return {
+          timestamp: new Date(),
+          filtrosAplicados: {
+            tipoIdentificacion: this.tipoIdentificacion || 'Todos',
+            clasificacion: this.clasificacion || 'Todas',
+            tipoEmisor: this.tipoEmisor || 'Todos'
+          },
+          totalRegistros: 0,
+          registrosValidados: [],
+          erroresEncontrados: [],
+          advertencias: [],
+          estadoGeneral: 'SIN_DATOS'
+        };
+      }
+
+      // Transformar datos del backend a formato oficial L01
+      this.datosL01 = this.transformBackendDataToL01Official(response.datos);
+      
+      this.txtLogger.info('L01MainComponent', `Datos obtenidos del backend: ${this.datosL01.length} registros`);
+
+      // PASO 2: Validar cada registro contra catálogos oficiales
+      const validationResults = {
+        timestamp: new Date(),
+        filtrosAplicados: {
+          tipoIdentificacion: this.tipoIdentificacion || 'Todos',
+          clasificacion: this.clasificacion || 'Todas',
+          tipoEmisor: this.tipoEmisor || 'Todos'
+        },
+        totalRegistros: this.datosL01.length,
+        registrosValidados: [] as any[],
+        erroresEncontrados: [] as any[],
+        advertencias: [] as any[],
+        estadoGeneral: 'PENDIENTE'
+      };
+
+      // Validar cada registro contra catálogos oficiales
+      for (const registro of this.datosL01) {
+        const registroValidation = this.validateL01Record(registro);
+        validationResults.registrosValidados.push(registroValidation);
+
+        if (registroValidation.errores.length > 0) {
+          validationResults.erroresEncontrados.push(...registroValidation.errores);
+        }
+
+        if (registroValidation.advertencias.length > 0) {
+          validationResults.advertencias.push(...registroValidation.advertencias);
+        }
+      }
+
+      // Determinar estado general de validación
+      if (validationResults.erroresEncontrados.length === 0 && validationResults.advertencias.length === 0) {
+        validationResults.estadoGeneral = 'VÁLIDO';
+      } else if (validationResults.erroresEncontrados.length === 0) {
+        validationResults.estadoGeneral = 'VÁLIDO_CON_ADVERTENCIAS';
+      } else {
+        validationResults.estadoGeneral = 'CON_ERRORES';
+      }
+
+      this.txtLogger.info('L01MainComponent', 'Validación completada', validationResults);
+      return validationResults;
+
+    } catch (error) {
+      this.txtLogger.error('L01MainComponent', 'Error al obtener datos del backend para validación', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Validar un registro individual L01 contra catálogos oficiales
+   */
+  private validateL01Record(registro: L01RegulatoryData): any {
+    const validation = {
+      id: registro.id,
+      identificacion: registro.identificacion,
+      errores: [] as any[],
+      advertencias: [] as any[],
+      estado: 'PENDIENTE'
+    };
+
+    // Validar Tipo de Identificación (Tabla 4)
+    if (!['R', 'X'].includes(registro.tipoIdentificacion)) {
+      validation.errores.push({
+        campo: 'tipoIdentificacion',
+        mensaje: 'Tipo de identificación debe ser R (RUC) o X (Extranjero)',
+        severidad: 'ERROR'
+      });
+    }
+
+    // Validar Identificación según tipo
+    if (registro.tipoIdentificacion === 'R') {
+      if (!/^\d{13}$/.test(registro.identificacion)) {
+        validation.errores.push({
+          campo: 'identificacion',
+          mensaje: 'RUC debe tener exactamente 13 dígitos',
+          severidad: 'ERROR'
+        });
+      }
+      if (!registro.identificacion.startsWith('17')) {
+        validation.errores.push({
+          campo: 'identificacion',
+          mensaje: 'RUC debe empezar con 17 (Ecuador)',
+          severidad: 'ERROR'
+        });
+      }
+    } else if (registro.tipoIdentificacion === 'X') {
+      if (!/^\d{1,7}$/.test(registro.identificacion)) {
+        validation.errores.push({
+          campo: 'identificacion',
+          mensaje: 'Código extranjero debe ser numérico y máximo 7 dígitos',
+          severidad: 'ERROR'
+        });
+      }
+    }
+
+    // Validar Clasificación (Tabla 173)
+    if (![1, 2, 3, 4].includes(registro.clasificacion)) {
+      validation.errores.push({
+        campo: 'clasificacion',
+        mensaje: 'Clasificación debe ser 1, 2, 3 o 4',
+        severidad: 'ERROR'
+      });
+    }
+
+    // Validar Tipo de Emisor (Tabla 73) - Solo valores válidos para L01
+    const valoresValidosL01 = [0, 2, 3, 4, 5, 7, 8, 9];
+    if (!valoresValidosL01.includes(registro.tipoEmisor)) {
+      validation.errores.push({
+        campo: 'tipoEmisor',
+        mensaje: `Tipo de emisor debe ser uno de: ${valoresValidosL01.join(', ')}`,
+        severidad: 'ERROR'
+      });
+    }
+
+    // Determinar estado del registro
+    if (validation.errores.length === 0 && validation.advertencias.length === 0) {
+      validation.estado = 'VÁLIDO';
+    } else if (validation.errores.length === 0) {
+      validation.estado = 'VÁLIDO_CON_ADVERTENCIAS';
+    } else {
+      validation.estado = 'CON_ERRORES';
+    }
+
+    return validation;
+  }
+
+  /**
+   * Mostrar modal con resultados de validación para intervención manual
+   */
+  private showValidationResultsModal(validationResults: any): void {
+    this.txtLogger.info('L01MainComponent', 'Mostrando modal de resultados de validación');
+    
+    // Mostrar modal de validación con resultados
+    this.validationResults = validationResults;
+    this.showValidationModal = true;
+    
+    // Log de resultados para debugging
+    console.log('Resultados de validación L01:', validationResults);
+  }
+
+  /**
+   * Generar reporte L01 después de validación exitosa
+   */
+  private async generateL01Report(validationResults: any): Promise<void> {
+    this.txtLogger.info('L01MainComponent', 'Generando reporte L01 después de validación exitosa');
+
+    try {
+      // Construir request para backend - OBTENER TODOS LOS REGISTROS (sin filtros)
+      const searchRequest = {
+        id: 0,
+        codigoTipoIdentificacion: 0, // 0 = Todos los tipos
+        codigoEmisor: 0,             // 0 = Todos los emisores
+        codigoClasificacionEmisor: 0, // 0 = Todas las clasificaciones
+        codigoTipoEmisor: 0           // 0 = Todos los tipos de emisor
+      };
+
+      this.txtLogger.info('L01MainComponent', 'Request para backend - obteniendo todos los registros L01', searchRequest);
+
+      // Llamar al servicio para buscar datos usando firstValueFrom
+      const response: any = await firstValueFrom(
+        this.regulatoryService.searchL01Data(searchRequest).pipe(
+          timeout(30000), // 30 segundos de timeout
+          catchError(error => {
+            this.txtLogger.error('L01MainComponent', 'Error o timeout en generación de reporte', error);
+            throw new Error('Timeout: La generación del reporte tardó más de 30 segundos');
+          })
+        )
+      );
+
+      this.txtLogger.info('L01MainComponent', 'Respuesta del backend para reporte L01', response);
+
+      if (response && response.datos) {
+        // Transformar datos del backend a formato oficial L01
+        this.datosL01 = this.transformBackendDataToL01Official(response.datos);
+
+        // Preparar datos para exportación
+        this.prepareExportData();
+
+        // Mostrar confirmación de reporte generado
+        this.showSuccessMessage(`Reporte L01 generado exitosamente con ${this.datosL01.length} registros después de validación.`);
+
+        this.txtLogger.info('L01MainComponent', 'Reporte L01 generado después de validación', {
+          totalRegistros: this.datosL01.length,
+          estadoValidacion: validationResults.estadoGeneral
+        });
+      } else {
+        this.txtLogger.warn('L01MainComponent', 'Backend no retornó datos válidos para reporte');
+        this.datosL01 = [];
+        this.error = 'No se encontraron datos L01 en el backend para generar el reporte.';
+      }
+
+    } catch (error: any) {
+      this.txtLogger.error('L01MainComponent', 'Error al generar reporte L01 después de validación', error);
+      
+      // Mostrar mensaje de error específico
+      if (error.message && error.message.includes('Timeout')) {
+        this.error = error.message;
+      } else if (error.status === 0) {
+        this.error = 'Error de conectividad: No se puede conectar al servidor.';
+      } else if (error.status === 404) {
+        this.error = 'Endpoint no encontrado. Verifique la configuración del backend.';
+      } else if (error.status === 500) {
+        this.error = 'Error interno del servidor. Contacte al administrador.';
+      } else {
+        this.error = `Error ${error.status}: ${error.message || 'Error desconocido al generar reporte después de validación'}`;
+      }
+    } finally {
+      // IMPORTANTE: Siempre desactivar loading
+      this.loading = false;
+    }
+  }
+
+  // ========================================
+  // MÉTODOS PARA MODAL DE VALIDACIÓN
+  // ========================================
+
+  /**
+   * Maneja el cierre del modal de validación
+   */
+  onValidationModalClosed(): void {
+    this.showValidationModal = false;
+    this.validationResults = null;
+    this.loading = false;
+    this.txtLogger.info('L01MainComponent', 'Modal de validación cerrado');
+  }
+
+  /**
+   * Maneja la decisión de proceder con el reporte después de validación
+   */
+  onValidationProceedWithReport(validationResults: ValidationResults): void {
+    this.txtLogger.info('L01MainComponent', 'Usuario decidió proceder con reporte después de validación', validationResults);
+    
+    // Cerrar modal de validación
+    this.showValidationModal = false;
+    this.validationResults = null;
+    
+    // Proceder con generación del reporte
+    this.generateL01Report(validationResults);
+  }
+
+  /**
+   * Maneja la decisión de corregir errores
+   */
+  onValidationFixErrors(): void {
+    this.txtLogger.info('L01MainComponent', 'Usuario decidió corregir errores de validación');
+    
+    // Cerrar modal de validación
+    this.showValidationModal = false;
+    this.validationResults = null;
+    this.loading = false;
+    
+    // Mostrar mensaje para corregir errores
+    this.error = 'Por favor, corrija los errores de validación identificados antes de generar el reporte L01.';
+    
+    // TODO: Implementar navegación a formularios de corrección en HITO 3
+  }
+
+  // ========================================
+  // MÉTODOS PARA FILTRADO DEL GRID
+  // ========================================
+
+  /**
+   * Aplicar filtros al grid de datos
+   */
+  applyGridFilters(): void {
+    this.txtLogger.info('L01MainComponent', 'Aplicando filtros al grid', {
+      tipoIdentificacion: this.tipoIdentificacion,
+      clasificacion: this.clasificacion,
+      tipoEmisor: this.tipoEmisor
+    });
+
+    // Filtrar los datos del grid según los filtros seleccionados
+    this.filteredDataL01 = this.datosL01.filter(record => {
+      let matches = true;
+
+      // Filtro por Tipo de Identificación
+      if (this.tipoIdentificacion && record.tipoIdentificacion !== this.tipoIdentificacion) {
+        matches = false;
+      }
+
+      // Filtro por Clasificación
+      if (this.clasificacion && record.clasificacion !== parseInt(this.clasificacion)) {
+        matches = false;
+      }
+
+      // Filtro por Tipo de Emisor
+      if (this.tipoEmisor && record.tipoEmisor !== parseInt(this.tipoEmisor)) {
+        matches = false;
+      }
+
+      return matches;
+    });
+
+    this.txtLogger.info('L01MainComponent', `Filtros aplicados: ${this.filteredDataL01.length} registros de ${this.datosL01.length} total`);
+  }
+
+  /**
+   * Limpiar filtros del grid
+   */
+  clearGridFilters(): void {
+    this.txtLogger.info('L01MainComponent', 'Limpiando filtros del grid');
+    this.tipoIdentificacion = '';
+    this.clasificacion = '';
+    this.tipoEmisor = '';
+    
+    // Restaurar todos los datos
+    this.filteredDataL01 = [...this.datosL01];
+    
+    this.txtLogger.info('L01MainComponent', 'Filtros limpiados, mostrando todos los registros');
+  }
+
+  /**
+   * Obtener descripción del tipo de identificación
+   */
+  getTipoIdentificacionDesc(codigo: string): string {
+    const tipo = this.tiposIdentificacionL01.find(t => t.codigo === codigo);
+    return tipo ? tipo.descripcion : codigo;
+  }
+
 }

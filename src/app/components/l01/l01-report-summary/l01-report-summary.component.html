@@ -1,0 +1,133 @@
+<!-- Modal de Resumen de Reporte L01 Generado -->
+<div class="report-summary-modal-overlay" 
+     *ngIf="showModal" 
+     (click)="onClose()">
+  
+  <div class="report-summary-modal" 
+       (click)="$event.stopPropagation()">
+    
+    <!-- Header del Modal -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📊</span>
+        <h3 class="modal-title">Reporte L01 Generado</h3>
+      </div>
+      <button class="close-button" (click)="onClose()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Contenido del Modal -->
+    <div class="modal-body">
+      
+      <!-- Mensaje Principal -->
+      <div class="main-message">
+        <p class="success-message">
+          ✅ Se generaron <strong>{{ reportData?.totalRegistros || 0 }} registros L01</strong> según filtros oficiales aplicados.
+        </p>
+      </div>
+
+      <!-- Información del Reporte -->
+      <div class="report-info">
+        <h4>📋 Información del Reporte:</h4>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Total Registros:</span>
+            <span class="info-value">{{ reportData?.totalRegistros || 0 }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fecha de Generación:</span>
+            <span class="info-value">
+              <input type="date" [(ngModel)]="fechaSeleccionada" class="date-input">
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Usuario:</span>
+            <span class="info-value">{{ reportData?.usuarioGenerador || 'Christian Aguirre' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros Aplicados -->
+      <div class="filters-applied" *ngIf="reportData?.filtrosAplicados">
+        <h4>🔍 Filtros Aplicados:</h4>
+        <div class="filters-grid">
+          <div class="filter-item">
+            <span class="filter-label">Tipo Identificación:</span>
+            <span class="filter-value">{{ getFilterDescription('tipoIdentificacion', reportData?.filtrosAplicados?.tipoIdentificacion || '') }}</span>
+          </div>
+          <div class="filter-item">
+            <span class="filter-label">Clasificación:</span>
+            <span class="filter-value">{{ getFilterDescription('clasificacion', reportData?.filtrosAplicados?.clasificacion || '') }}</span>
+          </div>
+          <div class="filter-item">
+            <span class="filter-label">Tipo Emisor:</span>
+            <span class="filter-value">{{ getFilterDescription('tipoEmisor', reportData?.filtrosAplicados?.tipoEmisor || '') }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen por Clasificación -->
+      <div class="classification-summary" *ngIf="reportData?.datos && (reportData?.datos?.length || 0) > 0">
+        <h4>📊 Resumen por Clasificación:</h4>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="summary-label">Emisores:</span>
+            <span class="summary-value">{{ getCountByClasificacion(1) }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Custodios:</span>
+            <span class="summary-value">{{ getCountByClasificacion(2) }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Depositarios:</span>
+            <span class="summary-value">{{ getCountByClasificacion(3) }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Contrapartes:</span>
+            <span class="summary-value">{{ getCountByClasificacion(4) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje cuando no hay datos -->
+      <div class="no-data-message" *ngIf="!reportData?.datos || (reportData?.datos?.length || 0) === 0">
+        <div class="no-data-icon">📭</div>
+        <p>No se encontraron registros L01 con los filtros aplicados.</p>
+        <p class="suggestion">Sugerencia: Intente con filtros diferentes o cree un nuevo registro.</p>
+      </div>
+
+    </div>
+
+    <!-- Footer del Modal con Botones -->
+    <div class="modal-footer">
+      <div class="footer-actions">
+        <!-- Botón Exportar TXT -->
+        <button 
+          (click)="onExportTxt()" 
+          [disabled]="!reportData?.datos || (reportData?.datos?.length || 0) === 0"
+          class="btn btn-success">
+          <i class="pi pi-download"></i>
+          Exportar TXT
+        </button>
+        
+        <!-- Botón Crear Nuevo Registro -->
+        <button 
+          (click)="onCreateNewRecord()" 
+          class="btn btn-info">
+          <i class="pi pi-plus"></i>
+          Crear Nuevo Registro
+        </button>
+        
+        <!-- Botón Cerrar -->
+        <button 
+          (click)="onClose()" 
+          class="btn btn-secondary">
+          <i class="pi pi-times"></i>
+          Cerrar
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

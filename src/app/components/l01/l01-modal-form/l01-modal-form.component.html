@@ -1,0 +1,149 @@
+<!-- Modal del Formulario L01 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    
+    <!-- Header del Modal -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">{{ getModalTitle() }}</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Contenido del Modal -->
+    <div class="modal-body">
+      
+      <!-- Formulario -->
+      <form [formGroup]="l01Form" (ngSubmit)="onSubmit()" class="l01-form">
+        
+        <!-- Resultado de Validación -->
+        <div class="validation-result" *ngIf="showValidationResult" [class]="validationResult.valid ? 'valid' : 'invalid'">
+          <div class="validation-icon">
+            <i class="pi" [class]="validationResult.valid ? 'pi-check-circle' : 'pi-times-circle'"></i>
+          </div>
+          <div class="validation-content">
+            <div class="validation-message">{{ validationResult.message }}</div>
+            <div class="validation-field" *ngIf="validationResult.field">
+              <i class="pi pi-map-marker"></i>
+              Campo: {{ validationResult.field }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Campos del Formulario - SOLO LOS 4 CAMPOS OFICIALES L01 -->
+        <div class="form-row">
+          <!-- Campo 1: Tipo de Identificación -->
+          <div class="form-group col-md-3">
+            <label for="tipoIdentificacion" class="form-label">
+              Tipo de Identificación <span class="required">*</span>
+            </label>
+            <p-dropdown 
+              id="tipoIdentificacion"
+              formControlName="tipoIdentificacion"
+              [options]="tiposIdentificacion"
+              optionLabel="descripcion"
+              optionValue="codigo"
+              placeholder="Seleccione tipo (R=RUC, X=Extranjero)"
+              [class.is-invalid]="isFieldInvalid('tipoIdentificacion')"
+              class="w-100">
+            </p-dropdown>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('tipoIdentificacion')">
+              {{ getFieldError('tipoIdentificacion') }}
+            </div>
+          </div>
+
+          <!-- Campo 2: Identificación -->
+          <div class="form-group col-md-3">
+            <label for="identificacion" class="form-label">
+              Identificación <span class="required">*</span>
+            </label>
+            <p-dropdown 
+              *ngIf="l01Form.get('tipoIdentificacion')?.value === 'X'"
+              id="identificacion"
+              formControlName="identificacion"
+              [options]="codigosExtranjeros"
+              optionLabel="descripcion"
+              optionValue="codigo"
+              placeholder="Seleccione código extranjero"
+              [class.is-invalid]="isFieldInvalid('identificacion')"
+              class="w-100">
+            </p-dropdown>
+            <input 
+              *ngIf="l01Form.get('tipoIdentificacion')?.value !== 'X'"
+              type="text" 
+              id="identificacion"
+              formControlName="identificacion"
+              class="form-control"
+              [class.is-invalid]="isFieldInvalid('identificacion')"
+              placeholder="Ingrese RUC (13 dígitos)">
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('identificacion')">
+              {{ getFieldError('identificacion') }}
+            </div>
+          </div>
+
+          <!-- Campo 3: Clasificación -->
+          <div class="form-group col-md-3">
+            <label for="clasificacion" class="form-label">
+              Clasificación <span class="required">*</span>
+            </label>
+            <p-dropdown 
+              id="clasificacion"
+              formControlName="clasificacion"
+              [options]="clasificaciones"
+              optionLabel="descripcion"
+              optionValue="codigo"
+              placeholder="Seleccione clasificación"
+              [class.is-invalid]="isFieldInvalid('clasificacion')"
+              class="w-100">
+            </p-dropdown>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('clasificacion')">
+              {{ getFieldError('clasificacion') }}
+            </div>
+          </div>
+
+          <!-- Campo 4: Tipo de Emisor -->
+          <div class="form-group col-md-3">
+            <label for="tipoEmisor" class="form-label">
+              Tipo de Emisor <span class="required">*</span>
+            </label>
+            <p-dropdown 
+              id="tipoEmisor"
+              formControlName="tipoEmisor"
+              [options]="tiposEmisor"
+              optionLabel="descripcion"
+              optionValue="codigo"
+              placeholder="Seleccione tipo de emisor"
+              [class.is-invalid]="isFieldInvalid('tipoEmisor')"
+              class="w-100">
+            </p-dropdown>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('tipoEmisor')">
+              {{ getFieldError('tipoEmisor') }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Mensaje Informativo -->
+        <div class="alert-info">
+          <strong>Información:</strong> Este formulario contiene únicamente los 4 campos oficiales requeridos por la Superintendencia de Bancos para la estructura L01.
+        </div>
+
+        <!-- Footer del Modal con Botones -->
+        <div class="modal-footer">
+          <div class="footer-actions">
+            <button type="submit" [disabled]="l01Form.invalid || isSubmitting" class="btn btn-primary">
+              <i class="pi pi-check"></i>
+              {{ isSubmitting ? 'Guardando...' : 'Guardar Registro' }}
+            </button>
+            <button type="button" (click)="closeModal()" class="btn btn-secondary">
+              <i class="pi pi-times"></i>
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

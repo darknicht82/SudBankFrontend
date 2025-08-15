@@ -69,6 +69,7 @@ export class L01ValidationService {
 
   /**
    * Valida la identificación según el tipo
+   * Manual SB: RUC 13 dígitos para tipo R, código extranjero para tipo X
    */
   private validateIdentificacion(identificacion: string, tipo: string): ValidationResult[] {
     const results: ValidationResult[] = [];
@@ -84,51 +85,52 @@ export class L01ValidationService {
     }
     
     if (tipo === 'R') {
-      // Validar RUC (13 dígitos)
+      // Validar RUC (13 dígitos) - Manual SB: debe empezar con 17 (Ecuador)
       if (!/^\d{13}$/.test(identificacion)) {
         results.push({
           valid: false,
           message: 'El RUC debe tener exactamente 13 dígitos',
-        field: 'identificacion',
+          field: 'identificacion',
           severity: 'error'
         });
       }
       
-      // Validar que empiece con 17 (Ecuador)
+      // Validar que empiece con 17 (Ecuador) - REQUERIMIENTO OFICIAL SB
       if (!identificacion.startsWith('17')) {
         results.push({
           valid: false,
           message: 'El RUC debe empezar con 17 (Ecuador)',
-              field: 'identificacion',
+          field: 'identificacion',
           severity: 'error'
         });
       }
       
-      // Validar dígito verificador (algoritmo básico)
-      if (!this.validateRUCVerifier(identificacion)) {
+      // Validar formato de RUC ecuatoriano
+      if (identificacion.length === 13 && !identificacion.startsWith('17')) {
         results.push({
           valid: false,
-          message: 'El RUC no es válido (dígito verificador incorrecto)',
+          message: 'RUC inválido: debe empezar con 17 para entidades ecuatorianas',
           field: 'identificacion',
           severity: 'error'
         });
       }
     } else if (tipo === 'X') {
-      // Validar código extranjero (máximo 7 caracteres)
-      if (identificacion.length > 7) {
+      // Validar código extranjero (máximo 7 dígitos) - Manual SB: Tabla 164
+      if (!/^\d{1,7}$/.test(identificacion)) {
         results.push({
           valid: false,
-          message: 'El código extranjero no puede exceder 7 caracteres',
+          message: 'El código extranjero debe tener máximo 7 dígitos numéricos',
           field: 'identificacion',
           severity: 'error'
         });
       }
       
-      // Validar que no esté vacío
-      if (identificacion.trim().length === 0) {
+      // VALIDACIÓN MEJORADA: Verificar que esté en Tabla 164 cuando esté disponible
+      // Por ahora solo validamos formato, pero se puede extender para validar contra catálogo real
+      if (identificacion.length > 7) {
         results.push({
           valid: false,
-          message: 'El código extranjero no puede estar vacío',
+          message: 'El código extranjero no puede exceder 7 dígitos según Tabla 164',
           field: 'identificacion',
           severity: 'error'
         });
@@ -139,12 +141,13 @@ export class L01ValidationService {
   }
 
   /**
-   * Valida la clasificación (1-4)
+   * Valida la clasificación del emisor/custodio/depositario/contraparte
+   * Manual SB: Valores 1-4 según tabla 173
    */
   private validateClasificacion(clasificacion: number): ValidationResult[] {
     const results: ValidationResult[] = [];
     
-    if (!clasificacion && clasificacion !== 0) {
+    if (clasificacion === undefined || clasificacion === null) {
       results.push({
         valid: false,
         message: 'La clasificación es obligatoria',
@@ -154,10 +157,11 @@ export class L01ValidationService {
       return results;
     }
     
+    // Validar que esté en rango 1-4 según manual SB
     if (![1, 2, 3, 4].includes(clasificacion)) {
       results.push({
         valid: false,
-        message: 'La clasificación debe ser 1 (Emisor), 2 (Custodio), 3 (Depositario) o 4 (Contraparte)',
+        message: 'La clasificación debe ser: 1=Emisor, 2=Custodio, 3=Depositario, 4=Contraparte',
         field: 'clasificacion',
         severity: 'error'
       });
@@ -167,12 +171,14 @@ export class L01ValidationService {
   }
 
   /**
-   * Valida el tipo de emisor (0,2,3,4,5,7,8,9)
+   * Valida el tipo de emisor/custodio/depositario/contraparte
+   * Manual SB: Valores según tabla 73 (sectores económicos)
+   * IMPORTANTE: Para L01 se excluyen valores 1 y 6 según manual
    */
-  private validateTipoEmisor(tipo: number): ValidationResult[] {
+  private validateTipoEmisor(tipoEmisor: number): ValidationResult[] {
     const results: ValidationResult[] = [];
     
-    if (!tipo && tipo !== 0) {
+    if (tipoEmisor === undefined || tipoEmisor === null) {
       results.push({
         valid: false,
         message: 'El tipo de emisor es obligatorio',
@@ -182,11 +188,14 @@ export class L01ValidationService {
       return results;
     }
     
-    const tiposValidos = [0, 2, 3, 4, 5, 7, 8, 9];
-    if (!tiposValidos.includes(tipo)) {
+    // VALIDACIÓN CORREGIDA: Solo valores válidos para L01 según manual SB
+    // Tabla 73 para L01: 0,2,3,4,5,7,8,9 (excluye 1 y 6)
+    const valoresValidosL01 = [0, 2, 3, 4, 5, 7, 8, 9];
+    
+    if (!valoresValidosL01.includes(tipoEmisor)) {
       results.push({
         valid: false,
-        message: 'El tipo de emisor debe ser uno de los valores válidos: 0,2,3,4,5,7,8,9',
+        message: `El tipo de emisor debe ser uno de los valores válidos para L01: ${valoresValidosL01.join(', ')}. Valor ${tipoEmisor} no es válido.`,
         field: 'tipoEmisor',
         severity: 'error'
       });

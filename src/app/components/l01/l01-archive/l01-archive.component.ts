@@ -24,12 +24,12 @@ export class L01ArchiveComponent implements OnInit {
     this.isLoading = true;
     this.error = '';
 
-    this.l01Service.listarTodos().subscribe({
-      next: (data) => {
+    this.l01Service.getAllL01Data().subscribe({
+      next: (data: L01RegulatoryData[]) => {
         this.registros = data;
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error cargando archivo L01:', error);
         this.error = 'Error al cargar el archivo';
         this.isLoading = false;
@@ -51,18 +51,14 @@ export class L01ArchiveComponent implements OnInit {
   }
 
   onExport(): void {
-    const request = { fecha: new Date().toISOString().split('T')[0] };
-    
-    this.l01Service.exportToTxt(request).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `L01_${new Date().toISOString().split('T')[0]}.txt`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (error) => {
+    // Usar el servicio de exportación L01
+    import('../../../services/l01-export.service').then(({ L01ExportService }) => {
+      const exportService = new L01ExportService();
+      const filename = exportService.generateL01Filename();
+      
+      try {
+        exportService.downloadTxt(this.registros, filename);
+      } catch (error) {
         console.error('Error exportando:', error);
         alert('❌ Error al exportar el archivo');
       }
