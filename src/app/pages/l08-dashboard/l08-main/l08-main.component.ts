@@ -9,12 +9,13 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { L08Service, L08ReportRequest, L08ReportResponse } from '../../../services/l08.service';
 import { L08Validator } from '../../../validators/l08.validator';
-import { 
-  getDescripcionLiquidez, 
-  getDescripcionTipoInstrumento,
-  getDescripcionCalificacionEmisor,
-  getDescripcionCalificadoraRiesgo
-} from '../../../catalogs';
+// ✅ L08: Catálogos comentados temporalmente - No conectados a APIs reales
+// import { 
+//   getDescripcionLiquidez, 
+//   getDescripcionTipoInstrumento,
+//   getDescripcionCalificacionEmisor,
+//   getDescripcionCalificadoraRiesgo
+// } from '../../../catalogs';
 import { getFieldTooltip, FieldTooltip, L08_STRUCTURE_INFO } from '../../../utils/field-tooltips';
 
 @Component({
@@ -218,18 +219,21 @@ export class L08MainComponent implements OnInit {
    * Obtener descripción de códigos para UI
    */
   getDescripcion(codigo: number, tipo: string): string {
-    switch (tipo) {
-      case 'codigoLiquidez':
-        return getDescripcionLiquidez(codigo);
-      case 'tipoInstrumento':
-        return getDescripcionTipoInstrumento(codigo.toString());
-      case 'calificacionEntidad':
-        return getDescripcionCalificacionEmisor(codigo.toString());
-      case 'calificadoraRiesgo':
-        return getDescripcionCalificadoraRiesgo(codigo.toString());
-      default:
-        return codigo.toString();
-    }
+    // ✅ L08: Catálogos comentados temporalmente - No conectados a APIs reales
+    return codigo.toString();
+    
+    // switch (tipo) {
+    //   case 'codigoLiquidez':
+    //     return getDescripcionLiquidez(codigo);
+    //   case 'tipoInstrumento':
+    //     return getDescripcionTipoInstrumento(codigo.toString());
+    //   case 'calificacionEntidad':
+    //     return getDescripcionCalificacionEmisor(codigo.toString());
+    //   case 'calificadoraRiesgo':
+    //     return getDescripcionCalificadoraRiesgo(codigo.toString());
+    //   default:
+    //     return codigo.toString();
+    // }
   }
 
   /**

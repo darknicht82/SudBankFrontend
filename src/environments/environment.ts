@@ -21,7 +21,7 @@ export const environment = {
   // ==========================================
   // ENDPOINTS DE SERVICIOS
   // ==========================================
-  backendEndpoint: 'http://192.168.10.4:5000/api', // Endpoint sin versión para coincidir con backend
+  backendEndpoint: 'http://192.168.10.4:5000/api', // Endpoint real del backend
   rvcEndpoint: 'https://appweb.superbancos.gob.ec/rvc',
   
   // ==========================================

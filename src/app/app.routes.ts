@@ -12,11 +12,7 @@ import { L08AuditoriaComponent } from './pages/l08-dashboard/l08-auditoria/l08-a
 import { L01MainComponent } from './pages/l01-dashboard/l01-main/l01-main.component';
 import { L03MainComponent } from './pages/l03-dashboard/l03-main/l03-main.component';
 
-// Importar nuevos componentes L01
-import { L01FormComponent } from './components/l01/l01-form/l01-form.component';
-import { L01TableComponent } from './components/l01/l01-table/l01-table.component';
-import { L01ValidateComponent } from './components/l01/l01-validate/l01-validate.component';
-import { L01ArchiveComponent } from './components/l01/l01-archive/l01-archive.component';
+// Componentes L01 eliminados - Solo se mantiene L01MainComponent
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -28,10 +24,6 @@ export const routes: Routes = [
   
   // Rutas directas (para compatibilidad)
   { path: 'l01', component: L01MainComponent },
-  { path: 'l01/form', component: L01FormComponent },
-  { path: 'l01/table', component: L01TableComponent },
-  { path: 'l01/validate', component: L01ValidateComponent },
-  { path: 'l01/archive', component: L01ArchiveComponent },
   { path: 'l08', children: [
     { path: '', component: L08MainComponent },
     { path: 'historico', component: L08HistoricoComponent },
@@ -41,13 +33,9 @@ export const routes: Routes = [
 
   { path: 'l03', component: L03MainComponent },
   
-  // Rutas con prefijo regulatory (para consistencia con el menú)
+      // Rutas con prefijo regulatory (para consistencia con el menú)
   { path: 'regulatory', children: [
     { path: 'l01', component: L01MainComponent },
-    { path: 'l01/form', component: L01FormComponent },
-    { path: 'l01/table', component: L01TableComponent },
-    { path: 'l01/validate', component: L01ValidateComponent },
-    { path: 'l01/archive', component: L01ArchiveComponent },
     { path: 'l08', children: [
       { path: '', component: L08MainComponent },
       { path: 'historico', component: L08HistoricoComponent },

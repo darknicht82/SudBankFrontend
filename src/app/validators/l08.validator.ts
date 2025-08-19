@@ -5,12 +5,13 @@
  */
 
 import { L08, L08Cabecera, L08Detalle, L08Validacion } from '../models/l08.model';
-import { 
-  isValidCodigoLiquidez, 
-  isValidTipoInstrumento, 
-  isValidCalificacionEmisor, 
-  isValidCalificadoraRiesgo 
-} from '../catalogs';
+// ✅ L08: Catálogos comentados temporalmente - No conectados a APIs reales
+// import { 
+//   isValidCodigoLiquidez, 
+//   isValidTipoInstrumento, 
+//   isValidCalificacionEmisor, 
+//   isValidCalificadoraRiesgo 
+// } from '../catalogs';
 
 export class L08Validator {
   
@@ -82,10 +83,12 @@ export class L08Validator {
     const errores: string[] = [];
     const advertencias: string[] = [];
 
+    // ✅ L08: Validaciones de catálogos comentadas temporalmente - No conectadas a APIs reales
+    
     // Validar código de liquidez
-    if (!isValidCodigoLiquidez(detalle.codigoLiquidez)) {
-      errores.push(`REGISTRO ${numeroRegistro}: Código de liquidez ${detalle.codigoLiquidez} no válido`);
-    }
+    // if (!isValidCodigoLiquidez(detalle.codigoLiquidez)) {
+    //   errores.push(`REGISTRO ${numeroRegistro}: Código de liquidez ${detalle.codigoLiquidez} no válido`);
+    // }
 
     // Validar tipo de identificación
     if (!['R', 'E'].includes(detalle.tipoIdentificacion)) {
@@ -98,19 +101,19 @@ export class L08Validator {
     }
 
     // Validar tipo de instrumento
-    if (!isValidTipoInstrumento(detalle.tipoInstrumento.toString())) {
-      errores.push(`REGISTRO ${numeroRegistro}: Tipo de instrumento ${detalle.tipoInstrumento} no válido`);
-    }
+    // if (!isValidTipoInstrumento(detalle.tipoInstrumento.toString())) {
+    //   errores.push(`REGISTRO ${numeroRegistro}: Tipo de instrumento ${detalle.tipoInstrumento} no válido`);
+    // }
 
     // Validar calificación de entidad
-    if (!isValidCalificacionEmisor(detalle.calificacionEntidad.toString())) {
-      errores.push(`REGISTRO ${numeroRegistro}: Calificación de entidad ${detalle.calificacionEntidad} no válida`);
-    }
+    // if (!isValidCalificacionEmisor(detalle.calificacionEntidad.toString())) {
+    //   errores.push(`REGISTRO ${numeroRegistro}: Calificación de entidad ${detalle.calificacionEntidad} no válida`);
+    // }
 
     // Validar calificadora de riesgo
-    if (!isValidCalificadoraRiesgo(detalle.calificadoraRiesgo.toString())) {
-      errores.push(`REGISTRO ${numeroRegistro}: Calificadora de riesgo ${detalle.calificadoraRiesgo} no válida`);
-    }
+    // if (!isValidCalificadoraRiesgo(detalle.calificadoraRiesgo.toString())) {
+    //   errores.push(`REGISTRO ${numeroRegistro}: Calificadora de riesgo ${detalle.calificadoraRiesgo} no válida`);
+    // }
 
     // Validar valores (deben ser números positivos)
     const valores = [
