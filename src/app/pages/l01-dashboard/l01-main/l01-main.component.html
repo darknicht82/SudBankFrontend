@@ -148,6 +148,25 @@
       </div>
       <div class="card-content">
         
+        <!-- MENSAJE INFORMATIVO SOBRE REGISTROS FILTRADOS -->
+        <div *ngIf="registrosFiltrados > 0" class="filtered-records-message">
+          <div class="alert alert-warning">
+            <h4>⚠️ Registros Filtrados por Validación L01</h4>
+            <p><strong>Se encontraron {{ registrosFiltrados }} registros que no cumplen con las especificaciones L01:</strong></p>
+            <ul>
+              <li><strong>Códigos de tipo de identificación no permitidos:</strong> Solo se permiten códigos <strong>R</strong> y <strong>X</strong></li>
+              <li><strong>Registros con códigos C, E, etc. fueron filtrados automáticamente</strong></li>
+              <li><strong>Estos registros no aparecen en la tabla pero existen en la base de datos</strong></li>
+            </ul>
+            <p class="text-muted">
+              <small>
+                <strong>Nota:</strong> Los registros filtrados contienen códigos de tipo de identificación 
+                que no están permitidos según el manual L01 de la Superintendencia de Bancos del Ecuador.
+              </small>
+            </p>
+          </div>
+        </div>
+        
         <!-- MENSAJE CUANDO NO HAY DATOS -->
         <div *ngIf="datosL01.length === 0" class="no-data-message">
           <div class="alert alert-info">
