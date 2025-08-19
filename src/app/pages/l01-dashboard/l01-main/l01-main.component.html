@@ -136,33 +136,45 @@
     </div>
   </div>
 
-  <!-- NUEVO: Componente de Confirmación -->
-  <app-l01-confirmation
-    [showModal]="showConfirmationModal"
-    [confirmationData]="confirmationData"
-    [loading]="confirmationLoading"
-    (confirmed)="onConfirmationConfirmed($event)"
-    (cancelled)="onConfirmationCancelled()"
-    (closed)="onConfirmationClosed()">
-  </app-l01-confirmation>
+  <!-- Componente de Confirmación ELIMINADO -->
 
-  <!-- NUEVO: Componente de Resumen del Reporte L01 -->
-  <app-l01-report-summary
-    [showModal]="showReportSummaryModal"
-    [reportData]="reportSummaryData"
-    [loading]="loading"
-    (modalClosed)="onReportSummaryModalClosed()"
-    (exportTxt)="onReportSummaryExportTxt($event)"
-    (createNewRecord)="onReportSummaryCreateNewRecord()">
-  </app-l01-report-summary>
+  <!-- Componente de Resumen del Reporte ELIMINADO -->
 
   <!-- TABLA DE DATOS -->
-  <div *ngIf="datosL01.length > 0" class="data-section">
+  <div class="data-section">
     <div class="card">
       <div class="card-header">
         <h3>📋 Datos del Reporte L01</h3>
       </div>
       <div class="card-content">
+        
+        <!-- MENSAJE CUANDO NO HAY DATOS -->
+        <div *ngIf="datosL01.length === 0" class="no-data-message">
+          <div class="alert alert-info">
+            <h4>📊 Estado de los Datos L01</h4>
+            <p><strong>Total de registros:</strong> {{ datosL01.length }}</p>
+            <p><strong>Estado de carga:</strong> {{ loading ? '🔄 Cargando...' : '✅ Carga completada' }}</p>
+            <p><strong>Error:</strong> {{ error || 'Ninguno' }}</p>
+            
+            <div class="debug-info" *ngIf="!loading">
+              <h5>🔍 Información de Debug:</h5>
+              <ul>
+                <li><strong>Catálogos cargados:</strong> 
+                  T4: {{ tiposIdentificacionL01.length }}, 
+                  T173: {{ clasificacionesL01.length }}, 
+                  T73: {{ tiposEmisorL01.length }}, 
+                  T164: {{ codigosExtranjerosL01.length }}
+                </li>
+                <li><strong>Datos del backend:</strong> {{ datosL01.length }} registros</li>
+                <li><strong>Datos filtrados:</strong> {{ filteredDataL01.length }} registros</li>
+              </ul>
+              
+              <button (click)="refreshData()" class="btn btn-primary">
+                🔄 Refrescar Datos
+              </button>
+            </div>
+          </div>
+        </div>
         
         <!-- FILTROS PARA VISTA DEL GRID -->
         <div class="grid-filters">
@@ -299,16 +311,7 @@
     </div>
   </div>
 
-  <!-- COMPONENTE DE EXPORTACIÓN L01 -->
-  <div class="export-section" *ngIf="!loading && exportData.length > 0">
-    <app-l01-export
-      [data]="exportData"
-      [fechaCorte]="fechaCorte"
-      [usuario]="usuarioActual"
-      (exportCompleted)="onExportCompleted($event)"
-      (exportError)="onExportError($event)">
-    </app-l01-export>
-  </div>
+  <!-- COMPONENTE DE EXPORTACIÓN L01 ELIMINADO -->
 
   <!-- CONTROLES DE PRUEBA Y DEBUG -->
   <div class="debug-controls" *ngIf="!loading && showLogMonitor">
@@ -371,13 +374,5 @@
     (dataSaved)="onModalDataSaved($event)">
   </app-l01-modal-form>
 
-  <!-- MODAL DE RESULTADOS DE VALIDACIÓN L01 -->
-  <app-l01-validation-results
-    [showModal]="showValidationModal"
-    [validationResults]="validationResults"
-    [loading]="loading"
-    (modalClosed)="onValidationModalClosed()"
-    (proceedWithReport)="onValidationProceedWithReport($event)"
-    (fixErrors)="onValidationFixErrors()">
-  </app-l01-validation-results>
+  <!-- MODAL DE RESULTADOS DE VALIDACIÓN L01 ELIMINADO -->
 </div>

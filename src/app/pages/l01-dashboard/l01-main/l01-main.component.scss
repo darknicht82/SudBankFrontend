@@ -324,7 +324,7 @@
   }
 }
 
-/* ERRORES */
+/* ERRORES Y ALERTAS */
 .error-message {
   margin-bottom: 20px;
 
@@ -334,6 +334,38 @@
     border-left: 4px solid #dc3545;
     background-color: #f8d7da;
     color: #721c24;
+  }
+}
+
+/* ESTILOS GENERALES PARA ALERTAS */
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  
+  &.alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+  }
+  
+  &.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+  
+  &.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+  
+  &.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
   }
 }
 
@@ -409,6 +441,61 @@
 /* TABLA DE DATOS */
 .data-section {
   margin-bottom: 25px;
+
+  /* MENSAJE CUANDO NO HAY DATOS */
+  .no-data-message {
+    margin: 20px 0;
+    
+    .alert {
+      border-radius: 8px;
+      padding: 20px;
+      
+      h4 {
+        margin: 0 0 15px 0;
+        color: #0c5460;
+        font-size: 1.2em;
+      }
+      
+      p {
+        margin: 8px 0;
+        font-size: 0.95em;
+        
+        strong {
+          color: #495057;
+        }
+      }
+      
+      .debug-info {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #bee5eb;
+        
+        h5 {
+          color: #0c5460;
+          margin: 0 0 10px 0;
+          font-size: 1.1em;
+        }
+        
+        ul {
+          margin: 10px 0;
+          padding-left: 20px;
+          
+          li {
+            margin: 5px 0;
+            font-size: 0.9em;
+            
+            strong {
+              color: #495057;
+            }
+          }
+        }
+        
+        .btn {
+          margin-top: 10px;
+        }
+      }
+    }
+  }
 
   .table-container {
     overflow-x: auto;

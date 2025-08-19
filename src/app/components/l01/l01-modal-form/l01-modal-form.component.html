@@ -19,7 +19,9 @@
       <!-- Formulario -->
       <form [formGroup]="l01Form" (ngSubmit)="onSubmit()" class="l01-form">
         
-        <!-- Resultado de Validación -->
+        <!-- ❌ [DESHABILITADO] Resultado de Validación -->
+        <!-- VALIDACIONES DESHABILITADAS - NO SE MUESTRA NADA -->
+        <!--
         <div class="validation-result" *ngIf="showValidationResult" [class]="validationResult.valid ? 'valid' : 'invalid'">
           <div class="validation-icon">
             <i class="pi" [class]="validationResult.valid ? 'pi-check-circle' : 'pi-times-circle'"></i>
@@ -32,6 +34,7 @@
             </div>
           </div>
         </div>
+        -->
 
         <!-- Campos del Formulario - SOLO LOS 4 CAMPOS OFICIALES L01 -->
         <div class="form-row">
@@ -45,14 +48,16 @@
               formControlName="tipoIdentificacion"
               [options]="tiposIdentificacion"
               optionLabel="descripcion"
-              optionValue="codigo"
+              optionValue="id"
               placeholder="Seleccione tipo (R=RUC, X=Extranjero)"
-              [class.is-invalid]="isFieldInvalid('tipoIdentificacion')"
               class="w-100">
             </p-dropdown>
+            <!-- ❌ [DESHABILITADO] Validaciones deshabilitadas -->
+            <!--
             <div class="invalid-feedback" *ngIf="isFieldInvalid('tipoIdentificacion')">
               {{ getFieldError('tipoIdentificacion') }}
             </div>
+            -->
           </div>
 
           <!-- Campo 2: Identificación -->
@@ -66,9 +71,8 @@
               formControlName="identificacion"
               [options]="codigosExtranjeros"
               optionLabel="descripcion"
-              optionValue="codigo"
+              optionValue="id"
               placeholder="Seleccione código extranjero"
-              [class.is-invalid]="isFieldInvalid('identificacion')"
               class="w-100">
             </p-dropdown>
             <input 
@@ -77,11 +81,13 @@
               id="identificacion"
               formControlName="identificacion"
               class="form-control"
-              [class.is-invalid]="isFieldInvalid('identificacion')"
               placeholder="Ingrese RUC (13 dígitos)">
+            <!-- ❌ [DESHABILITADO] Validaciones deshabilitadas -->
+            <!--
             <div class="invalid-feedback" *ngIf="isFieldInvalid('identificacion')">
               {{ getFieldError('identificacion') }}
             </div>
+            -->
           </div>
 
           <!-- Campo 3: Clasificación -->
@@ -94,14 +100,16 @@
               formControlName="clasificacion"
               [options]="clasificaciones"
               optionLabel="descripcion"
-              optionValue="codigo"
+              optionValue="id"
               placeholder="Seleccione clasificación"
-              [class.is-invalid]="isFieldInvalid('clasificacion')"
               class="w-100">
             </p-dropdown>
+            <!-- ❌ [DESHABILITADO] Validaciones deshabilitadas -->
+            <!--
             <div class="invalid-feedback" *ngIf="isFieldInvalid('clasificacion')">
               {{ getFieldError('clasificacion') }}
             </div>
+            -->
           </div>
 
           <!-- Campo 4: Tipo de Emisor -->
@@ -114,14 +122,16 @@
               formControlName="tipoEmisor"
               [options]="tiposEmisor"
               optionLabel="descripcion"
-              optionValue="codigo"
+              optionValue="id"
               placeholder="Seleccione tipo de emisor"
-              [class.is-invalid]="isFieldInvalid('tipoEmisor')"
               class="w-100">
             </p-dropdown>
+            <!-- ❌ [DESHABILITADO] Validaciones deshabilitadas -->
+            <!--
             <div class="invalid-feedback" *ngIf="isFieldInvalid('tipoEmisor')">
               {{ getFieldError('tipoEmisor') }}
             </div>
+            -->
           </div>
         </div>
 

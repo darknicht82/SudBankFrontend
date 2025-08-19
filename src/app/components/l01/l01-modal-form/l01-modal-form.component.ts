@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { L01RegulatoryData } from '../../../services/l01-regulatory.service';
-import { L01ValidationService, ValidationResult } from '../../../services/l01-validation.service';
 import { L01CatalogService } from '../../../services/l01-catalog.service';
 
 // PrimeNG Components (solo los necesarios)
@@ -25,13 +24,21 @@ export class L01ModalFormComponent implements OnInit {
 
   l01Form: FormGroup;
   isSubmitting: boolean = false;
+  // ❌ [DESHABILITADO] Propiedades de validación
+  // VALIDACIONES DESHABILITADAS - NO SE USA MÁS
+  /*
   showValidationResult: boolean = false;
+  */
   isModalProtected: boolean = false; // Protección contra cierre automático
+  // ❌ [DESHABILITADO] Propiedades de validación
+  // VALIDACIONES DESHABILITADAS - NO SE USA MÁS
+  /*
   validationResult: ValidationResult = {
     valid: true,
     message: '',
     severity: 'info'
   };
+  */
 
   // Catálogos
   tiposIdentificacion: any[] = [];
@@ -41,7 +48,6 @@ export class L01ModalFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private validationService: L01ValidationService,
     private catalogService: L01CatalogService
   ) {
     // SOLO LOS 4 CAMPOS OFICIALES L01 SEGÚN MANUAL SB MARZO 2017
@@ -62,7 +68,8 @@ export class L01ModalFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCatalogs();
-    this.setupFormValidation();
+    // ❌ [DESHABILITADO] Validaciones deshabilitadas
+    // this.setupFormValidation();
   }
 
   ngOnChanges(): void {
@@ -149,8 +156,10 @@ export class L01ModalFormComponent implements OnInit {
   }
 
   /**
-   * Configura las validaciones del formulario
+   * ❌ [DESHABILITADO] Configura las validaciones del formulario
+   * VALIDACIONES DESHABILITADAS - NO SE USA MÁS
    */
+  /*
   private setupFormValidation(): void {
     // Validar identificación cuando cambie el tipo
     this.l01Form.get('tipoIdentificacion')?.valueChanges.subscribe(tipo => {
@@ -164,6 +173,7 @@ export class L01ModalFormComponent implements OnInit {
       this.l01Form.get('identificacion')?.updateValueAndValidity();
     });
   }
+  */
 
   /**
    * Pobla el formulario con datos para edición
@@ -189,7 +199,8 @@ export class L01ModalFormComponent implements OnInit {
         tipoEmisor: null
       });
       
-      this.showValidationResult = false;
+      // ❌ [DESHABILITADO] Validaciones deshabilitadas
+      // this.showValidationResult = false;
       this.isSubmitting = false;
       
       console.log('✅ [DEBUG] Formulario reseteado exitosamente');
@@ -246,8 +257,10 @@ export class L01ModalFormComponent implements OnInit {
   }
 
   /**
-   * Valida el formulario antes de enviar
+   * ❌ [DESHABILITADO] Valida el formulario antes de enviar
+   * VALIDACIONES DESHABILITADAS - NO SE USA MÁS
    */
+  /*
   private validateForm(): boolean {
     const formData = this.l01Form.value;
     const validations = this.validationService.validateL01Record(formData);
@@ -267,11 +280,13 @@ export class L01ModalFormComponent implements OnInit {
     this.showValidationResult = true;
     return true;
   }
+  */
 
   /**
-   * 🔧 [FIX] Valida el formulario con datos ya convertidos (números)
-   * SOLUCIÓN DEFINITIVA AL ERROR DE VALIDACIÓN
+   * ❌ [DESHABILITADO] Valida el formulario con datos ya convertidos (números)
+   * VALIDACIONES DESHABILITADAS - NO SE USA MÁS
    */
+  /*
   private validateFormWithData(data: L01RegulatoryData): boolean {
     console.log('🔧 [FIX] Iniciando validación con datos convertidos:', data);
     
@@ -294,9 +309,11 @@ export class L01ModalFormComponent implements OnInit {
     console.log('✅ [FIX] Validación exitosa con datos convertidos');
     return true;
   }
+  */
 
   /**
-   * Maneja el envío del formulario
+   * 🚀 [SIN VALIDACIONES] Maneja el envío del formulario
+   * VALIDACIONES DESHABILITADAS - SE GUARDAN CÓDIGOS DIRECTOS DE CATÁLOGOS
    */
   onSubmit(): void {
     if (this.l01Form.invalid) {
@@ -311,7 +328,7 @@ export class L01ModalFormComponent implements OnInit {
     console.log('🔍 [DEBUG] ===== DATOS DEL FORMULARARIO ANTES DE ENVIAR =====');
     console.log('🔍 [DEBUG] Formulario completo:', this.l01Form.value);
     console.log('🔍 [DEBUG] Tipo Identificación:', formData.tipoIdentificacion, 'Tipo:', typeof formData.tipoIdentificacion);
-    console.log('🔍 [DEBUG] Identificación:', formData.identificacion, 'Tipo:', typeof formData.identificacion);
+    console.log('🔍 [DEBUG] Identificación:', formData.identificacion, 'Tipo:', typeof formData.tipoIdentificacion);
     console.log('🔍 [DEBUG] Clasificación:', formData.clasificacion, 'Tipo:', typeof formData.clasificacion);
     console.log('🔍 [DEBUG] Tipo Emisor:', formData.tipoEmisor, 'Tipo:', typeof formData.tipoEmisor);
     
@@ -323,27 +340,24 @@ export class L01ModalFormComponent implements OnInit {
     console.log('🔍 [DEBUG] Códigos Extranjeros disponibles:', this.codigosExtranjeros);
     console.log('🔍 [DEBUG] ===== FIN DEBUG =====');
 
-    // 🔧 [FIX] CONVERTIR TIPOS ANTES DE VALIDAR - SOLUCIÓN DEFINITIVA AL ERROR
-    const dataToValidate: L01RegulatoryData = {
-      tipoIdentificacion: formData.tipoIdentificacion,
-      identificacion: formData.identificacion,
-      clasificacion: +formData.clasificacion, // Convertir a number ANTES de validar
-      tipoEmisor: +formData.tipoEmisor // Convertir a number ANTES de validar
+    // 🚀 [SIN VALIDACIONES] PREPARAR DATOS PARA ENVÍO DIRECTO
+    // AHORA SE ENVÍAN LOS IDs DE FK CORRECTOS PARA LA BASE DE DATOS
+    const dataToSend: L01RegulatoryData = {
+      tipoIdentificacion: formData.tipoIdentificacion,        // string (R/X) - Código directo
+      identificacion: formData.identificacion,                // string - Código directo
+      clasificacion: formData.clasificacion,                  // number - ID de T173 (FK)
+      tipoEmisor: formData.tipoEmisor                         // number - ID de T73 (FK)
     };
 
-    console.log('🔧 [FIX] Datos convertidos para validación:', dataToValidate);
-    console.log('🔧 [FIX] Tipos después de conversión:');
-    console.log('  - clasificacion:', dataToValidate.clasificacion, 'Tipo:', typeof dataToValidate.clasificacion);
-    console.log('  - tipoEmisor:', dataToValidate.tipoEmisor, 'Tipo:', typeof dataToValidate.tipoEmisor);
+    console.log('🚀 [SIN VALIDACIONES] Datos preparados para envío directo:', dataToSend);
+    console.log('🚀 [SIN VALIDACIONES] Tipos de datos:');
+    console.log('  - clasificacion:', dataToSend.clasificacion, 'Tipo:', typeof dataToSend.clasificacion, '(ID de T173)');
+    console.log('  - tipoEmisor:', dataToSend.tipoEmisor, 'Tipo:', typeof dataToSend.tipoEmisor, '(ID de T73)');
+    console.log('🚀 [SIN VALIDACIONES] AHORA SE ENVÍAN IDs DE FK CORRECTOS PARA LA BASE DE DATOS');
 
-    // 🔧 [FIX] VALIDAR CON DATOS CONVERTIDOS, NO CON ORIGINALES
-    if (!this.validateFormWithData(dataToValidate)) {
-      this.isSubmitting = false;
-      return;
-    }
-
-    // Emitir datos al componente padre
-    this.dataSaved.emit(dataToValidate);
+    // 🚀 [SIN VALIDACIONES] ENVIAR DATOS SIN VALIDACIÓN
+    // Ahora se envían IDs de FK correctos para la base de datos
+    this.dataSaved.emit(dataToSend);
     
     // Cerrar modal después de un breve delay
     setTimeout(() => {
@@ -410,16 +424,21 @@ export class L01ModalFormComponent implements OnInit {
   }
 
   /**
-   * Verifica si un campo es inválido y ha sido tocado
+   * ❌ [DESHABILITADO] Verifica si un campo es inválido y ha sido tocado
+   * VALIDACIONES DESHABILITADAS - NO SE USA MÁS
    */
+  /*
   isFieldInvalid(fieldName: string): boolean {
     const field = this.l01Form.get(fieldName);
     return field ? field.invalid && field.touched : false;
   }
+  */
 
   /**
-   * Obtiene el mensaje de error para un campo
+   * ❌ [DESHABILITADO] Obtiene el mensaje de error para un campo
+   * VALIDACIONES DESHABILITADAS - NO SE USA MÁS
    */
+  /*
   getFieldError(fieldName: string): string {
     const field = this.l01Form.get(fieldName);
     if (field && field.errors) {
@@ -432,4 +451,5 @@ export class L01ModalFormComponent implements OnInit {
     }
     return '';
   }
+  */
 }

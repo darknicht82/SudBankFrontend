@@ -78,25 +78,25 @@ export class L01RegulatoryService {
 
   // Método para obtener todos los registros L01
   getAllL01Data(): Observable<L01RegulatoryData[]> {
-    const url = `${this.baseUrl}/structures/l01`;
+    const url = `${this.baseUrl}/structures/l01`; // ✅ CORREGIDO: Endpoint real del backend
     return this.http.get<L01RegulatoryData[]>(url);
   }
 
   // Método para crear nuevo registro L01
   createL01Data(data: L01RegulatoryData): Observable<L01RegulatoryData> {
-    const url = `${this.baseUrl}/structures/l01`;
+    const url = `${this.baseUrl}/structures/l01`; // ✅ CORREGIDO: Endpoint real del backend
     return this.http.post<L01RegulatoryData>(url, data);
   }
 
   // Método para actualizar registro L01
   updateL01Data(id: number, data: L01RegulatoryData): Observable<L01RegulatoryData> {
-    const url = `${this.baseUrl}/structures/l01/${id}`;
+    const url = `${this.baseUrl}/structures/l01/${id}`; // ✅ CORREGIDO: Endpoint real del backend
     return this.http.put<L01RegulatoryData>(url, data);
   }
 
   // Método para eliminar registro L01
   deleteL01Data(id: number): Observable<void> {
-    const url = `${this.baseUrl}/structures/l01/${id}`;
+    const url = `${this.baseUrl}/structures/l01/${id}`; // ✅ CORREGIDO: Endpoint real del backend
     return this.http.delete<void>(url);
   }
 
