@@ -40,6 +40,7 @@ export class L01MainComponent implements OnInit {
   
   // Datos del reporte
   datosL01: L01RegulatoryData[] = [];
+  registrosFiltrados: number = 0; // ✅ NUEVO: Contador de registros filtrados por validación L01
   loading = false;
   error = '';
 
@@ -265,7 +266,10 @@ export class L01MainComponent implements OnInit {
     // ✅ VALIDACIÓN ESTRICTA L01: Solo permitir códigos R y X
     const codigosPermitidosL01 = ['R', 'X'];
     
-    return backendData.map(item => {
+    // ✅ CONTAR REGISTROS FILTRADOS: Para mostrar mensaje informativo
+    let registrosFiltrados = 0;
+    
+    const datosTransformados = backendData.map(item => {
       // ✅ TRANSFORMACIÓN: Mapeo correcto según estructura real de la API
       const transformedItem = {
         tipoIdentificacion: this.mapTipoIdentificacion(item.codigoTipoIdentificacion),
@@ -291,10 +295,22 @@ export class L01MainComponent implements OnInit {
           registro: item,
           mensaje: 'Este registro contiene un código de tipo de identificación que no está permitido en L01'
         });
+        registrosFiltrados++;
       }
       
       return tipoIdentificacionValido && datosBasicosValidos;
     });
+    
+    // ✅ ACTUALIZAR CONTADOR: Para mostrar en el mensaje informativo
+    this.registrosFiltrados = registrosFiltrados;
+    
+    this.txtLogger.info('L01MainComponent', 'Transformación L01 completada', {
+      totalRegistrosBackend: backendData.length,
+      registrosValidos: datosTransformados.length,
+      registrosFiltrados: registrosFiltrados
+    });
+    
+    return datosTransformados;
   }
 
   /**

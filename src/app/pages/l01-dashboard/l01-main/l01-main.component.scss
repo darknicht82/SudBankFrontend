@@ -497,6 +497,67 @@
     }
   }
 
+  /* ✅ NUEVO: MENSAJE DE REGISTROS FILTRADOS */
+  .filtered-records-message {
+    margin: 20px 0;
+    
+    .alert-warning {
+      border-radius: 8px;
+      padding: 20px;
+      border-left: 4px solid #ffc107;
+      background-color: #fff3cd;
+      border-color: #ffeaa7;
+      color: #856404;
+      
+      h4 {
+        color: #856404;
+        margin: 0 0 15px 0;
+        font-size: 1.2em;
+        
+        &::before {
+          content: "⚠️ ";
+          margin-right: 8px;
+        }
+      }
+      
+      p {
+        margin: 8px 0;
+        font-size: 0.95em;
+        
+        strong {
+          color: #856404;
+        }
+      }
+      
+      ul {
+        margin: 15px 0;
+        padding-left: 20px;
+        
+        li {
+          margin: 8px 0;
+          font-size: 0.9em;
+          line-height: 1.4;
+          
+          strong {
+            color: #856404;
+          }
+        }
+      }
+      
+      .text-muted {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #ffeaa7;
+        
+        small {
+          font-size: 0.9rem;
+          line-height: 1.4;
+          color: #6c757d;
+        }
+      }
+    }
+  }
+
   .table-container {
     overflow-x: auto;
     border-radius: 8px;
