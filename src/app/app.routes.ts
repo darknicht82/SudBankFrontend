@@ -10,6 +10,7 @@ import { L08HistoricoComponent } from './pages/l08-dashboard/l08-historico/l08-h
 import { L08CompararComponent } from './pages/l08-dashboard/l08-comparar/l08-comparar.component';
 import { L08AuditoriaComponent } from './pages/l08-dashboard/l08-auditoria/l08-auditoria.component';
 import { L01MainComponent } from './pages/l01-dashboard/l01-main/l01-main.component';
+import { L03MainComponent } from './pages/l03-dashboard/l03-main/l03-main.component';
 
 // Importar nuevos componentes L01
 import { L01FormComponent } from './components/l01/l01-form/l01-form.component';
@@ -37,6 +38,8 @@ export const routes: Routes = [
     { path: 'comparar', component: L08CompararComponent },
     { path: 'auditoria', component: L08AuditoriaComponent },
   ]},
+
+  { path: 'l03', component: L03MainComponent },
   
   // Rutas con prefijo regulatory (para consistencia con el menú)
   { path: 'regulatory', children: [
@@ -51,9 +54,12 @@ export const routes: Routes = [
       { path: 'comparar', component: L08CompararComponent },
       { path: 'auditoria', component: L08AuditoriaComponent },
     ]},
+
+    { path: 'l03', component: L03MainComponent },
+
     // Placeholder routes para otros reportes (cuando se implementen)
     { path: 'l02', redirectTo: 'l01' },
-    { path: 'l03', redirectTo: 'l01' },
+    // { path: 'l03', redirectTo: 'l01' },
     { path: 'l04', redirectTo: 'l01' },
     { path: 'l05', redirectTo: 'l01' },
     { path: 'l06', redirectTo: 'l01' },

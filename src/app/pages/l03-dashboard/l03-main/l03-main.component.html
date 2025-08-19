@@ -1,0 +1,511 @@
+<!-- COMPONENTE L01 MAIN - DASHBOARD PRINCIPAL -->
+<!-- Manual de Control de Inversiones - Marzo 2017 -->
+<!-- Superintendencia de Bancos del Ecuador -->
+
+<div class="l01-main-container">
+  <!-- CABECERA -->
+  <div class="header">
+    <h1>L03 - Saldo y Liquidaciones de inversiones</h1>
+    <p class="subtitle">Registro de saldo y liquidaciones de inversiones</p>
+  </div>
+
+  <!-- INDICADOR DE MODO DE DATOS >
+  <div class="data-mode-indicator" [class]="isUsingMockData ? 'mock-mode' : 'real-mode'">
+    <div class="mode-badge">
+      <i class="fas" [class]="isUsingMockData ? 'fa-flask' : 'fa-database'"></i>
+      <span>{{ isUsingMockData ? 'DATOS MOCK (Desarrollo)' : 'DATOS REALES (Producción)' }}</span>
+      <button *ngIf="!isProduction" (click)="toggleDataMode()" class="btn btn-sm btn-outline-light">
+        <i class="fas fa-exchange-alt"></i>
+        Cambiar a {{ isUsingMockData ? 'Datos Reales' : 'Datos Mock' }}
+      </button>
+    </div>
+  </div-->
+
+  <!-- INFORMACIÓN DE ESTRUCTURA -->
+  <div class="structure-info">
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Información de la Estructura L03</h3>
+      </div>
+      <div class="card-content">
+        <p><strong>Descripción:</strong> {{ tooltips.description }}</p>
+        <p><strong>Periodicidad:</strong> {{ tooltips.periodicity }}</p>
+        <p><strong>Plazo entrega:</strong> {{ tooltips.deadline }}</p>
+        <p><strong>Código Banco:</strong> {{ tooltips.bankCode }}</p>
+        <p><strong>Formato archivo:</strong> {{ tooltips.fileFormat }}</p>
+        <p><strong>Fuente:</strong> {{ tooltips.source }}</p>
+        
+        <div class="requirements">
+          <strong>Requisitos:</strong>
+          <ul>
+            <li *ngFor="let req of tooltips.requirements">{{ req }}</li>
+          </ul>
+        </div>
+
+        <!-- <div class="fields-info">
+          <strong>Campos Oficiales (💡 hover para detalles):</strong>
+          <div class="fields-grid">
+            <div *ngFor="let field of tooltips.fields" class="field-item">
+              <span class="field-position">{{ field.position }}.</span>
+              <span class="field-name">{{ field.name }}</span>
+              <span class="field-table">({{ field.table }})</span>
+              <div class="field-description">{{ field.description }}</div>
+            </div>
+          </div>
+        </div> -->
+        <strong>Campos Oficiales:</strong>
+          <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
+            <app-l03-fields-table></app-l03-fields-table>
+          </div>  
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filters-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Filtros de Reporte</h3>
+      </div>
+      <div class="card-content">
+        <div class="filters-grid">
+          <div class="form-field">
+            <label>Fecha Inicio:</label>
+            <input type="date" [(ngModel)]="fechaInicio" class="form-control">
+          </div>
+          <div class="form-field">
+            <label>Fecha Fin:</label>
+            <input type="date" [(ngModel)]="fechaFin" class="form-control">
+          </div>
+          <div class="form-field">
+            <label>Tipo Identificación:</label>
+            <select [(ngModel)]="tipoIdentificacion" class="form-control">
+              <option value="">Todos</option>
+              <option *ngFor="let tipo of tiposIdentificacionL01" [value]="tipo.codigo">
+                {{tipo.codigo}} - {{tipo.descripcion}}
+              </option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Clasificación:</label>
+            <select [(ngModel)]="clasificacion" class="form-control">
+              <option value="">Todas</option>
+              <option *ngFor="let clasificacion of clasificacionesL01" [value]="clasificacion.codigo">
+                {{clasificacion.codigo}} - {{clasificacion.descripcion | titlecase}}
+              </option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Tipo Emisor:</label>
+            <select [(ngModel)]="tipoEmisor" class="form-control">
+              <option value="">Todos</option>
+              <option *ngFor="let tipo of tiposEmisorL01" [value]="tipo.codigo">
+                {{tipo.codigo}} - {{tipo.descripcion | titlecase}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <button (click)="generateReport()" [disabled]="loading" class="btn btn-primary">
+            {{ loading ? 'Generando...' : 'Generar Reporte' }}
+          </button>
+          <button (click)="exportReport()" class="btn btn-success">
+            Exportar Reporte
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERRORES -->
+  <div *ngIf="error" class="error-message">
+    <div class="alert alert-danger">
+      <strong>Error:</strong> {{ error }}
+    </div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div *ngIf="datosL03.length > 0" class="summary-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>📊 Resumen del Reporte</h3>
+      </div>
+      <div class="card-content">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <label>Total Registros:</label>
+            <span>{{ getTotalRegistros() }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Fecha Generación:</label>
+            <span>{{ getFechaGeneracion() }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Emisores:</label>
+            <span>{{ getCountByClasificacion(1) }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Custodios:</label>
+            <span>{{ getCountByClasificacion(2) }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Depositarios:</label>
+            <span>{{ getCountByClasificacion(3) }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Contrapartes:</label>
+            <span>{{ getCountByClasificacion(4) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div *ngIf="showHistorial" class="history-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>📜 Historial de Actividades</h3>
+      </div>
+      <div class="card-content">
+        <div class="history-list">
+          <div *ngFor="let item of historial" class="history-item">
+            <div class="history-date">{{ item.fecha }}</div>
+            <div class="history-user">{{ item.usuario }}</div>
+            <div class="history-action">{{ item.accion }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUEVO: Formulario de Creación de Registros -->
+  <div class="creation-section" *ngIf="showCreationForm">
+    <div class="section-header">
+      <h3>➕ Crear Nuevo Registro L03</h3>
+      <button class="close-button" (click)="onCreationCancelled()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+    
+    <div class="creation-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="newTipoIdentificacion">Tipo Identificación *</label>
+          <select id="newTipoIdentificacion" 
+                  [(ngModel)]="newRecord.tipoIdentificacion" 
+                  class="form-control">
+            <option value="R">R - RUC Nacional</option>
+            <option value="X">X - Código Extranjero</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="newIdentificacion">Identificación *</label>
+          <input type="text" 
+                 id="newIdentificacion" 
+                 [(ngModel)]="newRecord.identificacion" 
+                 class="form-control"
+                 [maxlength]="newRecord.tipoIdentificacion === 'R' ? 13 : 7"
+                 placeholder="Ingrese identificación">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="newClasificacion">Clasificación *</label>
+          <select id="newClasificacion" 
+                  [(ngModel)]="newRecord.clasificacion" 
+                  class="form-control">
+            <option value="1">1 - Emisor</option>
+            <option value="2">2 - Custodio</option>
+            <option value="3">3 - Depositario</option>
+            <option value="4">4 - Contraparte</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="newTipoEmisor">Tipo Emisor *</label>
+          <select id="newTipoEmisor" 
+                  [(ngModel)]="newRecord.tipoEmisor" 
+                  class="form-control">
+            <option value="0">0 - Supranacionales</option>
+            <option value="2">2 - Pública financiera</option>
+            <option value="3">3 - Privada financiera</option>
+            <option value="4">4 - Pública no financiera</option>
+            <option value="5">5 - Privada no financiera</option>
+            <option value="7">7 - Fondos de inversión</option>
+            <option value="8">8 - Estados Soberanos</option>
+            <option value="9">9 - Multilaterales</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button class="btn btn-success" (click)="saveNewRecord()" type="button">
+          ✅ Guardar Registro
+        </button>
+        <button class="btn btn-secondary" (click)="onCreationCancelled()" type="button">
+          ❌ Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUEVO: Botón para Crear Nuevo Registro -->
+  <div class="action-buttons" *ngIf="!showCreationForm">
+    <button class="btn btn-primary" (click)="createNewRecord()" type="button">
+      ➕ Crear Nuevo Registro L03
+    </button>
+  </div>
+
+  <!-- NUEVO: Componente de Confirmación -->
+
+  <!-- <app-L03-confirmation
+    [showModal]="showConfirmationModal"
+    [confirmationData]="confirmationData"
+    [loading]="confirmationLoading"
+    (confirmed)="onConfirmationConfirmed($event)"
+    (cancelled)="onConfirmationCancelled()"
+    (closed)="onConfirmationClosed()">
+  </app-L03-confirmation> -->
+
+
+  <!-- TABLA DE DATOS -->
+  <div *ngIf="datosL03.length > 0" class="data-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Datos del Reporte L03</h3>
+      </div>
+      <div class="card-content">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th *ngFor="let column of displayedColumns" 
+                    (mouseenter)="showFieldTooltip(column, $event)"
+                    (mouseleave)="hideTooltip()">
+                  {{ getColumnTitle(column) }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of datosL03; let i = index" class="data-row">
+                <!-- Tipo Identificación -->
+                <td class="editable-cell" 
+                    [class.edit-mode]="isEditing(i, 'tipoIdentificacion')"
+                    (click)="startEdit(i, 'tipoIdentificacion')">
+                  <div *ngIf="!isEditing(i, 'tipoIdentificacion')" class="cell-content">
+                    <span class="cell-value">{{ item.tipoIdentificacion === 'R' ? 'R - RUC Nacional' : 'X - Código Extranjero' }}</span>
+                    <span class="edit-icon">✏️</span>
+                  </div>
+                  <div *ngIf="isEditing(i, 'tipoIdentificacion')" class="edit-controls">
+                    <select [(ngModel)]="editValue" class="edit-select">
+                      <option value="R">R - RUC Nacional</option>
+                      <option value="X">X - Código Extranjero</option>
+                    </select>
+                    <div class="edit-actions">
+                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
+                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Identificación -->
+                <td class="editable-cell" 
+                    [class.edit-mode]="isEditing(i, 'identificacion')"
+                    (click)="startEdit(i, 'identificacion')">
+                  <div *ngIf="!isEditing(i, 'identificacion')" class="cell-content">
+                    <span class="cell-value">{{ item.identificacion }}</span>
+                    <span class="edit-icon">✏️</span>
+                  </div>
+                  <div *ngIf="isEditing(i, 'identificacion')" class="edit-controls">
+                    <!-- Select para códigos extranjeros, input para RUC -->
+                    <select *ngIf="getTipoIdentificacionActual(i) === 'X'" 
+                            [(ngModel)]="editValue" 
+                            class="edit-select">
+                      <option *ngFor="let codigo of codigosExtranjerosL03" 
+                              [value]="codigo.codigo">
+                        {{ codigo.codigo }} - {{ codigo.descripcion }}
+                      </option>
+                    </select>
+                    <input *ngIf="getTipoIdentificacionActual(i) === 'R'" 
+                           type="text" 
+                           [(ngModel)]="editValue" 
+                           class="edit-input"
+                           maxlength="13"
+                           (input)="onIdentificacionInput($event)"
+                           placeholder="Ingrese RUC">
+                    <div class="edit-actions">
+                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
+                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Clasificación -->
+                <td class="editable-cell" 
+                    [class.edit-mode]="isEditing(i, 'clasificacion')"
+                    (click)="startEdit(i, 'clasificacion')">
+                  <div *ngIf="!isEditing(i, 'clasificacion')" class="cell-content">
+                    <span class="cell-value">{{ getClasificacionDesc(item.clasificacion) }}</span>
+                    <span class="edit-icon">✏️</span>
+                  </div>
+                  <div *ngIf="isEditing(i, 'clasificacion')" class="edit-controls">
+                    <select [(ngModel)]="editValue" class="edit-select">
+                      <option value="1">1 - Emisor</option>
+                      <option value="2">2 - Custodio</option>
+                      <option value="3">3 - Depositario</option>
+                      <option value="4">4 - Contraparte</option>
+                    </select>
+                    <div class="edit-actions">
+                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
+                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Tipo Emisor -->
+                <td class="editable-cell" 
+                    [class.edit-mode]="isEditing(i, 'tipoEmisor')"
+                    (click)="startEdit(i, 'tipoEmisor')">
+                  <div *ngIf="!isEditing(i, 'tipoEmisor')" class="cell-content">
+                    <span class="cell-value">{{ getTipoEmisorDesc(item.tipoEmisor) }}</span>
+                    <span class="edit-icon">✏️</span>
+                  </div>
+                  <div *ngIf="isEditing(i, 'tipoEmisor')" class="edit-controls">
+                    <select [(ngModel)]="editValue" class="edit-select">
+                      <option value="0">0 - Supranacionales</option>
+                      <option value="2">2 - Pública financiera</option>
+                      <option value="3">3 - Privada financiera</option>
+                      <option value="4">4 - Pública no financiera</option>
+                      <option value="5">5 - Privada no financiera</option>
+                      <option value="7">7 - Fondos de inversión</option>
+                      <option value="8">8 - Estados Soberanos</option>
+                      <option value="9">9 - Multilaterales</option>
+                    </select>
+                    <div class="edit-actions">
+                      <button class="btn-save" (click)="saveEdit()" title="Guardar">✓</button>
+                      <button class="btn-cancel" (click)="cancelEdit()" title="Cancelar">✗</button>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Acciones -->
+                <td class="action-cell">
+                  <div class="action-buttons">
+                    <button class="btn btn-info btn-sm" 
+                            (click)="verDetalle(item)" 
+                            title="Ver detalle">
+                      👁️
+                    </button>
+                    <button class="btn btn-warning btn-sm" 
+                            (click)="editar(item)" 
+                            title="Editar registro completo">
+                      ✏️
+                    </button>
+                    <button class="btn btn-danger btn-sm" 
+                            (click)="confirmDeletion(item)" 
+                            title="Eliminar registro">
+                      🗑️
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOLTIP L03 -->
+  <div *ngIf="showTooltip && currentTooltip" 
+       class="tooltip-popup" 
+       [style.left.px]="tooltipPosition.x + 10"
+       [style.top.px]="tooltipPosition.y - 10">
+    <div class="tooltip-content">
+      <h4>{{ currentTooltip.title }}</h4>
+      <p>{{ currentTooltip.description }}</p>
+      
+      <div class="tooltip-details">
+        <div class="tooltip-row">
+          <strong>Formato:</strong> {{ currentTooltip.format }}
+        </div>
+        <div class="tooltip-row">
+          <strong>Validación:</strong> {{ currentTooltip.validation }}
+        </div>
+        <div class="tooltip-row">
+          <strong>Ejemplo:</strong> {{ currentTooltip.example }}
+        </div>
+        <div class="tooltip-row">
+          <strong>Fuente:</strong> {{ currentTooltip.source }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPONENTE DE EXPORTACIÓN L03 -->
+  <div class="export-section" *ngIf="!loading && exportData.length > 0">
+    <app-l01-export
+      [data]="exportData"
+      [fechaCorte]="fechaCorte"
+      [usuario]="usuarioActual"
+      (exportCompleted)="onExportCompleted($event)"
+      (exportError)="onExportError($event)">
+    </app-l01-export>
+  </div>
+
+  <!-- CONTROLES DE PRUEBA Y DEBUG -->
+  <div class="debug-controls" *ngIf="!loading && showLogMonitor">
+    <div class="card">
+      <div class="card-header">
+        <h5>
+          <i class="fas fa-tools me-2"></i>
+          Controles de Prueba
+        </h5>
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-outline-danger btn-sm w-100" (click)="testError()">
+              <i class="fas fa-bug me-2"></i>
+              Simular Error
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-outline-warning btn-sm w-100" (click)="testWarning()">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              Simular Advertencia
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-outline-info btn-sm w-100" (click)="refreshData()">
+              <i class="fas fa-sync-alt me-2"></i>
+              Refrescar Datos
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-outline-secondary btn-sm w-100" (click)="toggleLogMonitor()">
+              <i class="fas fa-eye me-2"></i>
+              {{ showLogMonitor ? 'Ocultar' : 'Mostrar' }} Monitor
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONITOR DE LOGS -->
+  <div class="log-monitor-section" *ngIf="showLogMonitor">
+    <app-log-monitor></app-log-monitor>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Generando reporte L01...</p>
+    </div>
+  </div>
+</div>
