@@ -1,0 +1,87 @@
+<!-- COMPONENTE l02 MAIN - DASHBOARD PRINCIPAL -->
+<!-- Manual de Control de Inversiones - Marzo 2017 -->
+<!-- Superintendencia de Bancos del Ecuador -->
+
+
+<div class="l02-main-container">
+  <!-- CABECERA -->
+  <div class="header">
+    <h1>L02 - Portafolio de Inversiones</h1>
+    <p class="subtitle">Se deberá reportar únicamente los nuevos títulos que se hayan instrumentado. Cada título debe reportarse una única vez en esta estructura, hasta que se lo venda o liquide. </p>
+  </div>
+
+  <!-- INFORMACIÓN DE ESTRUCTURA -->
+  <div class="structure-info">
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Información de la Estructura L02</h3>
+      </div>
+      <div class="card-content">
+        <p><strong>Descripción:</strong> Cada mes se deberá reportar únicamente los nuevos títulos que se hayan instrumentado en ese período. Cada título debe reportarse una única vez en esta estructura, hasta que se lo venda o liquide. Si un título que salió del portafolio de la entidad es adquirido o reingresado nuevamente en otro mes, debe volverse a reportar con la nueva fecha de compra. </p>
+        <p><strong>Periodicidad:</strong> Mensual </p>
+        <p><strong>Plazo entrega:</strong> Según requerimientos de la SB</p>
+        <p><strong>Código Banco:</strong> 1038</p>
+        <p><strong>Formato archivo:</strong> L02Exxxxddmmaaaa.txt</p>
+        <p><strong>Fuente:</strong> Manual de Control de Inversiones - SB Marzo 2017</p>
+        
+        <div class="requirements">
+          <strong>Requisitos:</strong>
+          <ul>
+            <li>Estructura eventual (no mensual)</li>
+            <li>4 campos oficiales obligatorios</li>
+            <li>Formato TXT con separador tabulador</li>
+            <li>Validaciones según manual SB</li>
+          </ul>
+        </div>
+        <div class="row">
+            <div class="md-6">
+                <mat-accordion>
+                    <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+                        <mat-expansion-panel-header>
+                        <mat-panel-title> Campos Oficiales L02 </mat-panel-title>
+                        <mat-panel-description>
+                            Click para {{panelOpenState() ? 'cerrar' : 'abrir'}}
+                        </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <p>I'm visible because I am open</p>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+
+        </div>
+        
+
+        <div class="fields-info">
+          <strong>Campos Oficiales L02:</strong>
+          <div class="fields-grid">
+            <div class="field-item">
+              <span class="field-position">1.</span>
+              <span class="field-name">Tipo de Identificación</span>
+              <span class="field-table">(Tabla 4)</span>
+              <div class="field-description">R (RUC Nacional) o X (Extranjero)</div>
+            </div>
+            <div class="field-item">
+              <span class="field-position">2.</span>
+              <span class="field-name">Identificación del Emisor</span>
+              <span class="field-table">(Tabla 164)</span>
+              <div class="field-description">RUC 13 dígitos o código extranjero</div>
+            </div>
+            <div class="field-item">
+                <span class="field-position">3.</span>
+                <span class="field-name">Número de título</span>
+                <span class="field-table"></span>
+                <div class="field-description">Corresponde a la numeración asignada por el emisor</div>
+            </div>
+            <div class="field-item">
+              <span class="field-position">4.</span>
+              <span class="field-name">Fecha de emisión</span>
+              <span class="field-table">Formato fecha dd/mm/aaaa</span>
+              <div class="field-description"></div>
+            </div>
+             
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
