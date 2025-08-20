@@ -43,8 +43,8 @@ export const routes: Routes = [
       { path: 'auditoria', component: L08AuditoriaComponent },
     ]},
     // Placeholder routes para otros reportes (cuando se implementen)
-    { path: 'l02', redirectTo: 'l01' },
-    { path: 'l03', redirectTo: 'l01' },
+    { path: 'l02', redirectTo: 'l02' },
+    { path: 'l03', redirectTo: 'l03' },
     { path: 'l04', redirectTo: 'l01' },
     { path: 'l05', redirectTo: 'l01' },
     { path: 'l06', redirectTo: 'l01' },
