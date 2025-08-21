@@ -1,0 +1,255 @@
+/* ========================================
+   MODAL AGREGAR EMISOR/CUSTODIO - ESTILOS SUDBANK
+   ======================================== */
+
+/* ========================================
+   OVERLAY Y MODAL PRINCIPAL
+   ======================================== */
+
+/* Overlay del modal */
+:host ::ng-deep .p-dialog-mask {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(4px);
+}
+
+/* Modal principal */
+:host ::ng-deep .p-dialog {
+  border-radius: var(--sudbank-border-radius-lg) !important;
+  box-shadow: var(--sudbank-shadow-xl) !important;
+  border: none !important;
+  overflow: hidden;
+}
+
+/* ========================================
+   HEADER DEL MODAL
+   ======================================== */
+
+:host ::ng-deep .p-dialog-header {
+  background: var(--gradient-primary, linear-gradient(135deg, var(--sudbank-primary) 0%, var(--sudbank-primary-light) 100%)) !important;
+  color: white !important;
+  border-radius: var(--sudbank-border-radius-lg) var(--sudbank-border-radius-lg) 0 0 !important;
+  padding: var(--sudbank-spacing-lg) var(--sudbank-spacing-xl) !important;
+  border-bottom: 2px solid var(--sudbank-primary) !important;
+}
+
+:host ::ng-deep .p-dialog-title {
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: var(--sudbank-font-size-xl) !important;
+}
+
+:host ::ng-deep .p-dialog-header-icon {
+  color: white !important;
+  font-size: var(--sudbank-font-size-lg) !important;
+  transition: var(--sudbank-transition) !important;
+}
+
+:host ::ng-deep .p-dialog-header-icon:hover {
+  color: var(--sudbank-gray-200) !important;
+  transform: scale(1.1);
+}
+
+/* ========================================
+   CONTENIDO DEL MODAL
+   ======================================== */
+
+:host ::ng-deep .p-dialog-content {
+  background: white !important;
+  padding: var(--sudbank-spacing-xl) !important;
+  border-radius: 0 !important;
+}
+
+/* ========================================
+   FOOTER DEL MODAL
+   ======================================== */
+
+:host ::ng-deep .p-dialog-footer {
+  background: var(--sudbank-gray-50) !important;
+  border-top: 1px solid var(--sudbank-gray-200) !important;
+  padding: var(--sudbank-spacing-lg) var(--sudbank-spacing-xl) !important;
+  border-radius: 0 0 var(--sudbank-border-radius-lg) var(--sudbank-border-radius-lg) !important;
+}
+
+/* ========================================
+   CAMPOS DEL FORMULARIO
+   ======================================== */
+
+.field {
+  margin-bottom: var(--sudbank-spacing-lg);
+}
+
+/* Labels */
+.label-sudbank {
+  display: block;
+  font-weight: 600;
+  color: var(--sudbank-gray-700);
+  margin-bottom: var(--sudbank-spacing-sm);
+  font-size: var(--sudbank-font-size-sm);
+}
+
+.label-sudbank.required::after {
+  content: ' *';
+  color: var(--sudbank-danger);
+}
+
+/* ========================================
+   SELECT DE PAÍSES
+   ======================================== */
+
+:host ::ng-deep .p-select {
+  width: 100% !important;
+  border: 2px solid var(--sudbank-gray-300) !important;
+  border-radius: var(--sudbank-border-radius) !important;
+  transition: var(--sudbank-transition) !important;
+  background-color: white !important;
+}
+
+:host ::ng-deep .p-select:hover {
+  border-color: var(--sudbank-gray-400) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--sudbank-shadow-sm);
+}
+
+:host ::ng-deep .p-select.p-focus {
+  border-color: var(--sudbank-primary) !important;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1) !important;
+}
+
+:host ::ng-deep .p-select-label {
+  color: var(--sudbank-gray-700) !important;
+  font-weight: 500 !important;
+  padding: var(--sudbank-spacing-sm) var(--sudbank-spacing-md) !important;
+}
+
+:host ::ng-deep .p-select-trigger {
+  color: var(--sudbank-gray-500) !important;
+  padding: var(--sudbank-spacing-sm) !important;
+  transition: var(--sudbank-transition) !important;
+}
+
+:host ::ng-deep .p-select-trigger:hover {
+  color: var(--sudbank-primary) !important;
+}
+
+/* Panel del select */
+:host ::ng-deep .p-select-panel {
+  border: 2px solid var(--sudbank-primary) !important;
+  border-radius: var(--sudbank-border-radius) !important;
+  box-shadow: var(--sudbank-shadow-lg) !important;
+  margin-top: 4px !important;
+}
+
+:host ::ng-deep .p-select-items .p-select-item {
+  padding: var(--sudbank-spacing-sm) var(--sudbank-spacing-md) !important;
+  transition: var(--sudbank-transition) !important;
+  border-radius: var(--sudbank-border-radius) !important;
+  margin: 2px var(--sudbank-spacing-sm) !important;
+}
+
+:host ::ng-deep .p-select-items .p-select-item:hover {
+  background-color: var(--sudbank-gray-100) !important;
+  color: var(--sudbank-primary) !important;
+  transform: translateX(4px);
+}
+
+:host ::ng-deep .p-select-items .p-select-item.p-highlight {
+  background-color: var(--sudbank-primary) !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+/* ========================================
+   INPUTS DE TEXTO
+   ======================================== */
+
+:host ::ng-deep .p-inputtext {
+  width: 100% !important;
+  border: 2px solid var(--sudbank-gray-300) !important;
+  border-radius: var(--sudbank-border-radius) !important;
+  padding: var(--sudbank-spacing-sm) var(--sudbank-spacing-md) !important;
+  transition: var(--sudbank-transition) !important;
+  background-color: white !important;
+  font-size: var(--sudbank-font-size-base) !important;
+}
+
+:host ::ng-deep .p-inputtext:hover {
+  border-color: var(--sudbank-gray-400) !important;
+}
+
+:host ::ng-deep .p-inputtext:focus {
+  outline: none !important;
+  border-color: var(--sudbank-primary) !important;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1) !important;
+}
+
+:host ::ng-deep .p-inputtext.ng-invalid.ng-touched {
+  border-color: var(--sudbank-danger) !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+}
+
+/* ========================================
+   BOTONES
+   ======================================== */
+
+/* Los botones ya usan las clases .btn-sudbank del sistema */
+
+/* ========================================
+   MENSAJES
+   ======================================== */
+
+.error-message-sudbank {
+  color: var(--sudbank-danger);
+  font-size: var(--sudbank-font-size-sm);
+  margin-top: var(--sudbank-spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--sudbank-spacing-xs);
+}
+
+.error-message-sudbank::before {
+  content: '⚠️';
+}
+
+.info-message-sudbank {
+  color: var(--sudbank-info);
+  font-size: var(--sudbank-font-size-sm);
+  margin-top: var(--sudbank-spacing-xs);
+  font-style: italic;
+  background: var(--sudbank-gray-50);
+  border: 1px solid var(--sudbank-gray-200);
+  border-radius: var(--sudbank-border-radius);
+  padding: var(--sudbank-spacing-md);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  :host ::ng-deep .p-dialog {
+    width: 95% !important;
+    margin: var(--sudbank-spacing-md) !important;
+  }
+  
+  :host ::ng-deep .p-dialog-content {
+    padding: var(--sudbank-spacing-lg) !important;
+  }
+  
+  :host ::ng-deep .p-dialog-footer {
+    padding: var(--sudbank-spacing-lg) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  :host ::ng-deep .p-dialog {
+    width: 98% !important;
+    margin: var(--sudbank-spacing-sm) !important;
+  }
+  
+  :host ::ng-deep .p-button {
+    min-width: 100px !important;
+    padding: var(--sudbank-spacing-sm) var(--sudbank-spacing-md) !important;
+    font-size: var(--sudbank-font-size-xs) !important;
+  }
+}
+

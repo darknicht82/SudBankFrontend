@@ -1,8 +1,6 @@
-<!-- COMPONENTE L01 MAIN - DASHBOARD PRINCIPAL -->
-<!-- Manual de Control de Inversiones - Marzo 2017 -->
 <!-- Superintendencia de Bancos del Ecuador -->
 
-<div class="l01-main-container">
+<div class="l01-main-container l01-dashboard theme-l01">
   <!-- CABECERA -->
   <div class="header">
     <h1>L01 - Emisores, Custodios y Contrapartes</h1>
@@ -87,6 +85,10 @@
             <i class="pi pi-plus"></i>
             Crear Nuevo Registro
           </button>
+          <button (click)="showAddEmitterModal()" class="btn btn-warning">
+            <i class="pi pi-plus-circle"></i>
+            Agregar Emisor/Custodio
+          </button>
         </div>
       </div>
     </div>
@@ -147,7 +149,7 @@
         <h3>📋 Datos del Reporte L01</h3>
       </div>
       <div class="card-content">
-        
+         
         <!-- MENSAJE INFORMATIVO SOBRE REGISTROS FILTRADOS -->
         <div *ngIf="registrosFiltrados > 0" class="filtered-records-message">
           <div class="alert alert-warning">
@@ -166,7 +168,7 @@
             </p>
           </div>
         </div>
-        
+         
         <!-- MENSAJE CUANDO NO HAY DATOS -->
         <div *ngIf="datosL01.length === 0" class="no-data-message">
           <div class="alert alert-info">
@@ -194,7 +196,7 @@
             </div>
           </div>
         </div>
-        
+         
         <!-- FILTROS PARA VISTA DEL GRID -->
         <div class="grid-filters">
           <h4>🔍 Filtros para Vista del Grid</h4>
@@ -392,6 +394,12 @@
     (modalClosed)="onModalClosed()"
     (dataSaved)="onModalDataSaved($event)">
   </app-l01-modal-form>
+
+  <!-- MODAL PARA AGREGAR EMISOR/CUSTODIO -->
+  <app-l01-add-emitter-modal
+    [(visible)]="showEmitterModal"
+    (emitterAdded)="onEmitterAdded($event)">
+  </app-l01-add-emitter-modal>
 
   <!-- MODAL DE RESULTADOS DE VALIDACIÓN L01 ELIMINADO -->
 </div>

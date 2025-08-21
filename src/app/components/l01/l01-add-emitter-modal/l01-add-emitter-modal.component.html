@@ -1,0 +1,78 @@
+<p-dialog 
+  header="Agregar Nuevo Emisor/Custodio" 
+  [(visible)]="visible" 
+  [modal]="true" 
+  [closable]="false"
+  [dismissableMask]="false"
+  [style]="{width: '600px'}" 
+  (onHide)="closeModal()"
+  class="theme-l01">
+
+  <div *ngIf="loading" class="loading-message-sudbank">
+    <i class="pi pi-spinner pi-spin"></i> Cargando países...
+  </div>
+
+  <div *ngIf="error" class="error-message-sudbank">
+    <i class="pi pi-exclamation-triangle"></i> {{ error }}
+  </div>
+
+  <form [formGroup]="form" *ngIf="!loading" class="space-y-md">
+    <div class="field">
+      <label class="label-sudbank required">País *</label>
+      <p-select 
+        formControlName="codigoPais" 
+        [options]="paises" 
+        optionLabel="descripcion" 
+        optionValue="id" 
+        placeholder="Seleccione el país" 
+        (onChange)="onPaisChange($event)"
+        [showClear]="true"
+        [filter]="true"
+        filterPlaceholder="Buscar país...">
+      </p-select>
+      <small class="error-message-sudbank" *ngIf="form.get('codigoPais')?.errors?.['required']">El país es obligatorio</small>
+    </div>
+
+    <div class="field">
+      <label class="label-sudbank required">Código/Identificación *</label>
+      <input pInputText formControlName="codigo" [placeholder]="getPlaceholder()" [maxlength]="getMaxLength()" class="input-sudbank">
+      <small class="error-message-sudbank" *ngIf="form.get('codigo')?.errors?.['required']">El código es obligatorio</small>
+      <small class="error-message-sudbank" *ngIf="form.get('codigo')?.errors?.['rucLongitud']">El RUC debe tener exactamente 13 dígitos</small>
+      <small class="error-message-sudbank" *ngIf="form.get('codigo')?.errors?.['rucPrefijo']">Prefijo RUC inválido. Debe ser: 00, 10, 15, 17, 20, 21, 25 o 30</small>
+      <small class="error-message-sudbank" *ngIf="form.get('codigo')?.errors?.['rucVerificador']">Dígito verificador del RUC inválido</small>
+      <small class="error-message-sudbank" *ngIf="form.get('codigo')?.errors?.['pattern']">Formato general inválido</small>
+    </div>
+
+    <div class="field">
+      <label class="label-sudbank required">Descripción *</label>
+      <input pInputText formControlName="descripcion" placeholder="Nombre de la entidad" maxlength="255" class="input-sudbank">
+      <small class="error-message-sudbank" *ngIf="form.get('descripcion')?.errors?.['required']">La descripción es obligatoria</small>
+    </div>
+
+    <div class="info-message-sudbank" *ngIf="form.get('codigoPais')?.value">
+      <small>
+        <strong>📋 Información del País:</strong><br>
+        • <strong>🌍 País:</strong> {{ getPaisDescripcion(form.get('codigoPais')?.value) }}<br>
+        • <strong>🔒 Validación:</strong> 
+        <span *ngIf="form.get('codigoPais')?.value === 60" class="ecuador-info">
+          RUC Ecuador (00 + 9 dígitos CI + 1 dígito verificador)
+        </span>
+        <span *ngIf="form.get('codigoPais')?.value !== 60" class="extranjero-info">
+          Código extranjero (1-50 caracteres)
+        </span><br>
+        • <strong>📝 Formato esperado:</strong> 
+        <span *ngIf="form.get('codigoPais')?.value === 60" class="ruc-format">
+          Ejemplo: 0012345678901
+        </span>
+        <span *ngIf="form.get('codigoPais')?.value !== 60" class="extranjero-format">
+          Código alfanumérico único
+        </span>
+      </small>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <button pButton type="button" label="Cancelar" (click)="closeModal()" class="btn-sudbank btn-sudbank-outline"></button>
+    <button pButton type="button" label="Guardar" (click)="saveEmitter()" [disabled]="!form.valid || loading" class="btn-sudbank btn-sudbank-primary"></button>
+  </ng-template>
+</p-dialog>
