@@ -93,69 +93,97 @@
 }
 
 /* ========================================
-   SELECT DE PAÍSES
+   SELECT DE PAÍSES - ESTILOS CON ALTA ESPECIFICIDAD
    ======================================== */
 
-:host ::ng-deep .p-select {
+/* Select principal con máxima especificidad */
+:host ::ng-deep .p-select.p-select.p-select {
   width: 100% !important;
   border: 2px solid var(--sudbank-gray-300) !important;
   border-radius: var(--sudbank-border-radius) !important;
   transition: var(--sudbank-transition) !important;
   background-color: white !important;
+  background: white !important;
+  box-sizing: border-box !important;
 }
 
-:host ::ng-deep .p-select:hover {
+:host ::ng-deep .p-select.p-select.p-select:hover {
   border-color: var(--sudbank-gray-400) !important;
   transform: translateY(-1px);
   box-shadow: var(--sudbank-shadow-sm);
 }
 
-:host ::ng-deep .p-select.p-focus {
+:host ::ng-deep .p-select.p-select.p-select.p-focus {
   border-color: var(--sudbank-primary) !important;
   box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1) !important;
 }
 
-:host ::ng-deep .p-select-label {
+/* Label del select */
+:host ::ng-deep .p-select .p-select-label {
   color: var(--sudbank-gray-700) !important;
   font-weight: 500 !important;
   padding: var(--sudbank-spacing-sm) var(--sudbank-spacing-md) !important;
+  background-color: white !important;
+  background: white !important;
 }
 
-:host ::ng-deep .p-select-trigger {
+/* Trigger del select */
+:host ::ng-deep .p-select .p-select-trigger {
   color: var(--sudbank-gray-500) !important;
   padding: var(--sudbank-spacing-sm) !important;
   transition: var(--sudbank-transition) !important;
+  background-color: transparent !important;
 }
 
-:host ::ng-deep .p-select-trigger:hover {
+:host ::ng-deep .p-select .p-select-trigger:hover {
   color: var(--sudbank-primary) !important;
 }
 
 /* Panel del select */
-:host ::ng-deep .p-select-panel {
+:host ::ng-deep .p-select-panel.p-select-panel {
   border: 2px solid var(--sudbank-primary) !important;
   border-radius: var(--sudbank-border-radius) !important;
   box-shadow: var(--sudbank-shadow-lg) !important;
   margin-top: 4px !important;
+  background-color: white !important;
+  background: white !important;
 }
 
-:host ::ng-deep .p-select-items .p-select-item {
+/* Items del select */
+:host ::ng-deep .p-select-panel .p-select-items .p-select-item {
   padding: var(--sudbank-spacing-sm) var(--sudbank-spacing-md) !important;
   transition: var(--sudbank-transition) !important;
   border-radius: var(--sudbank-border-radius) !important;
   margin: 2px var(--sudbank-spacing-sm) !important;
+  background-color: transparent !important;
 }
 
-:host ::ng-deep .p-select-items .p-select-item:hover {
+:host ::ng-deep .p-select-panel .p-select-items .p-select-item:hover {
   background-color: var(--sudbank-gray-100) !important;
   color: var(--sudbank-primary) !important;
   transform: translateX(4px);
 }
 
-:host ::ng-deep .p-select-items .p-select-item.p-highlight {
+:host ::ng-deep .p-select-panel .p-select-items .p-select-item.p-highlight {
   background-color: var(--sudbank-primary) !important;
   color: white !important;
   font-weight: 600 !important;
+}
+
+/* Override específico para el fondo del select */
+:host ::ng-deep .p-select {
+  background: white !important;
+  background-color: white !important;
+}
+
+:host ::ng-deep .p-select * {
+  background-color: inherit !important;
+}
+
+/* Override para el input interno del select */
+:host ::ng-deep .p-select input {
+  background-color: white !important;
+  background: white !important;
 }
 
 /* ========================================
