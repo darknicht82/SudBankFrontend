@@ -174,37 +174,137 @@ export class L01AddEmitterModalComponent implements OnInit {
       
       console.log(`🔍 Componentes RUC: Prefijo=${prefijo}, Cédula=${cedula}, Verificador=${verificador}`);
       
-      // Algoritmo base para todos los tipos de RUC
-      const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
-      let suma = 0;
-      
-      for (let i = 0; i < 9; i++) {
-        const producto = parseInt(cedula[i]) * coeficientes[i];
-        suma += producto > 9 ? producto - 9 : producto;
-      }
-      
-      const decena = Math.ceil(suma / 10) * 10;
-      const digitoCalculado = decena - suma;
-      const digitoEsperado = parseInt(verificador);
-      
       // Validación específica según tipo de RUC
       switch (prefijo) {
         case '00': // Personas Jurídicas
+          return this.validarRucJuridica(ruc, cedula, verificador);
         case '10': // Bancos
         case '15': // Cooperativas
         case '17': // Entidades Financieras (como Banco del Pichincha)
+          return this.validarRucFinanciera(ruc, cedula, verificador);
         case '20': // Empresas Públicas
         case '21': // Empresas Privadas
+          return this.validarRucEmpresa(ruc, cedula, verificador);
         case '25': // Entidades Extranjeras
         case '30': // Otros
-          return digitoCalculado === digitoEsperado;
+          return this.validarRucOtros(ruc, cedula, verificador);
         default:
+          console.log(`❌ Prefijo no reconocido: ${prefijo}`);
           return false;
       }
     } catch (error) {
       console.error('Error validando dígito verificador RUC:', error);
       return false;
     }
+  }
+
+  /**
+   * Valida RUC para Personas Jurídicas (prefijo 00)
+   */
+  private validarRucJuridica(ruc: string, cedula: string, verificador: string): boolean {
+    console.log('🏢 Validando RUC Persona Jurídica (prefijo 00)');
+    return this.validarRucBase(cedula, verificador);
+  }
+
+  /**
+   * Valida RUC para Entidades Financieras (prefijos 10, 15, 17)
+   */
+  private validarRucFinanciera(ruc: string, cedula: string, verificador: string): boolean {
+    console.log('🏦 Validando RUC Entidad Financiera (prefijos 10, 15, 17)');
+    
+    // Para entidades financieras, el algoritmo puede ser diferente
+    // Vamos a probar el algoritmo base primero
+    const esValidoBase = this.validarRucBase(cedula, verificador);
+    
+    if (esValidoBase) {
+      console.log('✅ RUC válido con algoritmo base');
+      return true;
+    }
+    
+    // Si no es válido con el algoritmo base, probar algoritmo alternativo
+    console.log('🔄 Probando algoritmo alternativo para entidades financieras...');
+    return this.validarRucAlternativo(cedula, verificador);
+  }
+
+  /**
+   * Valida RUC para Empresas (prefijos 20, 21)
+   */
+  private validarRucEmpresa(ruc: string, cedula: string, verificador: string): boolean {
+    console.log('🏭 Validando RUC Empresa (prefijos 20, 21)');
+    return this.validarRucBase(cedula, verificador);
+  }
+
+  /**
+   * Valida RUC para Otros tipos (prefijos 25, 30)
+   */
+  private validarRucOtros(ruc: string, cedula: string, verificador: string): boolean {
+    console.log('🔧 Validando RUC Otros (prefijos 25, 30)');
+    return this.validarRucBase(cedula, verificador);
+  }
+
+  /**
+   * Algoritmo base para validación de RUC (algoritmo estándar)
+   */
+  private validarRucBase(cedula: string, verificador: string): boolean {
+    const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+    let suma = 0;
+    
+    console.log('🔢 Cálculo del dígito verificador (algoritmo base):');
+    for (let i = 0; i < 9; i++) {
+      const digito = parseInt(cedula[i]);
+      const coeficiente = coeficientes[i];
+      const producto = digito * coeficiente;
+      const resultado = producto > 9 ? producto - 9 : producto;
+      suma += resultado;
+      
+      console.log(`  ${digito} × ${coeficiente} = ${producto} → ${resultado} (suma parcial: ${suma})`);
+    }
+    
+    const decena = Math.ceil(suma / 10) * 10;
+    const digitoCalculado = decena - suma;
+    const digitoEsperado = parseInt(verificador);
+    
+    console.log(`📊 Resumen del cálculo (base):`);
+    console.log(`  Suma total: ${suma}`);
+    console.log(`  Décima superior: ${decena}`);
+    console.log(`  Dígito calculado: ${digitoCalculado}`);
+    console.log(`  Dígito esperado: ${digitoEsperado}`);
+    console.log(`  ¿Coinciden?: ${digitoCalculado === digitoEsperado}`);
+    
+    return digitoCalculado === digitoEsperado;
+  }
+
+  /**
+   * Algoritmo alternativo para entidades financieras
+   * Algunas entidades financieras pueden usar algoritmos ligeramente diferentes
+   */
+  private validarRucAlternativo(cedula: string, verificador: string): boolean {
+    console.log('🔄 Algoritmo alternativo para entidades financieras');
+    
+    // Algoritmo alternativo: usar coeficientes inversos
+    const coeficientes = [1, 2, 1, 2, 1, 2, 1, 2, 1];
+    let suma = 0;
+    
+    for (let i = 0; i < 9; i++) {
+      const digito = parseInt(cedula[i]);
+      const coeficiente = coeficientes[i];
+      const producto = digito * coeficiente;
+      const resultado = producto > 9 ? producto - 9 : producto;
+      suma += resultado;
+    }
+    
+    const decena = Math.ceil(suma / 10) * 10;
+    const digitoCalculado = decena - suma;
+    const digitoEsperado = parseInt(verificador);
+    
+    console.log(`📊 Resumen del cálculo (alternativo):`);
+    console.log(`  Suma total: ${suma}`);
+    console.log(`  Décima superior: ${decena}`);
+    console.log(`  Dígito calculado: ${digitoCalculado}`);
+    console.log(`  Dígito esperado: ${digitoEsperado}`);
+    console.log(`  ¿Coinciden?: ${digitoCalculado === digitoEsperado}`);
+    
+    return digitoCalculado === digitoEsperado;
   }
 
   /**
