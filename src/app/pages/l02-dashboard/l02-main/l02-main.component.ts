@@ -9,14 +9,13 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { L02ModalFormComponent } from '../../../components/l02/l02-modal-form/l02-modal-form.component'
 import { L02FieldsTableComponent } from '../../../components/l02/l02-table/l02-fields-table/l02-fields-table.component';
-import { L01ModalFormComponent } from "../../../components/l01/l01-modal-form/l01-modal-form.component";
 
 @Component({
   selector: 'app-l02-main',
   templateUrl: './l02-main.component.html',
   styleUrls: ['./l02-main.component.scss'],
   standalone: true,
-  imports: [FormsModule, CommonModule, L02FieldsTableComponent, L02ModalFormComponent, L01ModalFormComponent]
+  imports: [FormsModule, CommonModule, L02FieldsTableComponent, L02ModalFormComponent]
 })
 export class L02MainComponent implements OnInit {
   showModalForm = false;
@@ -29,12 +28,10 @@ export class L02MainComponent implements OnInit {
 
   openModal(): void {
     this.showModalForm = true;
-    console.log('showModalForm: ', this.showModalForm);
   }
 
    onModalClosed(): void {
     this.showModalForm = false;
-    console.log('showModalForm: ', this.showModalForm);
   }
 
   validateAndGenerateReport(): void{
@@ -45,5 +42,4 @@ export class L02MainComponent implements OnInit {
   }
 
   exportToTxt(): void{}
-  
 }
