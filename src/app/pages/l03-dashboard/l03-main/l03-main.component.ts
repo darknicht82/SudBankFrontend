@@ -14,7 +14,7 @@ import { L01CatalogService } from '../../../services/l01-catalog.service';
 import { L01RegulatoryService, L01RegulatoryData } from '../../../services/l01-regulatory.service';
 import { L01ExportService } from '../../../services/l01-export.service';
 import { LogMonitorComponent } from '../../../components/debug/log-monitor/log-monitor.component';
-import { L01ModalFormComponent } from '../../../components/l01/l01-modal-form/l01-modal-form.component';
+import { L03NewRecordComponent } from '../../../components/l03/l03-new-record/l03-new-record.component';
 import { L03FieldsTableComponent } from '../../../components/l03/l03-table/l03-fields-table.component';
 import { L03TableComponent } from '../../../components/l03/l03-table/l03-table.component';
 import { LoggerService } from '../../../services/logger.service';
@@ -32,7 +32,7 @@ import { L03Dto, L03StructureService } from '../../../services/l03/l03-structure
   imports: [
     CommonModule,
     FormsModule,
-    L01ModalFormComponent,
+    L03NewRecordComponent,
     LogMonitorComponent,
     L03FieldsTableComponent,
     L03TableComponent
@@ -516,7 +516,7 @@ export class L03MainComponent implements OnInit {
   openCreateModal(): void {
     this.editData = null;
     this.showModalForm = true;
-    this.txtLogger.info('L01MainComponent', 'Modal de creación abierto');
+    this.txtLogger.info('L03MainComponent', 'Modal de creación abierto');
   }
 
   /**
@@ -538,14 +538,14 @@ export class L03MainComponent implements OnInit {
   onModalClosed(): void {
     this.showModalForm = false;
     this.editData = null;
-    this.txtLogger.info('L01MainComponent', 'Modal cerrado');
+    this.txtLogger.info('L03MainComponent', 'Modal cerrado');
   }
 
   /**
    * Datos guardados desde el modal
    */
   onModalDataSaved(data: L01RegulatoryData): void {
-    this.txtLogger.info('L01MainComponent', 'Datos guardados desde modal', data);
+    this.txtLogger.info('L03MainComponent', 'Datos guardados desde modal', data);
     
     if (this.editData) {
       // Actualizar registro existente
