@@ -1,0 +1,350 @@
+/* ========================================
+   TEMAS POR MÓDULO REGULATORIO SUDBANK
+   ======================================== */
+
+/* Tema Base - SudBank Corporativo */
+:root {
+  /* Colores principales corporativos */
+  --sudbank-primary: #1e3a8a;
+  --sudbank-primary-dark: #1e40af;
+  --sudbank-primary-light: #3b82f6;
+  --sudbank-secondary: #0f766e;
+  --sudbank-accent: #06b6d4;
+  
+  /* Estados estándar */
+  --sudbank-success: #059669;
+  --sudbank-warning: #d97706;
+  --sudbank-danger: #dc2626;
+  --sudbank-info: #0891b2;
+  
+  /* Neutros estándar */
+  --sudbank-gray-50: #f9fafb;
+  --sudbank-gray-100: #f3f4f6;
+  --sudbank-gray-200: #e5e7eb;
+  --sudbank-gray-300: #d1d5db;
+  --sudbank-gray-400: #9ca3af;
+  --sudbank-gray-500: #6b7280;
+  --sudbank-gray-600: #4b5563;
+  --sudbank-gray-700: #374151;
+  --sudbank-gray-800: #1f2937;
+  --sudbank-gray-900: #111827;
+}
+
+/* ========================================
+   TEMA L01 - CONTROL DE INVERSIONES
+   ======================================== */
+.theme-l01 {
+  /* Colores específicos para inversiones */
+  --sudbank-primary: #0f766e;           /* Verde azulado - estabilidad financiera */
+  --sudbank-primary-dark: #0d5a52;      /* Verde azulado oscuro */
+  --sudbank-primary-light: #14b8a6;     /* Verde azulado claro */
+  --sudbank-secondary: #059669;         /* Verde - crecimiento */
+  --sudbank-accent: #06b6d4;           /* Azul claro - liquidez */
+  
+  /* Estados específicos para inversiones */
+  --sudbank-success: #059669;           /* Verde - inversión exitosa */
+  --sudbank-warning: #d97706;          /* Naranja - atención requerida */
+  --sudbank-danger: #dc2626;           /* Rojo - riesgo alto */
+  --sudbank-info: #0891b2;             /* Azul - información */
+  
+  /* Colores de riesgo para inversiones */
+  --risk-low: #059669;                 /* Verde - riesgo bajo */
+  --risk-medium: #d97706;              /* Naranja - riesgo medio */
+  --risk-high: #dc2626;                /* Rojo - riesgo alto */
+  
+  /* Gradientes específicos */
+  --gradient-primary: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+  --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  --gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+}
+
+/* ========================================
+   TEMA L08 - RIESGOS DE MERCADO
+   ======================================== */
+.theme-l08 {
+  /* Colores específicos para riesgos */
+  --sudbank-primary: #dc2626;           /* Rojo - riesgo */
+  --sudbank-primary-dark: #b91c1c;      /* Rojo oscuro */
+  --sudbank-primary-light: #ef4444;     /* Rojo claro */
+  --sudbank-secondary: #d97706;         /* Naranja - advertencia */
+  --sudbank-accent: #f59e0b;           /* Amarillo - precaución */
+  
+  /* Estados específicos para riesgos */
+  --sudbank-success: #059669;           /* Verde - controlado */
+  --sudbank-warning: #d97706;          /* Naranja - moderado */
+  --sudbank-danger: #dc2626;           /* Rojo - alto */
+  --sudbank-info: #0891b2;             /* Azul - información */
+  
+  /* Colores de nivel de riesgo */
+  --risk-low: #059669;                 /* Verde - riesgo bajo */
+  --risk-medium: #d97706;              /* Naranja - riesgo medio */
+  --risk-high: #dc2626;                /* Rojo - riesgo alto */
+  --risk-critical: #7f1d1d;           /* Rojo crítico */
+  
+  /* Gradientes específicos */
+  --gradient-primary: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  --gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
+  --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+}
+
+/* ========================================
+   TEMA L06 - LIQUIDEZ
+   ======================================== */
+.theme-l06 {
+  /* Colores específicos para liquidez */
+  --sudbank-primary: #0891b2;           /* Azul - liquidez */
+  --sudbank-primary-dark: #0e7490;      /* Azul oscuro */
+  --sudbank-primary-light: #22d3ee;     /* Azul claro */
+  --sudbank-secondary: #06b6d4;         /* Cian - flujo */
+  --sudbank-accent: #0ea5e9;           /* Azul cielo */
+  
+  /* Estados específicos para liquidez */
+  --sudbank-success: #059669;           /* Verde - suficiente */
+  --sudbank-warning: #d97706;          /* Naranja - atención */
+  --sudbank-danger: #dc2626;           /* Rojo - insuficiente */
+  --sudbank-info: #0891b2;             /* Azul - información */
+  
+  /* Colores de nivel de liquidez */
+  --liquidity-high: #059669;           /* Verde - liquidez alta */
+  --liquidity-medium: #d97706;         /* Naranja - liquidez media */
+  --liquidity-low: #dc2626;            /* Rojo - liquidez baja */
+  
+  /* Gradientes específicos */
+  --gradient-primary: linear-gradient(135deg, #0891b2 0%, #22d3ee 100%);
+  --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  --gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+}
+
+/* ========================================
+   TEMA B - ESTADOS FINANCIEROS
+   ======================================== */
+.theme-b {
+  /* Colores específicos para estados financieros */
+  --sudbank-primary: #7c3aed;           /* Violeta - finanzas */
+  --sudbank-primary-dark: #6d28d9;      /* Violeta oscuro */
+  --sudbank-primary-light: #a855f7;     /* Violeta claro */
+  --sudbank-secondary: #0f766e;         /* Verde azulado - estabilidad */
+  --sudbank-accent: #06b6d4;           /* Cian - precisión */
+  
+  /* Estados específicos para estados financieros */
+  --sudbank-success: #059669;           /* Verde - positivo */
+  --sudbank-warning: #d97706;          /* Naranja - neutral */
+  --sudbank-danger: #dc2626;           /* Rojo - negativo */
+  --sudbank-info: #0891b2;             /* Azul - información */
+  
+  /* Colores de indicadores financieros */
+  --financial-positive: #059669;        /* Verde - positivo */
+  --financial-neutral: #d97706;        /* Naranja - neutral */
+  --financial-negative: #dc2626;       /* Rojo - negativo */
+  
+  /* Gradientes específicos */
+  --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  --gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+}
+
+/* ========================================
+   TEMA R - RIESGOS REGULATORIOS
+   ======================================== */
+.theme-r {
+  /* Colores específicos para riesgos regulatorios */
+  --sudbank-primary: #b91c1c;           /* Rojo oscuro - regulatorio */
+  --sudbank-primary-dark: #991b1b;      /* Rojo muy oscuro */
+  --sudbank-primary-light: #dc2626;     /* Rojo estándar */
+  --sudbank-secondary: #d97706;         /* Naranja - advertencia */
+  --sudbank-accent: #f59e0b;           /* Amarillo - precaución */
+  
+  /* Estados específicos para riesgos regulatorios */
+  --sudbank-success: #059669;           /* Verde - cumplimiento */
+  --sudbank-warning: #d97706;          /* Naranja - atención */
+  --sudbank-danger: #dc2626;           /* Rojo - incumplimiento */
+  --sudbank-info: #0891b2;             /* Azul - información */
+  
+  /* Colores de cumplimiento regulatorio */
+  --compliance-full: #059669;           /* Verde - cumplimiento total */
+  --compliance-partial: #d97706;        /* Naranja - cumplimiento parcial */
+  --compliance-none: #dc2626;          /* Rojo - sin cumplimiento */
+  
+  /* Gradientes específicos */
+  --gradient-primary: linear-gradient(135deg, #b91c1b 0%, #dc2626 100%);
+  --gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+}
+
+/* ========================================
+   TEMA T - TABLAS Y CATÁLOGOS
+   ======================================== */
+.theme-t {
+  /* Colores específicos para catálogos */
+  --sudbank-primary: #475569;           /* Gris azulado - neutral */
+  --sudbank-primary-dark: #334155;      /* Gris azulado oscuro */
+  --sudbank-primary-light: #64748b;     /* Gris azulado claro */
+  --sudbank-secondary: #0f766e;         /* Verde azulado - estabilidad */
+  --sudbank-accent: #06b6d4;           /* Cian - precisión */
+  
+  /* Estados específicos para catálogos */
+  --sudbank-success: #059669;           /* Verde - activo */
+  --sudbank-warning: #d97706;          /* Naranja - inactivo */
+  --sudbank-danger: #dc2626;           /* Rojo - eliminado */
+  --sudbank-info: #0891b2;             /* Azul - información */
+  
+  /* Colores de estado de catálogos */
+  --catalog-active: #059669;            /* Verde - activo */
+  --catalog-inactive: #d97706;         /* Naranja - inactivo */
+  --catalog-deleted: #dc2626;          /* Rojo - eliminado */
+  
+  /* Gradientes específicos */
+  --gradient-primary: linear-gradient(135deg, #475569 0%, #64748b 100%);
+  --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  --gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+}
+
+/* ========================================
+   APLICACIÓN AUTOMÁTICA DE TEMAS
+   ======================================== */
+
+/* Aplicar tema L01 automáticamente en páginas L01 */
+body[data-module="l01"],
+.l01-dashboard,
+.l01-main {
+  /* Colores específicos para inversiones */
+  --sudbank-primary: #0f766e;           
+  --sudbank-primary-dark: #0d5a52;      
+  --sudbank-primary-light: #14b8a6;     
+  --sudbank-secondary: #059669;         
+  --sudbank-accent: #06b6d4;           
+  
+  /* Estados específicos para inversiones */
+  --sudbank-success: #059669;           
+  --sudbank-warning: #d97706;          
+  --sudbank-danger: #dc2626;           
+  --sudbank-info: #0891b2;             
+  
+  /* Colores de riesgo para inversiones */
+  --risk-low: #059669;                 
+  --risk-medium: #d97706;              
+  --risk-high: #dc2626;                
+  
+  /* Gradientes específicos */
+  --gradient-primary: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+  --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  --gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+}
+
+/* Aplicar tema L08 automáticamente en páginas L08 */
+body[data-module="l08"],
+.l08-dashboard,
+.l08-main {
+  /* Colores específicos para riesgos */
+  --sudbank-primary: #dc2626;           
+  --sudbank-primary-dark: #b91c1c;      
+  --sudbank-primary-light: #ef4444;     
+  --sudbank-secondary: #d97706;         
+  --sudbank-accent: #f59e0b;           
+  
+  /* Estados específicos para riesgos */
+  --sudbank-success: #059669;           
+  --sudbank-warning: #d97706;          
+  --sudbank-danger: #dc2626;           
+  --sudbank-info: #0891b2;             
+  
+  /* Colores de nivel de riesgo */
+  --risk-low: #059669;                 
+  --risk-medium: #d97706;              
+  --risk-high: #dc2626;                
+  --risk-critical: #7f1d1d;           
+  
+  /* Gradientes específicos */
+  --gradient-primary: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  --gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
+  --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+}
+
+/* Aplicar tema L06 automáticamente en páginas L06 */
+body[data-module="l06"],
+.l06-dashboard,
+.l06-main {
+  /* Colores específicos para liquidez */
+  --sudbank-primary: #0891b2;           
+  --sudbank-primary-dark: #0e7490;      
+  --sudbank-primary-light: #22d3ee;     
+  --sudbank-secondary: #06b6d4;         
+  --sudbank-accent: #0891b2;           
+}
+
+/* Aplicar tema B automáticamente en páginas de estados financieros */
+body[data-module="b"],
+.b-dashboard,
+.b-main {
+  /* Colores específicos para estados financieros */
+  --sudbank-primary: #059669;           
+  --sudbank-primary-dark: #047857;      
+  --sudbank-primary-light: #10b981;     
+  --sudbank-secondary: #0891b2;         
+  --sudbank-accent: #06b6d4;           
+}
+
+/* Aplicar tema R automáticamente en páginas de riesgos */
+body[data-module="r"],
+.r-dashboard,
+.r-main {
+  /* Colores específicos para riesgos generales */
+  --sudbank-primary: #dc2626;           
+  --sudbank-primary-dark: #b91c1c;      
+  --sudbank-primary-light: #ef4444;     
+  --sudbank-secondary: #d97706;         
+  --sudbank-accent: #f59e0b;           
+}
+
+/* Aplicar tema T automáticamente en páginas de catálogos */
+body[data-module="t"],
+.t-dashboard,
+.t-main {
+  /* Colores específicos para catálogos */
+  --sudbank-primary: #475569;           
+  --sudbank-primary-dark: #334155;      
+  --sudbank-primary-light: #64748b;     
+  --sudbank-secondary: #0f766e;         
+  --sudbank-accent: #06b6d4;           
+}
+
+/* ========================================
+   UTILIDADES DE TEMA
+   ======================================== */
+
+/* Clases utilitarias para aplicar temas dinámicamente */
+/* Comentado para evitar referencias circulares */
+/* .theme-l01 { @extend .theme-l01; } */
+/* .theme-l08 { @extend .theme-l08; } */
+/* .theme-l06 { @extend .theme-l06; } */
+/* .theme-b { @extend .theme-b; } */
+/* .theme-r { @extend .theme-r; } */
+/* .theme-t { @extend .theme-t; } */
+
+/* Indicadores visuales de tema */
+.theme-indicator {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  
+  &.theme-l01 { background: var(--sudbank-primary); }
+  &.theme-l08 { background: var(--sudbank-primary); }
+  &.theme-l06 { background: var(--sudbank-primary); }
+  &.theme-b { background: var(--sudbank-primary); }
+  &.theme-r { background: var(--sudbank-primary); }
+  &.theme-t { background: var(--sudbank-primary); }
+}

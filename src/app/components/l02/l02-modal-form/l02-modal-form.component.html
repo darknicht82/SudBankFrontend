@@ -1,0 +1,43 @@
+<!-- Modal del Formulario L01 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    
+    <!-- Header del Modal -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro L02 </h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Contenido del Modal -->
+    <div class="modal-body">
+        
+        <form [formGroup]="l02Form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 w-full sm:w-56">
+            <div class="flex flex-col gap-1">
+                <p-select formControlName="tipoIdentificacion" [options]="arrayTipoIdentificacion" optionLabel="descripcion" placeholder="Escoge" class="w-full md:w-56" />
+                @if (isInvalid('tipoIdentificacion')) {
+                    <p-message severity="error" size="small" variant="simple">City is required.</p-message>
+                }
+            </div>
+            <button pButton severity="secondary" type="submit"><span pButtonLabel>Submit</span></button>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <div class="footer-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="pi pi-check"></i>
+                Guardar Registro
+            </button>
+            <button type="button" (click)="closeModal()" class="btn btn-secondary">
+                <i class="pi pi-times"></i>
+                Cancelar
+            </button>
+        </div>
+    </div>
+  </div>
+</div>

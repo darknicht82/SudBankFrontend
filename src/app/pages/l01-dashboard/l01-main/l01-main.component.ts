@@ -14,7 +14,8 @@ import { L01CatalogService } from '../../../services/l01-catalog.service';
 import { L01RegulatoryService, L01RegulatoryData } from '../../../services/l01-regulatory.service';
 import { L01ExportService } from '../../../services/l01-export.service';
 import { LogMonitorComponent } from '../../../components/debug/log-monitor/log-monitor.component';
-import { L01ModalFormComponent } from '../../../components/l01/l01-modal-form/l01-modal-form.component';
+import { L01NuevoRegistroNesComponent } from '../../../components/l01/l01-nuevo-registro-nes/l01-nuevo-registro-nes.component';
+import { L01NuevoEmisorComponent } from '../../../components/l01/l01-nuevo-emisor/l01-nuevo-emisor.component';
 import { LoggerService } from '../../../services/logger.service';
 import { TxtLoggerService } from '../../../services/txt-logger.service';
 import { environment } from '../../../../environments/environment';
@@ -29,7 +30,8 @@ import { HttpClient } from '@angular/common/http';
   imports: [
     CommonModule,
     FormsModule,
-    L01ModalFormComponent,
+    L01NuevoRegistroNesComponent,
+    L01NuevoEmisorComponent,
     LogMonitorComponent
   ],
 })
@@ -76,6 +78,9 @@ export class L01MainComponent implements OnInit {
   showModalForm = false;
   editData: L01RegulatoryData | null = null;
   isSaving = false;
+  
+  // Estados para modal de agregar emisor
+  showEmitterModal = false;
   
   // Tooltips
   tooltips = L01_STRUCTURE_INFO;
@@ -429,7 +434,7 @@ export class L01MainComponent implements OnInit {
       });
       
       // Simular proceso de validación
-      setTimeout(() => {
+    setTimeout(() => {
         this.loading = false;
         this.txtLogger.info('L01MainComponent', 'Reporte L01 generado exitosamente');
       }, 2000);
@@ -489,7 +494,7 @@ export class L01MainComponent implements OnInit {
       this.error = 'No hay datos para exportar';
       return;
     }
-
+    
     this.txtLogger.info('L01MainComponent', 'Iniciando exportación a TXT');
     
     try {
@@ -497,8 +502,37 @@ export class L01MainComponent implements OnInit {
       this.txtLogger.info('L01MainComponent', 'Exportación TXT completada exitosamente');
     } catch (error) {
       this.error = 'Error inesperado durante la exportación';
-      this.txtLogger.error('L01MainComponent', 'Error inesperado en exportación TXT', error);
+      this.txtLogger.error('L01MainComponent', 'Error durante exportación TXT', error);
     }
+  }
+
+  /**
+   * Muestra el modal para agregar nuevo emisor/custodio
+   */
+  showAddEmitterModal(): void {
+    this.showEmitterModal = true;
+    console.log('🚀 Abriendo modal para agregar emisor/custodio');
+  }
+  
+  /**
+   * Maneja el evento cuando se agrega un nuevo emisor
+   * @param emitter Emisor agregado
+   */
+  onEmitterAdded(emitter: any): void {
+    console.log('✅ Nuevo emisor agregado:', emitter);
+    
+    // Recargar catálogos para incluir el nuevo emisor
+    this.loadCatalogsForL01().then(() => {
+      console.log('🔄 Catálogos recargados después de agregar emisor');
+      
+      // Mostrar mensaje de éxito
+      this.txtLogger.info('L01MainComponent', `Emisor "${emitter.descripcion}" agregado exitosamente`);
+      
+      // Cerrar modal
+      this.showEmitterModal = false;
+    }).catch(error => {
+      console.error('❌ Error recargando catálogos:', error);
+    });
   }
 
   /**
