@@ -29,12 +29,10 @@ export class L02MainComponent implements OnInit {
 
   openModal(): void {
     this.showModalForm = true;
-    console.log('showModalForm: ', this.showModalForm);
   }
 
    onModalClosed(): void {
     this.showModalForm = false;
-    console.log('showModalForm: ', this.showModalForm);
   }
 
   validateAndGenerateReport(): void{
@@ -45,5 +43,4 @@ export class L02MainComponent implements OnInit {
   }
 
   exportToTxt(): void{}
-  
 }
