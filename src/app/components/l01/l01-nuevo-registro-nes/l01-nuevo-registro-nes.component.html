@@ -66,22 +66,18 @@
               Identificación <span class="required">*</span>
             </label>
             <p-dropdown 
-              *ngIf="l01Form.get('tipoIdentificacion')?.value === 'X'"
               id="identificacion"
               formControlName="identificacion"
-              [options]="codigosExtranjeros"
+              [options]="emisoresFiltrados"
               optionLabel="descripcion"
-              optionValue="id"
-              placeholder="Seleccione código extranjero"
+              optionValue="codigo"
+              [placeholder]="getIdentificacionPlaceholder()"
+              [filter]="true"
+              filterPlaceholder="Buscar por RUC o nombre..."
+              [showClear]="true"
+              [disabled]="!l01Form.get('tipoIdentificacion')?.value"
               class="w-100">
             </p-dropdown>
-            <input 
-              *ngIf="l01Form.get('tipoIdentificacion')?.value !== 'X'"
-              type="text" 
-              id="identificacion"
-              formControlName="identificacion"
-              class="form-control"
-              placeholder="Ingrese RUC (13 dígitos)">
             <!-- ❌ [DESHABILITADO] Validaciones deshabilitadas -->
             <!--
             <div class="invalid-feedback" *ngIf="isFieldInvalid('identificacion')">

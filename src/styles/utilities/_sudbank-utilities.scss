@@ -1,0 +1,431 @@
+/* ========================================
+   UTILIDADES CSS OPTIMIZADAS SUDBANK
+   ======================================== */
+
+/* ========================================
+   SISTEMA DE ESPACIADO
+   ======================================== */
+
+/* Márgenes */
+@each $size, $value in (
+  'xs': var(--sudbank-spacing-xs),
+  'sm': var(--sudbank-spacing-sm),
+  'md': var(--sudbank-spacing-md),
+  'lg': var(--sudbank-spacing-lg),
+  'xl': var(--sudbank-spacing-xl),
+  '2xl': var(--sudbank-spacing-2xl)
+) {
+  .m-#{$size} { margin: $value; }
+  .mt-#{$size} { margin-top: $value; }
+  .mr-#{$size} { margin-right: $value; }
+  .mb-#{$size} { margin-bottom: $value; }
+  .ml-#{$size} { margin-left: $value; }
+  .mx-#{$size} { margin-left: $value; margin-right: $value; }
+  .my-#{$size} { margin-top: $value; margin-bottom: $value; }
+}
+
+/* Padding */
+@each $size, $value in (
+  'xs': var(--sudbank-spacing-xs),
+  'sm': var(--sudbank-spacing-sm),
+  'md': var(--sudbank-spacing-md),
+  'lg': var(--sudbank-spacing-lg),
+  'xl': var(--sudbank-spacing-xl),
+  '2xl': var(--sudbank-spacing-2xl)
+) {
+  .p-#{$size} { padding: $value; }
+  .pt-#{$size} { padding-top: $value; }
+  .pr-#{$size} { padding-right: $value; }
+  .pb-#{$size} { padding-bottom: $value; }
+  .pl-#{$size} { padding-left: $value; }
+  .px-#{$size} { padding-left: $value; padding-right: $value; }
+  .py-#{$size} { padding-top: $value; padding-bottom: $value; }
+}
+
+/* ========================================
+   SISTEMA DE TIPOGRAFÍA
+   ======================================== */
+
+/* Tamaños de fuente */
+@each $size, $value in (
+  'xs': var(--sudbank-font-size-xs),
+  'sm': var(--sudbank-font-size-sm),
+  'base': var(--sudbank-font-size-base),
+  'lg': var(--sudbank-font-size-lg),
+  'xl': var(--sudbank-font-size-xl),
+  '2xl': var(--sudbank-font-size-2xl),
+  '3xl': var(--sudbank-font-size-3xl),
+  '4xl': var(--sudbank-font-size-4xl)
+) {
+  .text-#{$size} { font-size: $value; }
+}
+
+/* Pesos de fuente */
+@each $weight in (100, 200, 300, 400, 500, 600, 700, 800, 900) {
+  .font-#{$weight} { font-weight: $weight; }
+}
+
+/* Alineación de texto */
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-justify { text-align: justify; }
+
+/* Colores de texto */
+@each $color, $value in (
+  'primary': var(--sudbank-primary),
+  'secondary': var(--sudbank-secondary),
+  'success': var(--sudbank-success),
+  'warning': var(--sudbank-warning),
+  'danger': var(--sudbank-danger),
+  'info': var(--sudbank-info),
+  'gray-50': var(--sudbank-gray-50),
+  'gray-100': var(--sudbank-gray-100),
+  'gray-200': var(--sudbank-gray-200),
+  'gray-300': var(--sudbank-gray-300),
+  'gray-400': var(--sudbank-gray-400),
+  'gray-500': var(--sudbank-gray-500),
+  'gray-600': var(--sudbank-gray-600),
+  'gray-700': var(--sudbank-gray-700),
+  'gray-800': var(--sudbank-gray-800),
+  'gray-900': var(--sudbank-gray-900)
+) {
+  .text-#{$color} { color: $value; }
+}
+
+/* ========================================
+   SISTEMA DE BORDES
+   ======================================== */
+
+/* Bordes */
+@each $size, $value in (
+  'xs': 1px,
+  'sm': 2px,
+  'md': 3px,
+  'lg': 4px,
+  'xl': 6px
+) {
+  .border-#{$size} { border-width: $value; }
+}
+
+/* Estilos de borde */
+.border-solid { border-style: solid; }
+.border-dashed { border-style: dashed; }
+.border-dotted { border-style: dotted; }
+
+/* Colores de borde */
+@each $color, $value in (
+  'primary': var(--sudbank-primary),
+  'secondary': var(--sudbank-secondary),
+  'success': var(--sudbank-success),
+  'warning': var(--sudbank-warning),
+  'danger': var(--sudbank-danger),
+  'info': var(--sudbank-info),
+  'gray-200': var(--sudbank-gray-200),
+  'gray-300': var(--sudbank-gray-300),
+  'gray-400': var(--sudbank-gray-400)
+) {
+  .border-#{$color} { border-color: $value; }
+}
+
+/* Radio de borde */
+@each $size, $value in (
+  'none': 0,
+  'sm': var(--sudbank-border-radius),
+  'md': var(--sudbank-border-radius-lg),
+  'lg': var(--sudbank-border-radius-xl),
+  'full': 9999px
+) {
+  .rounded-#{$size} { border-radius: $value; }
+}
+
+/* ========================================
+   SISTEMA DE SOMBRAS
+   ======================================== */
+
+/* Sombras */
+@each $size, $value in (
+  'none': none,
+  'sm': var(--sudbank-shadow-sm),
+  'md': var(--sudbank-shadow),
+  'lg': var(--sudbank-shadow-md),
+  'xl': var(--sudbank-shadow-lg),
+  '2xl': var(--sudbank-shadow-xl)
+) {
+  .shadow-#{$size} { box-shadow: $value; }
+}
+
+/* ========================================
+   SISTEMA DE DISPLAY
+   ======================================== */
+
+/* Display */
+.block { display: block; }
+.inline-block { display: inline-block; }
+.inline { display: inline; }
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.grid { display: grid; }
+.hidden { display: none; }
+
+/* Flexbox */
+.flex-row { flex-direction: row; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-nowrap { flex-wrap: nowrap; }
+
+/* Justificación */
+.justify-start { justify-content: flex-start; }
+.justify-end { justify-content: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-around { justify-content: space-around; }
+.justify-evenly { justify-content: space-evenly; }
+
+/* Alineación */
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.items-center { align-items: center; }
+.items-baseline { align-items: baseline; }
+.items-stretch { align-items: stretch; }
+
+/* ========================================
+   SISTEMA DE POSICIONAMIENTO
+   ======================================== */
+
+/* Posición */
+.static { position: static; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+/* Z-index */
+@each $index in (0, 10, 20, 30, 40, 50, 100, 1000, 9999) {
+  .z-#{$index} { z-index: $index; }
+}
+
+/* ========================================
+   SISTEMA DE ANIMACIONES
+   ======================================== */
+
+/* Transiciones */
+.transition { transition: var(--sudbank-transition); }
+.transition-slow { transition: var(--sudbank-transition-slow); }
+
+/* Duración de transición */
+@each $duration in (75, 100, 150, 200, 300, 500, 700, 1000) {
+  .duration-#{$duration} { transition-duration: #{$duration}ms; }
+}
+
+/* Funciones de transición */
+.ease-linear { transition-timing-function: linear; }
+.ease-in { transition-timing-function: ease-in; }
+.ease-out { transition-timing-function: ease-out; }
+.ease-in-out { transition-timing-function: ease-in-out; }
+
+/* ========================================
+   SISTEMA DE ESTADOS
+   ======================================== */
+
+/* Estados de hover */
+.hover\:scale-105:hover { transform: scale(1.05); }
+.hover\:scale-110:hover { transform: scale(1.1); }
+.hover\:scale-95:hover { transform: scale(0.95); }
+
+.hover\:translate-y-1:hover { transform: translateY(-4px); }
+.hover\:translate-y-2:hover { transform: translateY(-8px); }
+.hover\:-translate-y-1:hover { transform: translateY(4px); }
+
+.hover\:shadow-lg:hover { box-shadow: var(--sudbank-shadow-lg); }
+.hover\:shadow-xl:hover { box-shadow: var(--sudbank-shadow-xl); }
+
+/* Estados de focus */
+.focus\:outline-none:focus { outline: none; }
+.focus\:ring:focus { box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1); }
+.focus\:ring-2:focus { box-shadow: 0 0 0 6px rgba(30, 58, 138, 0.1); }
+
+/* Estados de active */
+.active\:scale-95:active { transform: scale(0.95); }
+.active\:scale-90:active { transform: scale(0.9); }
+
+/* ========================================
+   SISTEMA RESPONSIVE
+   ======================================== */
+
+/* Breakpoints */
+@each $breakpoint, $value in (
+  'sm': 640px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1280px,
+  '2xl': 1536px
+) {
+  @media (min-width: $value) {
+    .#{$breakpoint}\:block { display: block; }
+    .#{$breakpoint}\:hidden { display: none; }
+    .#{$breakpoint}\:flex { display: flex; }
+    .#{$breakpoint}\:grid { display: grid; }
+    
+    .#{$breakpoint}\:text-left { text-align: left; }
+    .#{$breakpoint}\:text-center { text-align: center; }
+    .#{$breakpoint}\:text-right { text-align: right; }
+    
+    .#{$breakpoint}\:flex-row { flex-direction: row; }
+    .#{$breakpoint}\:flex-col { flex-direction: column; }
+    
+    .#{$breakpoint}\:justify-start { justify-content: flex-start; }
+    .#{$breakpoint}\:justify-center { justify-content: center; }
+    .#{$breakpoint}\:justify-end { justify-content: flex-end; }
+    .#{$breakpoint}\:justify-between { justify-content: space-between; }
+  }
+}
+
+/* ========================================
+   UTILIDADES ESPECÍFICAS SUDBANK
+   ======================================== */
+
+/* Indicadores de riesgo */
+.risk-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sudbank-spacing-xs);
+  padding: var(--sudbank-spacing-xs) var(--sudbank-spacing-sm);
+  border-radius: var(--sudbank-border-radius);
+  font-size: var(--sudbank-font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.risk-low { 
+  background: var(--risk-low, var(--sudbank-success)); 
+  color: white; 
+}
+
+.risk-medium { 
+  background: var(--risk-medium, var(--sudbank-warning)); 
+  color: white; 
+}
+
+.risk-high { 
+  background: var(--risk-high, var(--sudbank-danger)); 
+  color: white; 
+}
+
+.risk-critical { 
+  background: var(--risk-critical, #7f1d1d); 
+  color: white; 
+}
+
+/* Indicadores de cumplimiento */
+.compliance-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sudbank-spacing-xs);
+  padding: var(--sudbank-spacing-xs) var(--sudbank-spacing-sm);
+  border-radius: var(--sudbank-border-radius);
+  font-size: var(--sudbank-font-size-xs);
+  font-weight: 600;
+}
+
+.compliance-full { 
+  background: var(--compliance-full, var(--sudbank-success)); 
+  color: white; 
+}
+
+.compliance-partial { 
+  background: var(--compliance-partial, var(--sudbank-warning)); 
+  color: white; 
+}
+
+.compliance-none { 
+  background: var(--compliance-none, var(--sudbank-danger)); 
+  color: white; 
+}
+
+/* Indicadores de liquidez */
+.liquidity-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sudbank-spacing-xs);
+  padding: var(--sudbank-spacing-xs) var(--sudbank-spacing-sm);
+  border-radius: var(--sudbank-border-radius);
+  font-size: var(--sudbank-font-size-xs);
+  font-weight: 600;
+}
+
+.liquidity-high { 
+  background: var(--liquidity-high, var(--sudbank-success)); 
+  color: white; 
+}
+
+.liquidity-medium { 
+  background: var(--liquidity-medium, var(--sudbank-warning)); 
+  color: white; 
+}
+
+.liquidity-low { 
+  background: var(--liquidity-low, var(--sudbank-danger)); 
+  color: white; 
+}
+
+/* Indicadores financieros */
+.financial-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sudbank-spacing-xs);
+  padding: var(--sudbank-spacing-xs) var(--sudbank-spacing-sm);
+  border-radius: var(--sudbank-border-radius);
+  font-size: var(--sudbank-font-size-xs);
+  font-weight: 600;
+}
+
+.financial-positive { 
+  background: var(--financial-positive, var(--sudbank-success)); 
+  color: white; 
+}
+
+.financial-neutral { 
+  background: var(--financial-neutral, var(--sudbank-warning)); 
+  color: white; 
+}
+
+.financial-negative { 
+  background: var(--financial-negative, var(--sudbank-danger)); 
+  color: white; 
+}
+
+/* ========================================
+   UTILIDADES DE ACCESIBILIDAD
+   ======================================== */
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus visible */
+.focus-visible:focus-visible {
+  outline: 2px solid var(--sudbank-primary);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   UTILIDADES DE PRINT
+   ======================================== */
+
+@media print {
+  .print\:hidden { display: none !important; }
+  .print\:block { display: block !important; }
+  .print\:text-black { color: black !important; }
+  .print\:bg-white { background-color: white !important; }
+}
