@@ -10,13 +10,13 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputNumberModule } from 'primeng/inputnumber';
 
 @Component({
-  selector: 'app-l01-modal-form',
-  templateUrl: './l01-modal-form.component.html',
-  styleUrls: ['./l01-modal-form.component.scss'],
+  selector: 'app-l01-nuevo-registro-nes',
+  templateUrl: './l01-nuevo-registro-nes.component.html',
+  styleUrls: ['./l01-nuevo-registro-nes.component.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputNumberModule]
 })
-export class L01ModalFormComponent implements OnInit {
+export class L01NuevoRegistroNesComponent implements OnInit {
   @Input() isVisible: boolean = false;
   @Input() editData: L01RegulatoryData | null = null;
   @Output() modalClosed = new EventEmitter<void>();
@@ -45,6 +45,8 @@ export class L01ModalFormComponent implements OnInit {
   clasificaciones: any[] = [];
   tiposEmisor: any[] = [];
   codigosExtranjeros: any[] = [];
+  emisoresT164: any[] = []; // ✅ NUEVO: Lista de emisores/custodios de T164
+  emisoresFiltrados: any[] = []; // ✅ NUEVO: Lista filtrada por tipo de identificación
 
   constructor(
     private fb: FormBuilder,
@@ -56,7 +58,7 @@ export class L01ModalFormComponent implements OnInit {
       tipoIdentificacion: ['', Validators.required],
       
       // Campo 2: Identificación (RUC o código extranjero) - Tabla 164
-      identificacion: ['', Validators.required],
+      identificacion: [null, Validators.required], // ✅ CAMBIADO: null para dropdown
       
       // Campo 3: Clasificación (1-4) - Tabla 173
       clasificacion: [null, Validators.required],
@@ -68,8 +70,7 @@ export class L01ModalFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCatalogs();
-    // ❌ [DESHABILITADO] Validaciones deshabilitadas
-    // this.setupFormValidation();
+    this.setupFormValidation(); // ✅ REHABILITADO: Para filtrar emisores por tipo
   }
 
   ngOnChanges(): void {
@@ -153,27 +154,54 @@ export class L01ModalFormComponent implements OnInit {
         console.error('Error al cargar Códigos Extranjeros:', error);
       }
     });
+
+    // ✅ NUEVO: Cargar Emisores/Custodios T164 (para dropdown de identificación)
+    this.catalogService.getTabla164().subscribe({
+      next: (data) => {
+        this.emisoresT164 = data;
+        console.log('✅ [DEBUG] Emisores T164 cargados:', this.emisoresT164.length);
+        console.log('✅ [DEBUG] Primer emisor:', this.emisoresT164[0]);
+      },
+      error: (error) => {
+        console.error('❌ Error al cargar Emisores T164:', error);
+      }
+    });
   }
 
   /**
-   * ❌ [DESHABILITADO] Configura las validaciones del formulario
-   * VALIDACIONES DESHABILITADAS - NO SE USA MÁS
+   * ✅ REHABILITADO: Configura las validaciones del formulario
+   * AHORA FILTRA EMISORES POR TIPO DE IDENTIFICACIÓN
    */
-  /*
   private setupFormValidation(): void {
-    // Validar identificación cuando cambie el tipo
+    // Filtrar emisores cuando cambie el tipo de identificación
     this.l01Form.get('tipoIdentificacion')?.valueChanges.subscribe(tipo => {
-      if (tipo === 'X') {
-        // Para extranjeros, mostrar lista de códigos T164
-        this.l01Form.get('identificacion')?.setValidators([Validators.required]);
+      console.log('🔄 [DEBUG] Tipo de identificación cambiado a:', tipo);
+      
+      if (tipo === 'R') {
+        // Para RUC: mostrar solo emisores nacionales (que empiecen con números)
+        this.emisoresFiltrados = this.emisoresT164.filter(emisor => 
+          /^\d/.test(emisor.codigo) // Código que empiece con número
+        );
+        console.log('✅ [DEBUG] Emisores RUC filtrados:', this.emisoresFiltrados.length);
+      } else if (tipo === 'X') {
+        // Para extranjeros: mostrar solo emisores extranjeros (que empiecen con letras)
+        this.emisoresFiltrados = this.emisoresT164.filter(emisor => 
+          /^[A-Z]/.test(emisor.codigo) // Código que empiece con letra
+        );
+        console.log('✅ [DEBUG] Emisores extranjeros filtrados:', this.emisoresFiltrados.length);
       } else {
-        // Para otros tipos, validación estándar
-        this.l01Form.get('identificacion')?.setValidators([Validators.required]);
+        // Sin tipo seleccionado: lista vacía
+        this.emisoresFiltrados = [];
+        console.log('⚠️ [DEBUG] Sin tipo seleccionado, lista vacía');
       }
+      
+      // Resetear el campo de identificación cuando cambie el tipo
+      this.l01Form.get('identificacion')?.setValue(null);
       this.l01Form.get('identificacion')?.updateValueAndValidity();
+      
+      console.log('✅ [DEBUG] Campo identificación reseteado y emisores filtrados');
     });
   }
-  */
 
   /**
    * Pobla el formulario con datos para edición
@@ -194,7 +222,7 @@ export class L01ModalFormComponent implements OnInit {
     try {
       this.l01Form.reset({
         tipoIdentificacion: '',
-        identificacion: '',
+        identificacion: null, // ✅ CAMBIADO: null para dropdown
         clasificacion: null,
         tipoEmisor: null
       });
@@ -421,6 +449,23 @@ export class L01ModalFormComponent implements OnInit {
    */
   getModalTitle(): string {
     return this.editData ? 'Editar Registro L01' : 'Crear Nuevo Registro L01';
+  }
+
+  /**
+   * ✅ NUEVO: Obtiene el placeholder dinámico para el campo identificación
+   */
+  getIdentificacionPlaceholder(): string {
+    const tipo = this.l01Form.get('tipoIdentificacion')?.value;
+    
+    if (!tipo) {
+      return 'Primero seleccione el tipo de identificación';
+    } else if (tipo === 'R') {
+      return 'Seleccione emisor nacional (RUC)';
+    } else if (tipo === 'X') {
+      return 'Seleccione emisor extranjero';
+    }
+    
+    return 'Seleccione emisor/custodio';
   }
 
   /**

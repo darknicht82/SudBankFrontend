@@ -14,8 +14,8 @@ import { L01CatalogService } from '../../../services/l01-catalog.service';
 import { L01RegulatoryService, L01RegulatoryData } from '../../../services/l01-regulatory.service';
 import { L01ExportService } from '../../../services/l01-export.service';
 import { LogMonitorComponent } from '../../../components/debug/log-monitor/log-monitor.component';
-import { L01ModalFormComponent } from '../../../components/l01/l01-modal-form/l01-modal-form.component';
-import { L01AddEmitterModalComponent } from '../../../components/l01/l01-add-emitter-modal/l01-add-emitter-modal.component';
+import { L01NuevoRegistroNesComponent } from '../../../components/l01/l01-nuevo-registro-nes/l01-nuevo-registro-nes.component';
+import { L01NuevoEmisorComponent } from '../../../components/l01/l01-nuevo-emisor/l01-nuevo-emisor.component';
 import { LoggerService } from '../../../services/logger.service';
 import { TxtLoggerService } from '../../../services/txt-logger.service';
 import { environment } from '../../../../environments/environment';
@@ -30,8 +30,8 @@ import { HttpClient } from '@angular/common/http';
   imports: [
     CommonModule,
     FormsModule,
-    L01ModalFormComponent,
-    L01AddEmitterModalComponent,
+    L01NuevoRegistroNesComponent,
+    L01NuevoEmisorComponent,
     LogMonitorComponent
   ],
 })

@@ -12,13 +12,13 @@ import { T5Service, T5 } from "../../../services/t5.service";
 import { T164Service, T164 } from "../../../services/t164.service";
 
 @Component({
-  selector: "app-l01-add-emitter-modal",
+  selector: "app-l01-nuevo-emisor",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, DialogModule, ButtonModule, InputTextModule, SelectModule],
-  templateUrl: "./l01-add-emitter-modal.component.html",
-  styleUrls: ["./l01-add-emitter-modal.component.scss"]
+  templateUrl: "./l01-nuevo-emisor.component.html",
+  styleUrls: ["./l01-nuevo-emisor.component.scss"]
 })
-export class L01AddEmitterModalComponent implements OnInit {
+export class L01NuevoEmisorComponent implements OnInit {
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() emitterAdded = new EventEmitter<T164>();
