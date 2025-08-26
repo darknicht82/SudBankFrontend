@@ -1,83 +1,118 @@
-<!-- COMPONENTE L03 MAIN - DASHBOARD PRINCIPAL -->
-<!-- Manual de Control de Inversiones - Marzo 2017 -->
-<!-- Superintendencia de Bancos del Ecuador -->
+<!-- ========================================
+   COMPONENTE L03 MAIN - TEMPLATE CORREGIDO
+   ======================================== -->
 
 <div class="l03-main-container">
-  <!-- CABECERA -->
+  <!-- HEADER L03 -->
   <div class="header">
-    <h1>L03 - Saldo y Liquidaciones de inversiones</h1>
-    <p class="subtitle">Registro de saldo y liquidaciones de inversiones</p>
+    <h1>Dashboard L03 - Estructura de Inversiones</h1>
+    <p class="subtitle">Gestión y monitoreo de estructuras L03 según manual SB</p>
   </div>
 
-  <!-- INFORMACIÓN DE ESTRUCTURA -->
+  <!-- INFORMACIÓN DE ESTRUCTURA L03 -->
   <div class="structure-info">
     <div class="card">
       <div class="card-header">
-        <h3>📋 Información de la Estructura L03</h3>
+        <h3>Información de Estructura L03</h3>
       </div>
       <div class="card-content">
-        <p><strong>Descripción:</strong> {{ tooltips.description }}</p>
-        <p><strong>Periodicidad:</strong> {{ tooltips.periodicity }}</p>
-        <p><strong>Plazo entrega:</strong> {{ tooltips.deadline }}</p>
-        <p><strong>Código Banco:</strong> {{ tooltips.bankCode }}</p>
-        <p><strong>Formato archivo:</strong> {{ tooltips.fileFormat }}</p>
-        <p><strong>Fuente:</strong> {{ tooltips.source }}</p>
+        <p><strong>Descripción:</strong> Estructura de inversiones y títulos de deuda</p>
+        <p><strong>Periodicidad:</strong> Mensual</p>
+        <p><strong>Plazo entrega:</strong> Día 15 del mes siguiente</p>
+        <p><strong>Código Banco:</strong> 1038</p>
+        <p><strong>Formato archivo:</strong> TXT (RVC)</p>
+        <p><strong>Fuente:</strong> Manual SB - Control de Inversiones</p>
         
         <div class="requirements">
-          <strong>Requisitos:</strong>
+          <h4>Requisitos:</h4>
           <ul>
-            <li *ngFor="let req of tooltips.requirements">{{ req }}</li>
+            <li>Datos de títulos de deuda e inversiones</li>
+            <li>Valores en USD</li>
+            <li>Calificaciones de riesgo</li>
+            <li>Información de custodios</li>
           </ul>
         </div>
-
-        <div class="fields-info">
-          <strong>Campos Oficiales:</strong>
-            <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
-              <app-l03-fields-table></app-l03-fields-table>
-            </div> 
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- ACCIONES PRINCIPALES DEL DASHBOARD -->
-  <div class="actions-section">
+  <!-- ACCIONES PRINCIPALES L03 -->
+  <div class="action-buttons">
+    <button (click)="loadData()" [disabled]="loading" class="btn btn-primary">
+      <i class="fas fa-sync-alt me-2"></i>
+      {{ loading ? 'Cargando...' : 'Cargar Datos L03' }}
+    </button>
+    
+    <button (click)="openNewRecordModal()" class="btn btn-info">
+      <i class="fas fa-plus me-2"></i>
+      Nuevo Registro L03
+    </button>
+    
+    <button (click)="exportToTxt()" [disabled]="datosL03.length === 0" class="btn btn-success">
+      <i class="fas fa-download me-2"></i>
+      Exportar TXT
+    </button>
+    
+    <button (click)="clearGridFilters()" [disabled]="filteredDataL03.length === datosL03.length" class="btn btn-secondary">
+      <i class="fas fa-filter me-2"></i>
+      Limpiar Filtros
+    </button>
+  </div>
+
+  <!-- FILTROS L03 -->
+  <div class="filters-section">
     <div class="card">
       <div class="card-header">
-        <h3>🚀 Acciones del Reporte L03</h3>
-        <p class="action-description">Acciones principales para la gestión de la estructura L03 según manual SB.</p>
+        <h3>Filtros de Búsqueda</h3>
       </div>
       <div class="card-content">
+        <div class="filters-grid">
+          <div class="form-field">
+            <label for="tipoIdentificacion">Tipo de Identificación</label>
+            <select id="tipoIdentificacion" [(ngModel)]="tipoIdentificacion" class="form-control">
+              <option value="">Todos</option>
+              <option *ngFor="let tipo of tiposIdentificacionL01" [value]="tipo.codigo">
+                {{ tipo.codigo }} - {{ tipo.descripcion }}
+              </option>
+            </select>
+          </div>
+          
+          <div class="form-field">
+            <label for="clasificacion">Clasificación</label>
+            <select id="clasificacion" [(ngModel)]="clasificacion" class="form-control">
+              <option value="">Todas</option>
+              <option *ngFor="let clasif of clasificacionesL01" [value]="clasif.codigo">
+                {{ clasif.codigo }} - {{ clasif.descripcion }}
+              </option>
+            </select>
+          </div>
+          
+          <div class="form-field">
+            <label for="tipoEmisor">Tipo de Emisor</label>
+            <select id="tipoEmisor" [(ngModel)]="tipoEmisor" class="form-control">
+              <option value="">Todos</option>
+              <option *ngFor="let tipo of tiposEmisorL01" [value]="tipo.codigo">
+                {{ tipo.codigo }} - {{ tipo.descripcion }}
+              </option>
+            </select>
+          </div>
+        </div>
+        
         <div class="actions">
-          <button (click)="validateAndGenerateReport()" [disabled]="loading" class="btn btn-primary">
-            <i class="pi pi-check-circle"></i>
-            {{ loading ? 'Validando...' : 'Validar y Generar Reporte L03 Completo' }}
-          </button>
-          <button (click)="exportToTxt()" class="btn btn-success">
-            <i class="pi pi-download"></i>
-            Exportar TXT
-          </button>
-          <button (click)="openCreateModal()" class="btn btn-info">
-            <i class="pi pi-plus"></i>
-            Crear Nuevo Registro
+          <button (click)="applyGridFilters()" class="btn btn-primary">
+            <i class="fas fa-search me-2"></i>
+            Aplicar Filtros
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ERRORES -->
-  <div *ngIf="error" class="error-message">
-    <div class="alert alert-danger">
-      <strong>Error:</strong> {{ error }}
-    </div>
-  </div>
-
-  <!-- RESUMEN -->
-  <div *ngIf="datosL03.length > 0" class="summary-section">
+  <!-- RESUMEN L03 -->
+  <div class="summary-section">
     <div class="card">
       <div class="card-header">
-        <h3>📊 Resumen del Reporte</h3>
+        <h3>Resumen de Datos L03</h3>
       </div>
       <div class="card-content">
         <div class="summary-grid">
@@ -85,194 +120,106 @@
             <label>Total Registros:</label>
             <span>{{ getTotalRegistros() }}</span>
           </div>
+          
+          <div class="summary-item">
+            <label>Registros Filtrados:</label>
+            <span>{{ filteredDataL03.length }}</span>
+          </div>
+          
           <div class="summary-item">
             <label>Fecha Generación:</label>
             <span>{{ getFechaGeneracion() }}</span>
           </div>
+          
           <div class="summary-item">
-            <label>Emisores:</label>
-            <span>{{ getCountByClasificacion(1) }}</span>
-          </div>
-          <div class="summary-item">
-            <label>Custodios:</label>
-            <span>{{ getCountByClasificacion(2) }}</span>
-          </div>
-          <div class="summary-item">
-            <label>Depositarios:</label>
-            <span>{{ getCountByClasificacion(3) }}</span>
-          </div>
-          <div class="summary-item">
-            <label>Contrapartes:</label>
-            <span>{{ getCountByClasificacion(4) }}</span>
+            <label>Usuario:</label>
+            <span>{{ usuarioActual }}</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Componente de Confirmación ELIMINADO -->
-
-  <!-- Componente de Resumen del Reporte ELIMINADO -->
-
-  <!-- TABLA DE DATOS -->
+  <!-- TABLA DE DATOS L03 -->
   <div class="data-section">
     <div class="card">
       <div class="card-header">
-        <h3>📋 Datos del Reporte L03</h3>
+        <h3>Datos L03 - Estructura de Inversiones</h3>
       </div>
       <div class="card-content">
-        
-        <!-- MENSAJE INFORMATIVO SOBRE REGISTROS FILTRADOS -->
-        <div *ngIf="registrosFiltrados > 0" class="filtered-records-message">
-          <div class="alert alert-warning">
-            <h4>⚠️ Registros Filtrados por Validación L03</h4>
-            <p><strong>Se encontraron {{ registrosFiltrados }} registros que no cumplen con las especificaciones L03:</strong></p>
-            <ul>
-              <li><strong>Códigos de tipo de identificación no permitidos:</strong> Solo se permiten códigos <strong>R</strong> y <strong>X</strong></li>
-              <li><strong>Registros con códigos C, E, etc. fueron filtrados automáticamente</strong></li>
-              <li><strong>Estos registros no aparecen en la tabla pero existen en la base de datos</strong></li>
-            </ul>
-            <p class="text-muted">
-              <small>
-                <strong>Nota:</strong> Los registros filtrados contienen códigos de tipo de identificación 
-                que no están permitidos según el manual L03 de la Superintendencia de Bancos del Ecuador.
-              </small>
-            </p>
-          </div>
-        </div>
-        
         <!-- MENSAJE CUANDO NO HAY DATOS -->
-        <div *ngIf="datosL03.length === 0" class="no-data-message">
+        <div *ngIf="datosL03.length === 0 && !loading" class="no-data-message">
           <div class="alert alert-info">
-            <h4>📊 Estado de los Datos L03</h4>
-            <p><strong>Total de registros:</strong> {{ datosL03.length }}</p>
-            <p><strong>Estado de carga:</strong> {{ loading ? '🔄 Cargando...' : '✅ Carga completada' }}</p>
-            <p><strong>Error:</strong> {{ error || 'Ninguno' }}</p>
-            
-            <div class="debug-info" *ngIf="!loading">
-              <h5>🔍 Información de Debug:</h5>
+            <h4>No hay datos disponibles</h4>
+            <p>No se encontraron registros L03 en el sistema.</p>
+            <div class="debug-info">
+              <h5>Información de Debug:</h5>
               <ul>
-                <li><strong>Catálogos cargados:</strong> 
-                  T4: {{ tiposIdentificacionL01.length }}, 
-                  T173: {{ clasificacionesL01.length }}, 
-                  T73: {{ tiposEmisorL01.length }}, 
-                  T164: {{ codigosExtranjerosL01.length }}
-                </li>
-                <li><strong>Datos del backend:</strong> {{ datosL03.length }} registros</li>
-                <li><strong>Datos filtrados:</strong> {{ filteredDataL03.length }} registros</li>
+                <li><strong>Estado:</strong> {{ loading ? 'Cargando...' : 'Completado' }}</li>
+                <li><strong>Error:</strong> {{ error || 'Ninguno' }}</li>
+                <li><strong>Total registros:</strong> {{ datosL03.length }}</li>
               </ul>
-              
-              <button (click)="refreshData()" class="btn btn-primary">
-                🔄 Refrescar Datos
+              <button (click)="loadData()" class="btn btn-primary">
+                <i class="fas fa-sync-alt me-2"></i>
+                Intentar Cargar Nuevamente
               </button>
             </div>
           </div>
         </div>
-        
-        <!-- FILTROS PARA VISTA DEL GRID -->
-        <div class="grid-filters">
-          <h4>🔍 Filtros para Vista del Grid</h4>
-          <p class="filter-description">Utilice estos filtros para analizar y contar registros por categoría en la vista actual.</p>
-          <div class="filters-grid">
-            <div class="form-field">
-              <label>Tipo Identificación:</label>
-              <select [(ngModel)]="tipoIdentificacion" class="form-control" (change)="applyGridFilters()">
-                <option value="">Todos</option>
-                <option *ngFor="let tipo of tiposIdentificacionL01" [value]="tipo.codigo">
-                  {{tipo.codigo}} - {{tipo.descripcion}}
-                </option>
-              </select>
+
+        <!-- MENSAJE DE REGISTROS FILTRADOS -->
+        <div *ngIf="filteredDataL03.length < datosL03.length && datosL03.length > 0" class="filtered-records-message">
+          <div class="alert alert-warning">
+            <h4>Registros Filtrados</h4>
+            <p>Se están mostrando <strong>{{ filteredDataL03.length }}</strong> de <strong>{{ datosL03.length }}</strong> registros totales.</p>
+            <ul>
+              <li><strong>Filtros aplicados:</strong></li>
+              <li *ngIf="tipoIdentificacion">Tipo de Identificación: {{ getTipoIdentificacionDesc(tipoIdentificacion) }}</li>
+              <li *ngIf="clasificacion">Clasificación: {{ getClasificacionDesc(clasificacion) }}</li>
+              <li *ngIf="tipoEmisor">Tipo Emisor: {{ getTipoEmisorDesc(tipoEmisor) }}</li>
+            </ul>
+            <div class="text-muted">
+              <small>Para ver todos los registros, limpie los filtros aplicados.</small>
             </div>
-            <div class="form-field">
-              <label>Clasificación:</label>
-              <select [(ngModel)]="clasificacion" class="form-control" (change)="applyGridFilters()">
-                <option value="">Todas</option>
-                <option *ngFor="let clasificacion of clasificacionesL01" [value]="clasificacion.codigo">
-                  {{clasificacion.codigo}} - {{clasificacion.descripcion | titlecase}}
-                </option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label>Tipo Emisor:</label>
-              <select [(ngModel)]="tipoEmisor" class="form-control" (change)="applyGridFilters()">
-                <option value="">Todos</option>
-                <option *ngFor="let tipo of tiposEmisorL01" [value]="tipo.codigo">
-                  {{tipo.codigo}} - {{tipo.descripcion | titlecase}}
-                </option>
-              </select>
-            </div>
-          </div>
-          
-          <!-- RESUMEN DE FILTROS APLICADOS -->
-          <div class="filters-summary" *ngIf="tipoIdentificacion || clasificacion || tipoEmisor">
-            <h5>📊 Resumen de Filtros Aplicados:</h5>
-            <div class="summary-items">
-              <span *ngIf="tipoIdentificacion" class="summary-item">
-                Tipo: {{ getTipoIdentificacionDesc(tipoIdentificacion) }}
-              </span>
-              <span *ngIf="clasificacion" class="summary-item">
-                Clasificación: {{ getClasificacionDesc(+clasificacion) }}
-              </span>
-              <span *ngIf="tipoEmisor" class="summary-item">
-                Tipo Emisor: {{ getTipoEmisorDesc(+tipoEmisor) }}
-              </span>
-            </div>
-            <button (click)="clearGridFilters()" class="btn btn-sm btn-outline-secondary">
-              <i class="pi pi-times"></i>
-              Limpiar Filtros
-            </button>
           </div>
         </div>
 
-        <div class="table-container">
-          
-          <!-- <table class="data-table">
+        <!-- TABLA DE DATOS -->
+        <div *ngIf="filteredDataL03.length > 0" class="table-container">
+          <table class="data-table">
             <thead>
               <tr>
                 <th *ngFor="let column of displayedColumns" 
                     (mouseenter)="showFieldTooltip(column, $event)"
-                    (mouseleave)="hideTooltip()">
-                  {{ getColumnTitle(column) }}
+                    (mouseleave)="hideFieldTooltip()">
+                  {{ column | titlecase }}
+                </th>
+                <th class="action-header">
+                  <span class="column-title">Acciones</span>
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of filteredDataL03; let i = index" class="data-row">
-                <td class="data-cell">
-                  <span class="cell-value">{{ item.tipoIdentificacion === 'R' ? 'R - RUC Nacional' : 'X - Código Extranjero' }}</span>
-                </td>
-
-                <td class="data-cell">
-                  <span class="cell-value">{{ item.identificacion }}</span>
-                </td>
-
-                <td class="data-cell">
-                  <div class="cell-content">
-                    <span class="cell-value">{{ getClasificacionDesc(item.clasificacion) }}</span>
-                    <button class="btn btn-sm btn-outline-primary edit-btn" 
-                            (click)="openEditModal(item)" 
-                            title="Editar registro">
-                      ✏️
+              <tr *ngFor="let item of filteredDataL03" class="data-row">
+                <td>{{ item.codigoTipoIdentificacionEmisor }}</td>
+                <td>{{ item.codigoIdentificacionEmisor }}</td>
+                <td>{{ item.numeroTitulo }}</td>
+                <td>{{ item.fechaEmision | date:'dd/MM/yyyy' }}</td>
+                <td>{{ item.valorLibrosUsd | currency:'USD':'symbol':'1.2-2' }}</td>
+                <td>{{ item.valorMercadoUsd | currency:'USD':'symbol':'1.2-2' }}</td>
+                <td class="action-cell">
+                  <div class="action-buttons">
+                    <button (click)="openEditRecordModal(item)" class="btn btn-sm btn-primary">
+                      <i class="fas fa-edit"></i>
                     </button>
-                  </div>
-                </td>
-
-                <td class="data-cell">
-                  <div class="cell-content">
-                    <span class="cell-value">{{ getTipoEmisorDesc(item.tipoEmisor) }}</span>
-                    <button class="btn btn-sm btn-outline-primary edit-btn" 
-                            (click)="openEditModal(item)" 
-                            title="Editar registro">
-                      ✏️
+                    <button (click)="refreshData()" class="btn btn-sm btn-info">
+                      <i class="fas fa-sync-alt"></i>
                     </button>
                   </div>
                 </td>
               </tr>
             </tbody>
-          </table> -->
-
-          <app-l03-table [data]="datosL03"></app-l03-table>
-
+          </table>
         </div>
       </div>
     </div>
@@ -284,27 +231,10 @@
        [style.left.px]="tooltipPosition.x + 10"
        [style.top.px]="tooltipPosition.y - 10">
     <div class="tooltip-content">
-      <h4>{{ currentTooltip.title }}</h4>
-      <p>{{ currentTooltip.description }}</p>
-      
-      <div class="tooltip-details">
-        <div class="tooltip-row">
-          <strong>Formato:</strong> {{ currentTooltip.format }}
-        </div>
-        <div class="tooltip-row">
-          <strong>Validación:</strong> {{ currentTooltip.validation }}
-        </div>
-        <div class="tooltip-row">
-          <strong>Ejemplo:</strong> {{ currentTooltip.example }}
-        </div>
-        <div class="tooltip-row">
-          <strong>Fuente:</strong> {{ currentTooltip.source }}
-        </div>
-      </div>
+      <h4>{{ currentTooltip?.title || 'Información del Campo' }}</h4>
+      <p>{{ currentTooltip?.description || 'Descripción no disponible' }}</p>
     </div>
   </div>
-
-  <!-- COMPONENTE DE EXPORTACIÓN L03 ELIMINADO -->
 
   <!-- CONTROLES DE PRUEBA Y DEBUG -->
   <div class="debug-controls" *ngIf="!loading && showLogMonitor">
@@ -359,13 +289,27 @@
     </div>
   </div>
 
-  <!-- MODAL DEL FORMULARIO L03 -->
-  <app-l01-nuevo-registro-nes
-    [isVisible]="showModalForm"
-    [editData]="editData"
-    (modalClosed)="onModalClosed()"
-    (dataSaved)="onModalDataSaved($event)">
-  </app-l01-nuevo-registro-nes>
-
-  <!-- MODAL DE RESULTADOS DE VALIDACIÓN L03 ELIMINADO -->
+  <!-- MODAL DEL FORMULARIO L03 (PLACEHOLDER) -->
+  <div *ngIf="showModalForm" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>{{ editData ? 'Editar Registro L03' : 'Nuevo Registro L03' }}</h3>
+        <button (click)="onModalClosed()" class="close-button">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Componente modal L03 en desarrollo...</p>
+        <p>Datos: {{ editData ? 'Modo edición' : 'Modo creación' }}</p>
+      </div>
+      <div class="modal-footer">
+        <button (click)="onModalClosed()" class="btn btn-secondary">
+          Cancelar
+        </button>
+        <button (click)="onModalDataSaved(editData)" class="btn btn-primary">
+          {{ editData ? 'Actualizar' : 'Crear' }}
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -7,21 +7,16 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { L01ExportData } from '../../../models/l01-export.model';
+import { FormsModule } from '@angular/forms';
 import { L01CatalogService } from '../../../services/l01/l01-catalog.service';
-import { L01Service, L01Record } from '../../../services/l01/l01.service';
 import { L01ExportService } from '../../../services/l01/l01-export.service';
 import { LogMonitorComponent } from '../../../components/debug/log-monitor/log-monitor.component';
-import { L01NuevoRegistroNesComponent } from '../../../components/l01/l01-nuevo-registro-nes/l01-nuevo-registro-nes.component';
 import { L03FieldsTableComponent } from '../../../components/l03/l03-table/l03-fields-table.component';
 import { L03TableComponent } from '../../../components/l03/l03-table/l03-table.component';
 import { LoggerService } from '../../../services/logger.service';
 import { TxtLoggerService } from '../../../services/txt-logger.service';
 import { environment } from '../../../../environments/environment';
-import { getL01FieldTooltip, L01FieldTooltip, L01_STRUCTURE_INFO } from '../../../utils/l01-field-tooltips';
-import { HttpClient } from '@angular/common/http';
 import { L03Dto, L03StructureService } from '../../../services/l03/l03-structure.service';
 
 @Component({
@@ -32,7 +27,6 @@ import { L03Dto, L03StructureService } from '../../../services/l03/l03-structure
   imports: [
     CommonModule,
     FormsModule,
-    L01NuevoRegistroNesComponent,
     LogMonitorComponent,
     L03FieldsTableComponent,
     L03TableComponent
@@ -44,27 +38,28 @@ export class L03MainComponent implements OnInit {
   // ========================================
   
   // Datos del reporte
-  // datosL03: L01Record[] = [];
   datosL03: L03Dto[] = [];
-  registrosFiltrados: number = 0; // ✅ NUEVO: Contador de registros filtrados por validación L01
+  registrosFiltrados: number = 0;
   loading = false;
   error = '';
 
-  // Filtros para el grid (NO para generación de reporte)
+  // Filtros para el grid
   tipoIdentificacion = '';
   clasificacion = '';
   tipoEmisor = '';
   
-  // Columnas de la tabla según especificación oficial L01
+  // Columnas de la tabla según especificación oficial L03
   displayedColumns: string[] = [
-    'tipoIdentificacion',    // Campo 1: Tipo de identificación (R/X) - Tabla 4
-    'identificacion',        // Campo 2: Identificación (RUC o código extranjero) - Tabla 164
-    'clasificacion',         // Campo 3: Clasificación (1-4) - Tabla 173
-    'tipoEmisor'             // Campo 4: Tipo de emisor (sectores económicos) - Tabla 73
+    'codigoTipoIdentificacionEmisor',
+    'codigoIdentificacionEmisor',
+    'numeroTitulo',
+    'fechaEmision',
+    'valorLibrosUsd',
+    'valorMercadoUsd'
   ];
 
   // Datos para exportación
-  exportData: L01ExportData[] = [];
+  exportData: any[] = [];
   fechaCorte: Date = new Date();
   usuarioActual = 'Christian Aguirre';
   
@@ -80,17 +75,16 @@ export class L03MainComponent implements OnInit {
   
   // Estados para modal de formulario
   showModalForm = false;
-  editData: L01Record | null = null;
+  editData: L03Dto | null = null;
   isSaving = false;
   
   // Tooltips
-  tooltips = L01_STRUCTURE_INFO;
-  currentTooltip: L01FieldTooltip | null = null;
+  tooltips: any[] = [];
+  currentTooltip: any = null;
   showTooltip = false;
   tooltipPosition = { x: 0, y: 0 };
   
   // Datos filtrados para el grid
-  // filteredDataL03: L01Record[] = [];
   filteredDataL03: L03Dto[] = [];
 
   // ========================================
@@ -99,475 +93,139 @@ export class L03MainComponent implements OnInit {
 
   constructor(
     private catalogService: L01CatalogService,
-    // private regulatoryService: L01RegulatoryService,
     private service: L03StructureService,
     private exportService: L01ExportService,
     private logger: LoggerService,
-    private txtLogger: TxtLoggerService,
-    private http: HttpClient
-  ) { 
-    this.logger.info('L03MainComponent', 'Componente inicializado');
-    this.txtLogger.info('L03MainComponent', 'Componente principal L03 inicializado con logs TXT');
-  }
+    private txtLogger: TxtLoggerService
+  ) {}
+
+  // ========================================
+  // LIFECYCLE HOOKS
+  // ========================================
 
   ngOnInit(): void {
-    this.loadInitialData();
+    this.txtLogger.info('L03MainComponent', 'Componente L03 inicializado');
+    this.loadCatalogs();
+    this.loadData();
   }
 
   // ========================================
-  // CARGA DE DATOS INICIALES
+  // CARGA DE CATÁLOGOS
   // ========================================
 
   /**
-   * Carga datos iniciales del componente L01
-   * ✅ CORREGIDO: Sincronizar carga de catálogos antes de procesar datos
+   * Cargar catálogos para filtros
    */
-  private loadInitialData(): void {
-    this.logger.info('L03MainComponent', 'Iniciando carga de datos iniciales');
-    this.loading = true;
-    
-    // ✅ SINCRONIZAR: Cargar TODOS los catálogos primero, luego datos del backend
-    this.loadCatalogsForL01().then(() => {
-      this.txtLogger.info('L01MainComponent', 'Todos los catálogos cargados, procediendo con datos del backend');
-            this.loadRealDataFromBackend();
-    }).catch(error => {
-      this.txtLogger.error('L01MainComponent', 'Error al cargar catálogos', error);
-      this.loading = false;
-    });
-  }
-
-  /**
-   * Cargar catálogos para mapeo correcto de IDs
-   * ✅ CORREGIDO: Cargar TODOS los catálogos sin filtrar para mapear IDs reales
-   * ✅ SINCRONIZADO: Retorna Promise para esperar a que todos estén listos
-   */
-  private loadCatalogsForL01(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      let catalogsLoaded = 0;
-      const totalCatalogs = 4;
-      
-      const checkAllLoaded = () => {
-        catalogsLoaded++;
-        if (catalogsLoaded === totalCatalogs) {
-          this.txtLogger.info('L01MainComponent', 'Todos los catálogos cargados exitosamente', {
-            totalCatalogs: totalCatalogs,
-            catalogsLoaded: catalogsLoaded
-          });
-          resolve();
-        }
-      };
-      
-      const handleError = (error: any, catalogName: string) => {
-        this.logger.error('L01MainComponent', `Error al cargar ${catalogName}`, error);
-        reject(error);
-      };
-      
-      // Cargar Tipo de Identificación (T4) - TODOS para mapear IDs reales
-      this.catalogService.getTabla4().subscribe({
-        next: (data: any) => {
-          // ✅ CARGA COMPLETA: Todos los tipos para mapear IDs reales
-          this.tiposIdentificacionL01 = data;
-          
-          this.txtLogger.info('L01MainComponent', 'Tipos de Identificación T4 cargados completamente', {
-            totalRegistros: this.tiposIdentificacionL01.length,
-            todosLosRegistros: this.tiposIdentificacionL01.map(t => ({ id: t.id, codigo: t.codigo, descripcion: t.descripcion }))
-          });
-          checkAllLoaded();
-        },
-        error: (error: any) => handleError(error, 'Tipos de Identificación')
-      });
-
-      // Cargar Clasificaciones (T173) - TODAS para mapear IDs reales
-      this.catalogService.getTabla173().subscribe({
-        next: (data: any) => {
-          // ✅ CARGA COMPLETA: Todas las clasificaciones para mapear IDs reales
-          this.clasificacionesL01 = data;
-          
-          this.txtLogger.info('L01MainComponent', 'Clasificaciones T173 cargadas completamente', {
-            totalRegistros: this.clasificacionesL01.length,
-            todosLosRegistros: this.clasificacionesL01.map(c => ({ id: c.id, codigo: c.codigo, descripcion: c.descripcion }))
-          });
-          checkAllLoaded();
-        },
-        error: (error: any) => handleError(error, 'Clasificaciones')
-      });
-
-      // Cargar Tipos de Emisor (T73) - TODOS para mapear IDs reales
-      this.catalogService.getTabla73().subscribe({
-        next: (data: any) => {
-          // ✅ CARGA COMPLETA: Todos los tipos de emisor para mapear IDs reales
-          this.tiposEmisorL01 = data;
-          
-          this.txtLogger.info('L01MainComponent', 'Tipos de Emisor T73 cargados completamente', {
-            totalRegistros: this.tiposEmisorL01.length,
-            todosLosRegistros: this.tiposEmisorL01.map(t => ({ id: t.id, codigo: t.codigo, descripcion: t.descripcion }))
-          });
-          checkAllLoaded();
-        },
-        error: (error: any) => handleError(error, 'Tipos de Emisor')
-      });
-
-      // Cargar Códigos Extranjeros (T164) - TODOS para mapear IDs reales
-      this.catalogService.getTabla164().subscribe({
-        next: (data: any) => {
-          this.codigosExtranjerosL01 = data;
-          this.txtLogger.info('L01MainComponent', 'Códigos Extranjeros T164 cargados completamente', {
-            totalRegistros: this.codigosExtranjerosL01.length
-          });
-          checkAllLoaded();
-        },
-        error: (error: any) => handleError(error, 'Códigos Extranjeros')
-      });
-    });
-  }
-
-  /**
-   * Cargar datos reales del backend
-   */
-  private loadRealDataFromBackend(): void {
-    this.txtLogger.info('L01MainComponent', 'Cargando datos reales del backend');
-    
-    this.service.getAll().subscribe({
-      next: (data: any[]) => {
-        // this.datosL03 = this.transformBackendDataToL01Official(data);
-        this.datosL03 = data;
-        this.filteredDataL03 = [...this.datosL03];
-        this.error = '';
-        this.loading = false;
-        
-        this.txtLogger.info('L03MainComponent', 'Datos reales del backend cargados exitosamente', {
-          totalRegistros: this.datosL03.length
-        });
-      },
-      error: (error: any) => {
-        this.txtLogger.error('L03MainComponent', 'Error al cargar datos reales del backend', error);
-        this.loading = false;
-        
-        if (error.status === 0) {
-          this.error = 'Error de conectividad: No se puede conectar al servidor.';
-        } else if (error.status === 404) {
-          this.error = 'Endpoint no encontrado. Verifique la configuración del backend.';
-        } else if (error.status === 500) {
-          this.error = 'Error interno del servidor. Contacte al administrador.';
-        } else {
-          this.error = `Error ${error.status}: ${error.message || 'Error desconocido al cargar datos'}`;
-        }
-        
-        this.datosL03 = [];
-        this.filteredDataL03 = [];
-      }
-    });
-  }
-
-  // ========================================
-  // TRANSFORMACIÓN DE DATOS
-  // ========================================
-
-  /**
-   * Transformar datos del backend al formato oficial L03
-   * ✅ CORREGIDO: Mapeo correcto según estructura real de la API
-   */
-  private transformBackendDataToL01Official(backendData: any[]): L01Record[] {
-    this.txtLogger.info('L01MainComponent', 'Iniciando transformación de datos del backend', {
-      totalRegistrosBackend: backendData.length
-    });
-    
-    // ✅ VALIDACIÓN ESTRICTA L01: Solo permitir códigos R y X
-    const codigosPermitidosL01 = ['R', 'X'];
-    
-    // ✅ CONTAR REGISTROS FILTRADOS: Para mostrar mensaje informativo
-    let registrosFiltrados = 0;
-    
-    const datosTransformados = backendData.map(item => {
-      // ✅ TRANSFORMACIÓN: Mapeo correcto según estructura real de la API
-      const transformedItem = {
-        tipoIdentificacion: this.mapTipoIdentificacion(item.codigoTipoIdentificacion),
-        identificacion: this.mapIdentificacion(item.codigoEmisor),
-        clasificacion: item.codigoClasificacionEmisor,
-        tipoEmisor: item.codigoTipoEmisor
-      };
-      
-      return transformedItem;
-    }).filter(item => {
-      // ✅ FILTRO ESTRICTO L01: Solo registros con códigos permitidos
-      const tipoIdentificacionValido = codigosPermitidosL01.includes(item.tipoIdentificacion);
-      const datosBasicosValidos = item.clasificacion > 0 && 
-                                  item.tipoEmisor > 0 && 
-                                  item.tipoIdentificacion !== '' && 
-                                  item.identificacion !== '';
-      
-      // ✅ VALIDACIÓN L01: Registrar errores de códigos no permitidos
-      if (!tipoIdentificacionValido && item.tipoIdentificacion !== '') {
-        this.txtLogger.error('L01MainComponent', 'REGISTRO L01 INVÁLIDO: Código de tipo de identificación no permitido', {
-          codigoInvalido: item.tipoIdentificacion,
-          codigosPermitidos: codigosPermitidosL01,
-          registro: item,
-          mensaje: 'Este registro contiene un código de tipo de identificación que no está permitido en L01'
-        });
-        registrosFiltrados++;
-      }
-      
-      return tipoIdentificacionValido && datosBasicosValidos;
-    });
-    
-    // ✅ ACTUALIZAR CONTADOR: Para mostrar en el mensaje informativo
-    this.registrosFiltrados = registrosFiltrados;
-    
-    this.txtLogger.info('L01MainComponent', 'Transformación L01 completada', {
-      totalRegistrosBackend: backendData.length,
-      registrosValidos: datosTransformados.length,
-      registrosFiltrados: registrosFiltrados
-    });
-    
-    return datosTransformados;
-  }
-
-  /**
-   * Mapear código de tipo de identificación a valor L01 oficial
-   * ✅ CORREGIDO: Mapeo correcto de ID a código usando catálogo completo
-   */
-  private mapTipoIdentificacion(codigo: number): string {
-    if (codigo === 0) return '';
-    
-    // Buscar en catálogo T4 por ID
-    const tipo = this.tiposIdentificacionL01.find(t => t.id === codigo);
-    if (tipo) {
-      return tipo.codigo; // Retornar 'R', 'X', 'C', etc. del catálogo real
-    }
-    
-    // ❌ NO SUPONER: Si no se encuentra, retornar vacío
-    this.txtLogger.warn('L01MainComponent', 'Tipo de identificación no encontrado en catálogo T4', { codigo });
-    return '';
-  }
-
-  /**
-   * Mapear código de emisor a identificación L01 oficial
-   * ✅ CORREGIDO: Mapeo correcto de ID a código usando catálogo completo
-   */
-  private mapIdentificacion(codigo: number): string {
-    if (codigo === 0) return '';
-    
-    // Buscar en catálogo T164 por ID
-    const emisor = this.codigosExtranjerosL01.find(e => e.id === codigo);
-    if (emisor) {
-      this.txtLogger.info('L01MainComponent', 'Emisor mapeado correctamente', {
-        id: codigo,
-        codigo: emisor.codigo,
-        descripcion: emisor.descripcion
-      });
-      return emisor.codigo; // Retornar código extranjero del catálogo real
-    }
-    
-    // ❌ NO SUPONER: Si no se encuentra, retornar vacío
-    this.txtLogger.warn('L01MainComponent', 'Emisor no encontrado en catálogo T164', {
-      codigo: codigo,
-      catalogoDisponible: this.codigosExtranjerosL01.map(e => ({ id: e.id, codigo: e.codigo, descripcion: e.descripcion }))
-    });
-    return '';
-  }
-
-  /**
-   * Obtener descripción del tipo de identificación (para display)
-   * ✅ CORREGIDO: Descripción completa usando catálogo completo
-   */
-  getTipoIdentificacionDesc(codigo: string): string {
-    // Buscar en catálogo T4 por código
-    const tipo = this.tiposIdentificacionL01.find(t => t.codigo === codigo);
-    if (tipo) {
-      return `${tipo.codigo} - ${tipo.descripcion}`; // Usar descripción real del catálogo
-    }
-    
-    // ❌ NO SUPONER: Si no se encuentra, retornar código tal como está
-    this.txtLogger.warn('L01MainComponent', 'Descripción de tipo de identificación no encontrada en catálogo T4', {
-      codigo: codigo,
-      catalogoDisponible: this.tiposIdentificacionL01.map(t => ({ codigo: t.codigo, descripcion: t.descripcion }))
-    });
-    return codigo;
-  }
-
-  /**
-   * Obtener descripción de la clasificación
-   * ✅ CORREGIDO: Descripción completa usando catálogo completo
-   */
-  getClasificacionDesc(codigo: number): string {
-    const clasificacion = this.clasificacionesL01.find(c => c.id === codigo);
-    if (clasificacion) {
-      return clasificacion.descripcion;
-    }
-    
-    // ❌ NO SUPONER: Si no se encuentra, retornar descripción genérica
-    this.txtLogger.warn('L01MainComponent', 'Clasificación no encontrada en catálogo T173', { codigo });
-    return `Clasificación ${codigo}`;
-  }
-
-  /**
-   * Obtener descripción del tipo de emisor
-   * ✅ CORREGIDO: Descripción completa usando catálogo completo
-   */
-  getTipoEmisorDesc(codigo: number): string {
-    const tipo = this.tiposEmisorL01.find(t => t.id === codigo);
-    if (tipo) {
-      return tipo.descripcion;
-    }
-    
-    // ❌ NO SUPONER: Si no se encuentra, retornar descripción genérica
-    this.txtLogger.warn('L01MainComponent', 'Tipo de emisor no encontrado en catálogo T73', { codigo });
-    return `Tipo ${codigo}`;
-  }
-
-  // ========================================
-  // ACCIONES PRINCIPALES DEL DASHBOARD
-  // ========================================
-
-  /**
-   * Validar y generar reporte L01 completo
-   */
-  validateAndGenerateReport(): void {
-    this.loading = true;
-    this.error = '';
-    
-    this.txtLogger.info('L01MainComponent', 'Iniciando validación y generación de reporte L01');
-    
-    // ✅ VALIDACIÓN ESTRICTA L01: Verificar integridad de datos
-    const validacionL01 = this.validarIntegridadL01();
-    
-    if (validacionL01.esValido) {
-      this.txtLogger.info('L01MainComponent', 'Validación L01 exitosa - Datos integros', {
-        totalRegistros: this.datosL03.length,
-        registrosValidos: validacionL01.registrosValidos
-      });
-      
-      // Simular proceso de validación
-      setTimeout(() => {
-        this.loading = false;
-        this.txtLogger.info('L01MainComponent', 'Reporte L01 generado exitosamente');
-      }, 2000);
-    } else {
-      this.loading = false;
-      this.error = `Error de integridad L01: ${validacionL01.errores.join(', ')}`;
-      this.txtLogger.error('L01MainComponent', 'Validación L01 fallida - Datos corruptos', {
-        errores: validacionL01.errores,
-        registrosInvalidos: validacionL01.registrosInvalidos
-      });
-    }
-  }
-
-  /**
-   * Validar integridad de datos L01 según especificaciones oficiales
-   * ✅ VALIDACIÓN ESTRICTA: Solo códigos R y X permitidos
-   */
-  private validarIntegridadL01(): { esValido: boolean; errores: string[]; registrosValidos: number; registrosInvalidos: any[] } {
-    const errores: string[] = [];
-    const registrosInvalidos: any[] = [];
-    const codigosPermitidosL01 = ['R', 'X'];
-    
-    this.datosL03.forEach((registro, index) => {
-      // // ✅ VALIDAR TIPO IDENTIFICACIÓN: Solo R o X
-      // if (!codigosPermitidosL01.includes(registro.tipoIdentificacion)) {
-      //   errores.push(`Registro ${index + 1}: Código de tipo de identificación '${registro.tipoIdentificacion}' no permitido en L01`);
-      //   registrosInvalidos.push({ registro, index, error: 'Tipo de identificación inválido' });
-      // }
-      
-      // // ✅ VALIDAR CLASIFICACIÓN: Solo 1, 2, 3, 4
-      // if (![1, 2, 3, 4].includes(registro.clasificacion)) {
-      //   errores.push(`Registro ${index + 1}: Clasificación '${registro.clasificacion}' no permitida en L01`);
-      //   registrosInvalidos.push({ registro, index, error: 'Clasificación inválida' });
-      // }
-      
-      // // ✅ VALIDAR TIPO EMISOR: Solo códigos válidos de T73
-      // const tipoEmisorValido = this.tiposEmisorL01.some(t => t.id === registro.tipoEmisor);
-      // if (!tipoEmisorValido) {
-      //   errores.push(`Registro ${index + 1}: Tipo de emisor '${registro.tipoEmisor}' no encontrado en catálogo T73`);
-      //   registrosInvalidos.push({ registro, index, error: 'Tipo de emisor inválido' });
-      // }
-    });
-    
-    return {
-      esValido: errores.length === 0,
-      errores,
-      registrosValidos: this.datosL03.length - registrosInvalidos.length,
-      registrosInvalidos
-    };
-  }
-
-  /**
-   * Exportar datos a formato TXT
-   */
-  exportToTxt(): void {
-    if (this.datosL03.length === 0) {
-      this.error = 'No hay datos para exportar';
-      return;
-    }
-
-    this.txtLogger.info('L01MainComponent', 'Iniciando exportación a TXT');
-    
+  async loadCatalogs(): Promise<void> {
     try {
-      // this.exportService.exportToTxt(this.datosL03);
-      this.txtLogger.info('L01MainComponent', 'Exportación TXT completada exitosamente');
-    } catch (error) {
-      this.error = 'Error inesperado durante la exportación';
-      this.txtLogger.error('L01MainComponent', 'Error inesperado en exportación TXT', error);
+      this.txtLogger.info('L03MainComponent', 'Cargando catálogos...');
+      
+      // Cargar catálogos en paralelo usando los métodos correctos
+      const [tiposIdentificacion, tiposEmisor, clasificaciones, codigosExtranjeros] = await Promise.all([
+        this.catalogService.getTabla4().toPromise(),
+        this.catalogService.getTabla73().toPromise(),
+        this.catalogService.getTabla173().toPromise(),
+        this.catalogService.getTabla164().toPromise()
+      ]);
+
+      this.tiposIdentificacionL01 = tiposIdentificacion || [];
+      this.tiposEmisorL01 = tiposEmisor || [];
+      this.clasificacionesL01 = clasificaciones || [];
+      this.codigosExtranjerosL01 = codigosExtranjeros || [];
+
+      this.txtLogger.info('L03MainComponent', 'Catálogos cargados exitosamente', {
+        tiposIdentificacion: this.tiposIdentificacionL01.length,
+        tiposEmisor: this.tiposEmisorL01.length,
+        clasificaciones: this.clasificacionesL01.length,
+        codigosExtranjeros: this.codigosExtranjerosL01.length
+      });
+
+    } catch (error: any) {
+      this.txtLogger.error('L03MainComponent', 'Error al cargar catálogos', error);
+      this.error = 'Error al cargar catálogos: ' + (error.message || 'Error desconocido');
     }
   }
 
+  // ========================================
+  // CARGA DE DATOS
+  // ========================================
+
   /**
-   * Abrir modal para crear nuevo registro
+   * Cargar datos L03
    */
-  openCreateModal(): void {
+  async loadData(): Promise<void> {
+    try {
+      this.loading = true;
+      this.txtLogger.info('L03MainComponent', 'Cargando datos L03...');
+      
+      // Cargar datos desde el servicio L03 usando el método getAll()
+      const data = await this.service.getAll().toPromise();
+      this.datosL03 = data || [];
+      this.filteredDataL03 = [...this.datosL03];
+      
+      this.txtLogger.info('L03MainComponent', 'Datos L03 cargados exitosamente', {
+        totalRegistros: this.datosL03.length
+      });
+
+    } catch (error: any) {
+      this.txtLogger.error('L03MainComponent', 'Error al cargar datos L03', error);
+      this.error = 'Error al cargar datos: ' + (error.message || 'Error desconocido');
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  // ========================================
+  // MANEJO DE MODAL
+  // ========================================
+
+  /**
+   * Abrir modal para nuevo registro
+   */
+  openNewRecordModal(): void {
     this.editData = null;
     this.showModalForm = true;
-    this.txtLogger.info('L01MainComponent', 'Modal de creación abierto');
+    this.txtLogger.info('L03MainComponent', 'Modal de nuevo registro abierto');
   }
 
   /**
-   * Abrir modal para editar registro existente
+   * Abrir modal para editar registro
    */
-  openEditModal(record: L01Record): void {
+  openEditRecordModal(record: L03Dto): void {
     this.editData = { ...record };
     this.showModalForm = true;
-    this.txtLogger.info('L01MainComponent', 'Modal de edición abierto para registro', record);
+    this.txtLogger.info('L03MainComponent', 'Modal de edición abierto', record);
   }
 
-  // ========================================
-  // MANEJO DEL MODAL
-  // ========================================
-
   /**
-   * Modal cerrado
+   * Cerrar modal
    */
   onModalClosed(): void {
     this.showModalForm = false;
     this.editData = null;
-    this.txtLogger.info('L01MainComponent', 'Modal cerrado');
+    this.txtLogger.info('L03MainComponent', 'Modal cerrado');
   }
 
   /**
    * Datos guardados desde el modal
    */
-  onModalDataSaved(data: L01Record): void {
-    this.txtLogger.info('L01MainComponent', 'Datos guardados desde modal', data);
+  onModalDataSaved(data: L03Dto | null): void {
+    this.txtLogger.info('L03MainComponent', 'Datos guardados desde modal', data);
     
-    if (this.editData) {
-      // Actualizar registro existente
-      // const index = this.datosL03.findIndex(item => 
-      //   item.identificacion === this.editData?.identificacion
-      // );
-
-      // const index = 0;
-
-      // if (index !== -1) {
-      //   // this.datosL03[index] = data;
-      //   this.txtLogger.info('L01MainComponent', 'Registro actualizado en la lista');
-      // }
-
+    if (data) {
+      if (this.editData) {
+        // Actualizar registro existente
+        this.txtLogger.info('L03MainComponent', 'Registro actualizado en la lista');
+      } else {
+        // Agregar nuevo registro
+        this.txtLogger.info('L03MainComponent', 'Nuevo registro agregado a la lista');
+      }
+      
+      // Actualizar datos filtrados
+      this.applyGridFilters();
     } else {
-      // Agregar nuevo registro
-      // this.datosL03.push(data);
-      this.txtLogger.info('L01MainComponent', 'Nuevo registro agregado a la lista');
+      this.txtLogger.warn('L03MainComponent', 'No se recibieron datos válidos del modal');
     }
-    
-    // Actualizar datos filtrados
-    this.applyGridFilters();
     
     // Cerrar modal
     this.showModalForm = false;
@@ -582,20 +240,7 @@ export class L03MainComponent implements OnInit {
    * Aplicar filtros al grid
    */
   applyGridFilters(): void {
-    // this.filteredDataL03 = this.datosL03.filter(item => {
-    //   const matchTipoIdentificacion = !this.tipoIdentificacion || 
-    //     item.tipoIdentificacion === this.tipoIdentificacion;
-      
-    //   const matchClasificacion = !this.clasificacion || 
-    //     item.clasificacion === +this.clasificacion;
-      
-    //   const matchTipoEmisor = !this.tipoEmisor || 
-    //     item.tipoEmisor === +this.tipoEmisor;
-      
-    //   return matchTipoIdentificacion && matchClasificacion && matchTipoEmisor;
-    // });
-    
-    this.txtLogger.info('L01MainComponent', 'Filtros aplicados al grid', {
+    this.txtLogger.info('L03MainComponent', 'Filtros aplicados al grid', {
       filtros: { tipoIdentificacion: this.tipoIdentificacion, clasificacion: this.clasificacion, tipoEmisor: this.tipoEmisor },
       totalFiltrado: this.filteredDataL03.length
     });
@@ -610,14 +255,8 @@ export class L03MainComponent implements OnInit {
     this.tipoEmisor = '';
     this.filteredDataL03 = [...this.datosL03];
     
-    this.txtLogger.info('L01MainComponent', 'Filtros del grid limpiados');
+    this.txtLogger.info('L03MainComponent', 'Filtros del grid limpiados');
   }
-
-  // ========================================
-  // FUNCIONES DE DESCRIPCIÓN PARA FILTROS
-  // ========================================
-
-  
 
   // ========================================
   // FUNCIONES DE RESUMEN
@@ -634,15 +273,55 @@ export class L03MainComponent implements OnInit {
    * Obtener fecha de generación
    */
   getFechaGeneracion(): string {
-    return new Date().toLocaleDateString('es-EC');
+    return new Date().toLocaleString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
+  // ========================================
+  // FUNCIONES DE EXPORTACIÓN
+  // ========================================
+
   /**
-   * Contar registros por clasificación
+   * Exportar datos a TXT
    */
-  getCountByClasificacion(clasificacion: number): number {
-    // return this.datosL03.filter(item => item.clasificacion === clasificacion).length;
-    return 0;
+  async exportToTxt(): Promise<void> {
+    try {
+      this.txtLogger.info('L03MainComponent', 'Iniciando exportación a TXT...');
+      
+      // Preparar datos para exportación usando las propiedades correctas de L03Dto
+      this.exportData = this.filteredDataL03.map(item => ({
+        codigoTipoIdentificacionEmisor: item.codigoTipoIdentificacionEmisor,
+        codigoIdentificacionEmisor: item.codigoIdentificacionEmisor,
+        numeroTitulo: item.numeroTitulo,
+        fechaEmision: item.fechaEmision,
+        valorLibrosUsd: item.valorLibrosUsd,
+        valorMercadoUsd: item.valorMercadoUsd
+      }));
+
+      // Exportar usando el servicio (solo TXT está disponible)
+      const blob = this.exportService.exportToTxt(this.exportData as any);
+      
+      // Crear y descargar archivo
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'L03_Reporte_' + this.fechaCorte.toISOString().split('T')[0] + '.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      this.txtLogger.info('L03MainComponent', 'Exportación a TXT completada exitosamente');
+
+    } catch (error: any) {
+      this.txtLogger.error('L03MainComponent', 'Error en exportación a TXT', error);
+      this.error = 'Error en exportación: ' + (error.message || 'Error desconocido');
+    }
   }
 
   // ========================================
@@ -650,31 +329,24 @@ export class L03MainComponent implements OnInit {
   // ========================================
 
   /**
-   * Mostrar tooltip de campo
+   * Mostrar tooltip para campo
    */
   showFieldTooltip(fieldName: string, event: MouseEvent): void {
-    const tooltip = getL01FieldTooltip(fieldName);
+    const tooltip = this.tooltips.find((t: any) => t.field === fieldName);
     if (tooltip) {
       this.currentTooltip = tooltip;
       this.showTooltip = true;
       this.tooltipPosition = { x: event.clientX, y: event.clientY };
+      this.txtLogger.info('L03MainComponent', 'Tooltip mostrado para campo', fieldName);
     }
   }
 
   /**
    * Ocultar tooltip
    */
-  hideTooltip(): void {
+  hideFieldTooltip(): void {
     this.showTooltip = false;
     this.currentTooltip = null;
-  }
-
-  /**
-   * Obtener título de columna
-   */
-  getColumnTitle(columnName: string): string {
-    const tooltip = getL01FieldTooltip(columnName);
-    return tooltip ? tooltip.title : columnName;
   }
 
   // ========================================
@@ -685,23 +357,23 @@ export class L03MainComponent implements OnInit {
    * Simular error para pruebas
    */
   testError(): void {
-    this.txtLogger.error('L01MainComponent', 'Error simulado para pruebas');
-    this.error = 'Error simulado para pruebas de logging';
+    this.txtLogger.error('L03MainComponent', 'Error simulado para pruebas', new Error('Error de prueba'));
+    this.error = 'Error simulado para pruebas';
   }
 
   /**
    * Simular advertencia para pruebas
    */
   testWarning(): void {
-    this.txtLogger.warn('L01MainComponent', 'Advertencia simulada para pruebas');
+    this.txtLogger.warn('L03MainComponent', 'Advertencia simulada para pruebas');
   }
 
   /**
    * Refrescar datos
    */
   refreshData(): void {
-    this.txtLogger.info('L01MainComponent', 'Refrescando datos');
-    this.loadInitialData();
+    this.txtLogger.info('L03MainComponent', 'Refrescando datos...');
+    this.loadData();
   }
 
   /**
@@ -709,6 +381,88 @@ export class L03MainComponent implements OnInit {
    */
   toggleLogMonitor(): void {
     this.showLogMonitor = !this.showLogMonitor;
-    this.txtLogger.info('L01MainComponent', `Monitor de logs ${this.showLogMonitor ? 'activado' : 'desactivado'}`);
+    this.txtLogger.info('L03MainComponent', 'Monitor de logs alternado', { visible: this.showLogMonitor });
+  }
+
+  // ========================================
+  // FUNCIONES DE VALIDACIÓN
+  // ========================================
+
+  /**
+   * Validar RUC
+   */
+  validateRUC(ruc: string): boolean {
+    if (!ruc || ruc.length !== 13) return false;
+    
+    // Validación básica de RUC
+    const rucNumber = parseInt(ruc);
+    if (isNaN(rucNumber)) return false;
+    
+    // Validar prefijo de provincia (01-24)
+    const provincia = parseInt(ruc.substring(0, 2));
+    if (provincia < 1 || provincia > 24) return false;
+    
+    // Validar tipo de entidad (tercer dígito)
+    const tipoEntidad = parseInt(ruc.substring(2, 3));
+    if (tipoEntidad < 1 || tipoEntidad > 9) return false;
+    
+    return true;
+  }
+
+  /**
+   * Validar código extranjero
+   */
+  validateCodigoExtranjero(codigo: string): boolean {
+    if (!codigo || codigo.length < 3) return false;
+    
+    // Validación básica de código extranjero
+    const codigoNumber = parseInt(codigo);
+    if (isNaN(codigoNumber)) return false;
+    
+    return true;
+  }
+
+  // ========================================
+  // FUNCIONES DE UTILIDAD
+  // ========================================
+
+  /**
+   * Obtener descripción de tipo de identificación
+   */
+  getTipoIdentificacionDesc(codigo: string): string {
+    const tipo = this.tiposIdentificacionL01.find(t => t.codigo === codigo);
+    return tipo ? tipo.descripcion : codigo;
+  }
+
+  /**
+   * Obtener descripción de tipo de emisor
+   */
+  getTipoEmisorDesc(codigo: string): string {
+    const tipo = this.tiposEmisorL01.find(t => t.codigo === codigo);
+    return tipo ? tipo.descripcion : codigo;
+  }
+
+  /**
+   * Obtener descripción de clasificación
+   */
+  getClasificacionDesc(codigo: string): string {
+    const clasificacion = this.clasificacionesL01.find(c => c.codigo === codigo);
+    return clasificacion ? clasificacion.descripcion : codigo;
+  }
+
+  /**
+   * Obtener descripción de código extranjero
+   */
+  getCodigoExtranjeroDesc(codigo: string): string {
+    const codigoExt = this.codigosExtranjerosL01.find(c => c.codigo === codigo);
+    return codigoExt ? codigoExt.descripcion : codigo;
+  }
+
+  // ========================================
+  // FUNCIONES DE LIMPIEZA
+  // ========================================
+
+  ngOnDestroy(): void {
+    this.txtLogger.info('L03MainComponent', 'Componente L03 destruido');
   }
 }
