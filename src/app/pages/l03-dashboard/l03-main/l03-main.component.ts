@@ -10,11 +10,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { L01ExportData } from '../../../models/l01-export.model';
-import { L01CatalogService } from '../../../services/l01-catalog.service';
-import { L01RegulatoryService, L01RegulatoryData } from '../../../services/l01-regulatory.service';
-import { L01ExportService } from '../../../services/l01-export.service';
+import { L01CatalogService } from '../../../services/l01/l01-catalog.service';
+import { L01Service, L01Record } from '../../../services/l01/l01.service';
+import { L01ExportService } from '../../../services/l01/l01-export.service';
 import { LogMonitorComponent } from '../../../components/debug/log-monitor/log-monitor.component';
-import { L01ModalFormComponent } from '../../../components/l01/l01-modal-form/l01-modal-form.component';
+import { L01NuevoRegistroNesComponent } from '../../../components/l01/l01-nuevo-registro-nes/l01-nuevo-registro-nes.component';
 import { L03FieldsTableComponent } from '../../../components/l03/l03-table/l03-fields-table.component';
 import { L03TableComponent } from '../../../components/l03/l03-table/l03-table.component';
 import { LoggerService } from '../../../services/logger.service';
@@ -32,7 +32,7 @@ import { L03Dto, L03StructureService } from '../../../services/l03/l03-structure
   imports: [
     CommonModule,
     FormsModule,
-    L01ModalFormComponent,
+    L01NuevoRegistroNesComponent,
     LogMonitorComponent,
     L03FieldsTableComponent,
     L03TableComponent
@@ -44,7 +44,7 @@ export class L03MainComponent implements OnInit {
   // ========================================
   
   // Datos del reporte
-  // datosL03: L01RegulatoryData[] = [];
+  // datosL03: L01Record[] = [];
   datosL03: L03Dto[] = [];
   registrosFiltrados: number = 0; // ✅ NUEVO: Contador de registros filtrados por validación L01
   loading = false;
@@ -80,7 +80,7 @@ export class L03MainComponent implements OnInit {
   
   // Estados para modal de formulario
   showModalForm = false;
-  editData: L01RegulatoryData | null = null;
+  editData: L01Record | null = null;
   isSaving = false;
   
   // Tooltips
@@ -90,7 +90,7 @@ export class L03MainComponent implements OnInit {
   tooltipPosition = { x: 0, y: 0 };
   
   // Datos filtrados para el grid
-  // filteredDataL03: L01RegulatoryData[] = [];
+  // filteredDataL03: L01Record[] = [];
   filteredDataL03: L03Dto[] = [];
 
   // ========================================
@@ -164,7 +164,7 @@ export class L03MainComponent implements OnInit {
       
       // Cargar Tipo de Identificación (T4) - TODOS para mapear IDs reales
       this.catalogService.getTabla4().subscribe({
-        next: (data) => {
+        next: (data: any) => {
           // ✅ CARGA COMPLETA: Todos los tipos para mapear IDs reales
           this.tiposIdentificacionL01 = data;
           
@@ -174,12 +174,12 @@ export class L03MainComponent implements OnInit {
           });
           checkAllLoaded();
         },
-        error: (error) => handleError(error, 'Tipos de Identificación')
+        error: (error: any) => handleError(error, 'Tipos de Identificación')
       });
 
       // Cargar Clasificaciones (T173) - TODAS para mapear IDs reales
       this.catalogService.getTabla173().subscribe({
-        next: (data) => {
+        next: (data: any) => {
           // ✅ CARGA COMPLETA: Todas las clasificaciones para mapear IDs reales
           this.clasificacionesL01 = data;
           
@@ -189,12 +189,12 @@ export class L03MainComponent implements OnInit {
           });
           checkAllLoaded();
         },
-        error: (error) => handleError(error, 'Clasificaciones')
+        error: (error: any) => handleError(error, 'Clasificaciones')
       });
 
       // Cargar Tipos de Emisor (T73) - TODOS para mapear IDs reales
       this.catalogService.getTabla73().subscribe({
-        next: (data) => {
+        next: (data: any) => {
           // ✅ CARGA COMPLETA: Todos los tipos de emisor para mapear IDs reales
           this.tiposEmisorL01 = data;
           
@@ -204,19 +204,19 @@ export class L03MainComponent implements OnInit {
           });
           checkAllLoaded();
         },
-        error: (error) => handleError(error, 'Tipos de Emisor')
+        error: (error: any) => handleError(error, 'Tipos de Emisor')
       });
 
       // Cargar Códigos Extranjeros (T164) - TODOS para mapear IDs reales
       this.catalogService.getTabla164().subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.codigosExtranjerosL01 = data;
           this.txtLogger.info('L01MainComponent', 'Códigos Extranjeros T164 cargados completamente', {
             totalRegistros: this.codigosExtranjerosL01.length
           });
           checkAllLoaded();
         },
-        error: (error) => handleError(error, 'Códigos Extranjeros')
+        error: (error: any) => handleError(error, 'Códigos Extranjeros')
       });
     });
   }
@@ -267,7 +267,7 @@ export class L03MainComponent implements OnInit {
    * Transformar datos del backend al formato oficial L03
    * ✅ CORREGIDO: Mapeo correcto según estructura real de la API
    */
-  private transformBackendDataToL01Official(backendData: any[]): L01RegulatoryData[] {
+  private transformBackendDataToL01Official(backendData: any[]): L01Record[] {
     this.txtLogger.info('L01MainComponent', 'Iniciando transformación de datos del backend', {
       totalRegistrosBackend: backendData.length
     });
@@ -522,7 +522,7 @@ export class L03MainComponent implements OnInit {
   /**
    * Abrir modal para editar registro existente
    */
-  openEditModal(record: L01RegulatoryData): void {
+  openEditModal(record: L01Record): void {
     this.editData = { ...record };
     this.showModalForm = true;
     this.txtLogger.info('L01MainComponent', 'Modal de edición abierto para registro', record);
@@ -544,7 +544,7 @@ export class L03MainComponent implements OnInit {
   /**
    * Datos guardados desde el modal
    */
-  onModalDataSaved(data: L01RegulatoryData): void {
+  onModalDataSaved(data: L01Record): void {
     this.txtLogger.info('L01MainComponent', 'Datos guardados desde modal', data);
     
     if (this.editData) {
