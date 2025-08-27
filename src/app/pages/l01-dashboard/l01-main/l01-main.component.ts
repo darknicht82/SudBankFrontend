@@ -10,9 +10,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { L01ExportData } from '../../../models/l01-export.model';
-import { L01CatalogService } from '../../../services/l01-catalog.service';
-import { L01RegulatoryService, L01RegulatoryData } from '../../../services/l01-regulatory.service';
-import { L01ExportService } from '../../../services/l01-export.service';
+import { L01CatalogService } from '../../../services/l01/l01-catalog.service';
+import { L01Service, L01Record } from '../../../services/l01/l01.service';
+import { L01ExportService } from '../../../services/l01/l01-export.service';
 import { LogMonitorComponent } from '../../../components/debug/log-monitor/log-monitor.component';
 import { L01NuevoRegistroNesComponent } from '../../../components/l01/l01-nuevo-registro-nes/l01-nuevo-registro-nes.component';
 import { L01NuevoEmisorComponent } from '../../../components/l01/l01-nuevo-emisor/l01-nuevo-emisor.component';
@@ -41,7 +41,7 @@ export class L01MainComponent implements OnInit {
   // ========================================
   
   // Datos del reporte
-  datosL01: L01RegulatoryData[] = [];
+  datosL01: L01Record[] = [];
   registrosFiltrados: number = 0; // ✅ NUEVO: Contador de registros filtrados por validación L01
   loading = false;
   error = '';
@@ -76,7 +76,7 @@ export class L01MainComponent implements OnInit {
   
   // Estados para modal de formulario
   showModalForm = false;
-  editData: L01RegulatoryData | null = null;
+  editData: L01Record | null = null;
   isSaving = false;
   
   // Estados para modal de agregar emisor
@@ -89,7 +89,7 @@ export class L01MainComponent implements OnInit {
   tooltipPosition = { x: 0, y: 0 };
   
   // Datos filtrados para el grid
-  filteredDataL01: L01RegulatoryData[] = [];
+  filteredDataL01: L01Record[] = [];
 
   // ========================================
   // CONSTRUCTOR E INICIALIZACIÓN
@@ -97,7 +97,7 @@ export class L01MainComponent implements OnInit {
 
   constructor(
     private catalogService: L01CatalogService,
-    private regulatoryService: L01RegulatoryService,
+    private l01Service: L01Service,
     private exportService: L01ExportService,
     private logger: LoggerService,
     private txtLogger: TxtLoggerService,
@@ -224,7 +224,7 @@ export class L01MainComponent implements OnInit {
   private loadRealDataFromBackend(): void {
     this.txtLogger.info('L01MainComponent', 'Cargando datos reales del backend');
     
-    this.regulatoryService.getAllL01Data().subscribe({
+    this.l01Service.getAll().subscribe({
       next: (data: any[]) => {
         this.datosL01 = this.transformBackendDataToL01Official(data);
         this.filteredDataL01 = [...this.datosL01];
@@ -263,7 +263,7 @@ export class L01MainComponent implements OnInit {
    * Transformar datos del backend al formato oficial L01
    * ✅ CORREGIDO: Mapeo correcto según estructura real de la API
    */
-  private transformBackendDataToL01Official(backendData: any[]): L01RegulatoryData[] {
+  private transformBackendDataToL01Official(backendData: any[]): L01Record[] {
     this.txtLogger.info('L01MainComponent', 'Iniciando transformación de datos del backend', {
       totalRegistrosBackend: backendData.length
     });
@@ -547,7 +547,7 @@ export class L01MainComponent implements OnInit {
   /**
    * Abrir modal para editar registro existente
    */
-  openEditModal(record: L01RegulatoryData): void {
+  openEditModal(record: L01Record): void {
     this.editData = { ...record };
     this.showModalForm = true;
     this.txtLogger.info('L01MainComponent', 'Modal de edición abierto para registro', record);
@@ -569,7 +569,7 @@ export class L01MainComponent implements OnInit {
   /**
    * Datos guardados desde el modal
    */
-  onModalDataSaved(data: L01RegulatoryData): void {
+  onModalDataSaved(data: L01Record): void {
     this.txtLogger.info('L01MainComponent', 'Datos guardados desde modal', data);
     
     if (this.editData) {

@@ -1,567 +1,136 @@
-/**
- * ESTILOS DEL COMPONENTE DE CONFIRMACIÓN L01
- * Manual de Control de Inversiones - Marzo 2017
- * Superintendencia de Bancos del Ecuador
- */
+/* ========================================
+   COMPONENTE L03 CONFIRMATION - ESTILOS ESPECÍFICOS
+   ======================================== */
 
-// Variables de colores
-$primary-color: #007bff;
-$success-color: #28a745;
-$warning-color: #ffc107;
-$danger-color: #dc3545;
-$info-color: #17a2b8;
-$light-color: #f8f9fa;
-$dark-color: #343a40;
-$border-color: #dee2e6;
-$shadow-color: rgba(0, 0, 0, 0.15);
+/* CONTAINER PRINCIPAL */
+.l03-confirmation-container {
+  padding: var(--sudbank-spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
 
-// Overlay del modal
-.confirmation-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+/* ========================================
+   ESTILOS ESPECÍFICOS L03 CONFIRMATION
+   ======================================== */
+
+/* Dashboard específico L03 Confirmation */
+.l03-confirmation-dashboard {
+  .confirmation-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--sudbank-spacing-lg);
+    margin-bottom: var(--sudbank-spacing-xl);
+  }
+  
+  .confirmation-stat-card {
+    background: var(--sudbank-bg-white);
+    padding: var(--sudbank-spacing-lg);
+    border-radius: var(--sudbank-border-radius-lg);
+    box-shadow: var(--sudbank-shadow);
+    text-align: center;
+    
+    .confirmation-stat-number {
+      font-size: var(--sudbank-font-size-3xl);
+      font-weight: 700;
+      color: var(--sudbank-color-primary);
+      margin-bottom: var(--sudbank-spacing-sm);
+    }
+    
+    .confirmation-stat-label {
+      color: var(--sudbank-text-secondary);
+      font-size: var(--sudbank-font-size-base);
+      font-weight: 500;
+    }
+  }
+}
+
+/* Acciones específicas L03 Confirmation */
+.l03-confirmation-actions {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1050;
-  backdrop-filter: blur(2px);
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-// Modal principal
-.confirmation-modal {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px $shadow-color;
-  max-width: 600px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  animation: slideIn 0.3s ease-out;
-  border: 1px solid $border-color;
-}
-
-// Temas del modal según tipo de operación
-.modal-creation {
-  border-top: 4px solid $success-color;
+  gap: var(--sudbank-spacing-md);
+  margin-bottom: var(--sudbank-spacing-xl);
+  flex-wrap: wrap;
   
-  .operation-icon {
-    color: $success-color;
-  }
-  
-  .confirm-button {
-    background-color: $success-color;
-    border-color: $success-color;
-    
-    &:hover {
-      background-color: darken($success-color, 10%);
-      border-color: darken($success-color, 10%);
-    }
+  .confirmation-action-button {
+    flex: 1;
+    min-width: 200px;
   }
 }
 
-.modal-edit {
-  border-top: 4px solid $info-color;
+/* Filtros específicos L03 Confirmation */
+.l03-confirmation-filters {
+  background: var(--sudbank-bg-white);
+  padding: var(--sudbank-spacing-lg);
+  border-radius: var(--sudbank-border-radius-lg);
+  box-shadow: var(--sudbank-shadow-sm);
+  margin-bottom: var(--sudbank-spacing-xl);
   
-  .operation-icon {
-    color: $info-color;
-  }
-  
-  .confirm-button {
-    background-color: $info-color;
-    border-color: $info-color;
-    
-    &:hover {
-      background-color: darken($info-color, 10%);
-      border-color: darken($info-color, 10%);
-    }
-  }
-}
-
-.modal-deletion {
-  border-top: 4px solid $danger-color;
-  
-  .operation-icon {
-    color: $danger-color;
-  }
-  
-  .confirm-button {
-    background-color: $danger-color;
-    border-color: $danger-color;
-    
-    &:hover {
-      background-color: darken($danger-color, 10%);
-      border-color: darken($danger-color, 10%);
-    }
-  }
-}
-
-// Header del modal
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid $border-color;
-  
-  .header-content {
+  .confirmation-filter-row {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    gap: var(--sudbank-spacing-lg);
+    align-items: end;
+    flex-wrap: wrap;
     
-    .operation-icon {
-      font-size: 24px;
-      line-height: 1;
-    }
-    
-    .modal-title {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 600;
-      color: $dark-color;
-    }
-  }
-  
-  .close-button {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #6c757d;
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    
-    &:hover {
-      background-color: $light-color;
-      color: $dark-color;
-    }
-    
-    &:focus {
-      outline: 2px solid $primary-color;
-      outline-offset: 2px;
+    .confirmation-filter-field {
+      flex: 1;
+      min-width: 200px;
     }
   }
 }
 
-// Cuerpo del modal
-.modal-body {
-  padding: 20px 24px;
-  
-  .main-message {
-    margin-bottom: 20px;
-    
-    p {
-      margin: 0;
-      font-size: 16px;
-      color: $dark-color;
-      line-height: 1.5;
-    }
-  }
-  
-  // Detalles del registro
-  .record-details {
-    margin-bottom: 20px;
-    
-    h4 {
-      margin: 0 0 16px 0;
-      font-size: 16px;
-      font-weight: 600;
-      color: $dark-color;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .details-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      
-      .detail-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px;
-        background-color: $light-color;
-        border-radius: 6px;
-        border: 1px solid $border-color;
-        
-        .detail-label {
-          font-weight: 600;
-          color: $dark-color;
-        }
-        
-        .detail-value {
-          color: $primary-color;
-          font-weight: 500;
-        }
+/* Tabla específica L03 Confirmation */
+.l03-confirmation-table-container {
+  .l03-confirmation-table {
+    .l03-confirmation-row {
+      &:hover {
+        background: var(--sudbank-bg-light);
       }
-    }
-  }
-  
-  // Resumen de cambios
-  .changes-summary {
-    margin-bottom: 20px;
-    
-    h4 {
-      margin: 0 0 16px 0;
-      font-size: 16px;
-      font-weight: 600;
-      color: $dark-color;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .changes-table {
-      margin-bottom: 16px;
       
-      .change-row {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        padding: 16px;
-        background-color: $light-color;
-        border-radius: 6px;
-        border: 1px solid $border-color;
-        
-        .change-field {
-          font-weight: 600;
-          color: $dark-color;
-          padding-bottom: 8px;
-          border-bottom: 1px solid $border-color;
-        }
-        
-        .change-values {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 16px;
+      .l03-confirmation-cell {
+        &.confirmation-status-cell {
+          text-align: center;
           
-          .old-value, .new-value {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            
-            .value-label {
-              font-size: 12px;
-              color: #6c757d;
-              text-transform: uppercase;
-              letter-spacing: 0.5px;
-            }
-            
-            .value-content {
-              font-weight: 500;
-              color: $dark-color;
-              padding: 8px;
-              background-color: white;
-              border-radius: 4px;
-              border: 1px solid $border-color;
-            }
-          }
-          
-          .old-value .value-content {
-            color: $danger-color;
-            background-color: #fff5f5;
-            border-color: #fed7d7;
-          }
-          
-          .new-value .value-content {
-            color: $success-color;
-            background-color: #f0fff4;
-            border-color: #c6f6d5;
-          }
-        }
-      }
-    }
-    
-    .validation-status {
-      padding: 12px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      
-      &.validation-valid {
-        background-color: #f0fff4;
-        border: 1px solid #c6f6d5;
-        color: $success-color;
-      }
-      
-      &.validation-invalid {
-        background-color: #fff5f5;
-        border: 1px solid #fed7d7;
-        color: $danger-color;
-      }
-      
-      .validation-icon {
-        font-size: 16px;
-      }
-      
-      .validation-message {
-        font-weight: 500;
-      }
-    }
-  }
-  
-  // Advertencia de eliminación
-  .deletion-warning {
-    margin-bottom: 20px;
-    
-    .warning-icon {
-      font-size: 48px;
-      text-align: center;
-      margin-bottom: 16px;
-    }
-    
-    .warning-content {
-      text-align: center;
-      margin-bottom: 20px;
-      
-      p {
-        margin: 8px 0;
-        font-size: 16px;
-        color: $dark-color;
-        
-        &:first-child {
-          font-weight: 600;
-          color: $danger-color;
-        }
-      }
-    }
-    
-    .record-to-delete {
-      h4 {
-        margin: 0 0 16px 0;
-        font-size: 16px;
-        font-weight: 600;
-        color: $dark-color;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      
-      .deletion-details {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 12px;
-        
-        .detail-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 12px;
-          background-color: #fff5f5;
-          border-radius: 6px;
-          border: 1px solid #fed7d7;
-          
-          .detail-label {
+          .confirmation-status-badge {
+            padding: var(--sudbank-spacing-xs) var(--sudbank-spacing-sm);
+            border-radius: 12px;
+            font-size: var(--sudbank-font-size-sm);
             font-weight: 600;
-            color: $dark-color;
-          }
-          
-          .detail-value {
-            color: $danger-color;
-            font-weight: 500;
+            
+            &.confirmation-status-active {
+              background: rgba(40, 167, 69, 0.1);
+              color: var(--sudbank-color-success);
+            }
+            
+            &.confirmation-status-inactive {
+              background: rgba(220, 53, 69, 0.1);
+              color: var(--sudbank-color-danger);
+            }
           }
         }
       }
     }
   }
-  
-  // Información adicional
-  .additional-info {
-    margin-top: 20px;
-    padding: 16px;
-    background-color: $light-color;
-    border-radius: 6px;
-    border: 1px solid $border-color;
-    
-    .info-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      
-      &:last-child {
-        margin-bottom: 0;
-      }
-      
-      .info-icon {
-        font-size: 16px;
-      }
-      
-      .info-text {
-        color: $dark-color;
-        font-size: 14px;
-      }
-    }
-  }
 }
 
-// Footer del modal
-.modal-footer {
-  padding: 20px 24px;
-  border-top: 1px solid $border-color;
-  background-color: $light-color;
-  border-radius: 0 0 12px 12px;
-  
-  .button-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    
-    .confirm-button, .cancel-button {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      min-width: 120px;
-      
-      &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-      
-      &:focus {
-        outline: 2px solid $primary-color;
-        outline-offset: 2px;
-      }
-    }
-    
-    .confirm-button {
-      background-color: $primary-color;
-      color: white;
-      
-      &:hover:not(:disabled) {
-        background-color: darken($primary-color, 10%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px $shadow-color;
-      }
-      
-      .loading-spinner {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        border: 2px solid transparent;
-        border-top: 2px solid white;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-    }
-    
-    .cancel-button {
-      background-color: #6c757d;
-      color: white;
-      
-      &:hover:not(:disabled) {
-        background-color: darken(#6c757d, 10%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px $shadow-color;
-      }
-    }
-  }
-}
-
-// Animaciones
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-// Responsive design
+/* Responsive específico L03 Confirmation */
 @media (max-width: 768px) {
-  .confirmation-modal {
-    width: 95%;
-    max-height: 95vh;
+  .l03-confirmation-container {
+    padding: var(--sudbank-spacing-md);
   }
   
-  .modal-header {
-    padding: 16px 20px 12px;
+  .l03-confirmation-actions {
+    flex-direction: column;
     
-    .header-content .modal-title {
-      font-size: 18px;
+    .confirmation-action-button {
+      min-width: 100%;
     }
   }
   
-  .modal-body {
-    padding: 16px 20px;
+  .l03-confirmation-filters .confirmation-filter-row {
+    flex-direction: column;
     
-    .changes-summary .changes-table .change-row .change-values {
-      grid-template-columns: 1fr;
-      gap: 12px;
+    .confirmation-filter-field {
+      min-width: 100%;
     }
-  }
-  
-  .modal-footer {
-    padding: 16px 20px;
-    
-    .button-group {
-      flex-direction: column;
-      
-      .confirm-button, .cancel-button {
-        width: 100%;
-      }
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .confirmation-modal {
-    width: 98%;
-    border-radius: 8px;
-  }
-  
-  .modal-header {
-    padding: 12px 16px 8px;
-    
-    .header-content .modal-title {
-      font-size: 16px;
-    }
-  }
-  
-  .modal-body {
-    padding: 12px 16px;
-    
-    .details-grid .detail-item,
-    .deletion-details .detail-item {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-    }
-  }
-  
-  .modal-footer {
-    padding: 12px 16px;
   }
 }

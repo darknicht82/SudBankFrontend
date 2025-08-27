@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { L01RegulatoryData } from './l01-regulatory.service';
+import { L01Record } from './l01.service';
 
 export interface ExportOptions {
   includeHeaders: boolean;
@@ -20,7 +20,7 @@ export class L01ExportService {
    * @param options Opciones de exportación
    * @returns Blob con archivo TXT
    */
-  exportToTxt(data: L01RegulatoryData[], options: ExportOptions = this.getDefaultOptions()): Blob {
+  exportToTxt(data: L01Record[], options: ExportOptions = this.getDefaultOptions()): Blob {
     const content = this.generateTxtContent(data, options);
     return new Blob([content], { type: 'text/plain;charset=utf-8' });
   }
@@ -31,7 +31,7 @@ export class L01ExportService {
    * @param options Opciones de exportación
    * @returns Contenido del archivo TXT
    */
-  private generateTxtContent(data: L01RegulatoryData[], options: ExportOptions): string {
+  private generateTxtContent(data: L01Record[], options: ExportOptions): string {
     let content = '';
 
     // Agregar cabecera si está habilitada
@@ -80,7 +80,7 @@ export class L01ExportService {
    * @param options Opciones de exportación
    * @returns Línea formateada
    */
-  private formatRecord(record: L01RegulatoryData, options: ExportOptions): string {
+  private formatRecord(record: L01Record, options: ExportOptions): string {
     // SOLO los 4 campos oficiales L01 según manual SB
     const fields = [
       record.tipoIdentificacion || '',                    // Campo 1: Tipo de identificación (R/X)
@@ -110,7 +110,7 @@ export class L01ExportService {
    * @param filename Nombre del archivo
    * @param options Opciones de exportación
    */
-  downloadTxt(data: L01RegulatoryData[], filename: string = 'L01_export.txt', options?: ExportOptions): void {
+  downloadTxt(data: L01Record[], filename: string = 'L01_export.txt', options?: ExportOptions): void {
     // Validar que el archivo sea TXT
     if (!filename.toLowerCase().endsWith('.txt')) {
       throw new Error('El archivo debe tener extensión .txt');
@@ -159,7 +159,7 @@ export class L01ExportService {
    * @param options Opciones de exportación
    * @returns Información del archivo
    */
-  getFileInfo(data: L01RegulatoryData[], options?: ExportOptions): {
+  getFileInfo(data: L01Record[], options?: ExportOptions): {
     filename: string;
     contentType: string;
     size: number;

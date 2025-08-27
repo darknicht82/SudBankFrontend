@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { L01RegulatoryData } from '../../../services/l01-regulatory.service';
-import { L01CatalogService } from '../../../services/l01-catalog.service';
+import { L01Record } from '../../../services/l01/l01.service';
+import { L01CatalogService } from '../../../services/l01/l01-catalog.service';
 
 // PrimeNG Components (solo los necesarios)
 import { DropdownModule } from 'primeng/dropdown';
@@ -18,9 +18,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
 })
 export class L01NuevoRegistroNesComponent implements OnInit {
   @Input() isVisible: boolean = false;
-  @Input() editData: L01RegulatoryData | null = null;
+  @Input() editData: L01Record | null = null;
   @Output() modalClosed = new EventEmitter<void>();
-  @Output() dataSaved = new EventEmitter<L01RegulatoryData>();
+  @Output() dataSaved = new EventEmitter<L01Record>();
 
   l01Form: FormGroup;
   isSubmitting: boolean = false;
@@ -266,7 +266,7 @@ export class L01NuevoRegistroNesComponent implements OnInit {
   /**
    * Abre el modal para editar registro existente
    */
-  openEditModal(data: L01RegulatoryData): void {
+  openEditModal(data: L01Record): void {
     console.log('🔄 [DEBUG] Iniciando apertura de modal de edición');
     console.log('🔄 [DEBUG] Estado antes: isVisible =', this.isVisible, 'editData =', this.editData);
     
@@ -315,7 +315,7 @@ export class L01NuevoRegistroNesComponent implements OnInit {
    * VALIDACIONES DESHABILITADAS - NO SE USA MÁS
    */
   /*
-  private validateFormWithData(data: L01RegulatoryData): boolean {
+  private validateFormWithData(data: L01Record): boolean {
     console.log('🔧 [FIX] Iniciando validación con datos convertidos:', data);
     
     const validations = this.validationService.validateL01Record(data);
@@ -370,7 +370,7 @@ export class L01NuevoRegistroNesComponent implements OnInit {
 
     // 🚀 [SIN VALIDACIONES] PREPARAR DATOS PARA ENVÍO DIRECTO
     // AHORA SE ENVÍAN LOS IDs DE FK CORRECTOS PARA LA BASE DE DATOS
-    const dataToSend: L01RegulatoryData = {
+    const dataToSend: L01Record = {
       tipoIdentificacion: formData.tipoIdentificacion,        // string (R/X) - Código directo
       identificacion: formData.identificacion,                // string - Código directo
       clasificacion: formData.clasificacion,                  // number - ID de T173 (FK)
