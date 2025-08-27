@@ -1,42 +1,42 @@
 /* ========================================
-   COMPONENTE L08 MAIN - ESTILOS ESPECÍFICOS
+   COMPONENTE L03 CONFIRMATION - ESTILOS ESPECÍFICOS
    ======================================== */
 
 /* CONTAINER PRINCIPAL */
-.l08-main-container {
+.l03-confirmation-container {
   padding: var(--sudbank-spacing-lg);
   max-width: 1400px;
   margin: 0 auto;
 }
 
 /* ========================================
-   ESTILOS ESPECÍFICOS L08
+   ESTILOS ESPECÍFICOS L03 CONFIRMATION
    ======================================== */
 
-/* Dashboard específico L08 */
-.l08-dashboard {
-  .stats-grid {
+/* Dashboard específico L03 Confirmation */
+.l03-confirmation-dashboard {
+  .confirmation-stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--sudbank-spacing-lg);
     margin-bottom: var(--sudbank-spacing-xl);
   }
   
-  .stat-card {
+  .confirmation-stat-card {
     background: var(--sudbank-bg-white);
     padding: var(--sudbank-spacing-lg);
     border-radius: var(--sudbank-border-radius-lg);
     box-shadow: var(--sudbank-shadow);
     text-align: center;
     
-    .stat-number {
+    .confirmation-stat-number {
       font-size: var(--sudbank-font-size-3xl);
       font-weight: 700;
       color: var(--sudbank-color-primary);
       margin-bottom: var(--sudbank-spacing-sm);
     }
     
-    .stat-label {
+    .confirmation-stat-label {
       color: var(--sudbank-text-secondary);
       font-size: var(--sudbank-font-size-base);
       font-weight: 500;
@@ -44,64 +44,64 @@
   }
 }
 
-/* Acciones específicas L08 */
-.l08-actions {
+/* Acciones específicas L03 Confirmation */
+.l03-confirmation-actions {
   display: flex;
   gap: var(--sudbank-spacing-md);
   margin-bottom: var(--sudbank-spacing-xl);
   flex-wrap: wrap;
   
-  .action-button {
+  .confirmation-action-button {
     flex: 1;
     min-width: 200px;
   }
 }
 
-/* Filtros específicos L08 */
-.l08-filters {
+/* Filtros específicos L03 Confirmation */
+.l03-confirmation-filters {
   background: var(--sudbank-bg-white);
   padding: var(--sudbank-spacing-lg);
   border-radius: var(--sudbank-border-radius-lg);
   box-shadow: var(--sudbank-shadow-sm);
   margin-bottom: var(--sudbank-spacing-xl);
   
-  .filter-row {
+  .confirmation-filter-row {
     display: flex;
     gap: var(--sudbank-spacing-lg);
     align-items: end;
     flex-wrap: wrap;
     
-    .filter-field {
+    .confirmation-filter-field {
       flex: 1;
       min-width: 200px;
     }
   }
 }
 
-/* Tabla específica L08 */
-.l08-table-container {
-  .l08-table {
-    .l08-row {
+/* Tabla específica L03 Confirmation */
+.l03-confirmation-table-container {
+  .l03-confirmation-table {
+    .l03-confirmation-row {
       &:hover {
         background: var(--sudbank-bg-light);
       }
       
-      .l08-cell {
-        &.status-cell {
+      .l03-confirmation-cell {
+        &.confirmation-status-cell {
           text-align: center;
           
-          .status-badge {
+          .confirmation-status-badge {
             padding: var(--sudbank-spacing-xs) var(--sudbank-spacing-sm);
             border-radius: 12px;
             font-size: var(--sudbank-font-size-sm);
             font-weight: 600;
             
-            &.status-active {
+            &.confirmation-status-active {
               background: rgba(40, 167, 69, 0.1);
               color: var(--sudbank-color-success);
             }
             
-            &.status-inactive {
+            &.confirmation-status-inactive {
               background: rgba(220, 53, 69, 0.1);
               color: var(--sudbank-color-danger);
             }
@@ -112,24 +112,24 @@
   }
 }
 
-/* Responsive específico L08 */
+/* Responsive específico L03 Confirmation */
 @media (max-width: 768px) {
-  .l08-main-container {
+  .l03-confirmation-container {
     padding: var(--sudbank-spacing-md);
   }
   
-  .l08-actions {
+  .l03-confirmation-actions {
     flex-direction: column;
     
-    .action-button {
+    .confirmation-action-button {
       min-width: 100%;
     }
   }
   
-  .l08-filters .filter-row {
+  .l03-confirmation-filters .confirmation-filter-row {
     flex-direction: column;
     
-    .filter-field {
+    .confirmation-filter-field {
       min-width: 100%;
     }
   }
