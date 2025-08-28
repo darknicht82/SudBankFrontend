@@ -79,7 +79,7 @@
               Tipo de Identificación
             </th>
             <th>
-              Identificación Emisor
+              Emisor
             </th>
             <th>
               Número de Título
@@ -88,84 +88,50 @@
               Fecha de emisión
             </th>
             <th>
-              Fecha de compra
-            </th>
-            <th>
               Fecha de Vencimiento
             </th>
             <th>
-              Identificación del instrumento
+              Instrumento
+            </th>
+            <th>
+              Categoría de Instrumento
+            </th>
+            <th>
+              Tipo de Instrumento
+            </th>
+            <th>
+              Identificación de Instrumento
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr *ngFor="let item of arrayResume">
             <td class="data-cell">
-              <span class="cell-value">RUC</span>
+              <span class="cell-value">{{ item.tipoIdentificacion.description }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">1205130980001</span>
+              <span class="cell-value">{{ item.emisor.description }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">454SDG89</span>
+              <span class="cell-value">{{ item.numeroTitulo }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">20/08/2025</span>
+              <span class="cell-value">{{ item.fechaEmision }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">20/08/2025</span>
+              <span class="cell-value">{{ item.fechaVencimiento }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">20/08/2025</span>
+              <span class="cell-value">{{ item.instrumento.description }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">001POS65</span>
-            </td>
-          </tr>
-          <tr>
-            <td class="data-cell">
-              <span class="cell-value">RUC</span>
+              <span class="cell-value">{{ item.categoriaInstrumento.description }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">1205130980001</span>
+              <span class="cell-value">{{ item.tipoInstrumento.description }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">454SDG89</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">20/08/2025</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">20/08/2025</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">20/08/2025</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">001POS65</span>
-            </td>
-          </tr>
-          <tr>
-            <td class="data-cell">
-              <span class="cell-value">RUC</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">1205130980001</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">454SDG89</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">20/08/2025</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">20/08/2025</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">20/08/2025</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">001POS65</span>
+              <span class="cell-value">{{ item.identificacionInstrumento }}</span>
             </td>
           </tr>
         </tbody>

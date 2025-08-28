@@ -10,6 +10,7 @@ import { T168Service } from '../../../services/t168.service';
 import { T33Service } from '../../../services/t33.service';
 import { T64Service } from '../../../services/t64.service';
 import { T62AService } from '../../../services/t62A.service';
+import { L02CatalogService } from '../../../services/l02-catalog.service';
 
 @Component({
   selector: 'app-l02-modal-form',
@@ -44,7 +45,8 @@ export class L02ModalFormComponent implements OnInit {
     private t33Service: T33Service,
     private t64Service: T64Service,
     private t62AService: T62AService,
-    private t4service: T4Service
+    private t4service: T4Service,
+    private l02catalogService: L02CatalogService
   ) {
     this.l02Form = this.fb.group({
       tipoIdentificacion: [null, Validators.required],
@@ -97,21 +99,13 @@ export class L02ModalFormComponent implements OnInit {
     if (this.l02Form.valid) {
       const formData = this.l02Form.value;
       console.log('📌 Form Data:', formData);
-      /*
-        Example output:
-        {
-          tipoIdentificacion: { codigo: "P", descripcion: "Pasaporte" },
-          nombre: "Andrés",
-          edad: 30,
-          fechaNacimiento: "1994-08-25"
-        }
-      */
-
-      // Here you can send to backend
-      // this.t164service.saveL02(formData).subscribe(...);
+      this.l02catalogService.saveL02(formData);
 
       this.l02Form.reset();
       this.formSubmitted = false;
+
+      this.isVisible = false;
+      this.modalClosed.emit();
     }
   }
 
