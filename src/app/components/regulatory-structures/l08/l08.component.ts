@@ -7,12 +7,13 @@
 import { Component, OnInit } from '@angular/core';
 import { L08Service, L08ReportRequest, L08ReportResponse } from '../../../services/l08.service';
 import { L08Validator } from '../../../validators/l08.validator';
-import { 
-  getDescripcionLiquidez, 
-  getDescripcionTipoInstrumento,
-  getDescripcionCalificacionEmisor,
-  getDescripcionCalificadoraRiesgo
-} from '../../../catalogs';
+// ✅ L08: Catálogos comentados temporalmente - No conectados a APIs reales
+// import { 
+//   getDescripcionLiquidez, 
+//   getDescripcionTipoInstrumento,
+//   getDescripcionCalificacionEmisor,
+//   getDescripcionCalificadoraRiesgo
+// } from '../../../catalogs';
 
 @Component({
   selector: 'app-l08',
@@ -139,20 +140,24 @@ export class L08Component implements OnInit {
 
   /**
    * Obtener descripción de códigos para UI
+   * ✅ L08: Catálogos comentados temporalmente - No conectados a APIs reales
    */
   getDescripcion(codigo: number, tipo: string): string {
-    switch (tipo) {
-      case 'codigoLiquidez':
-        return getDescripcionLiquidez(codigo);
-      case 'tipoInstrumento':
-        return getDescripcionTipoInstrumento(codigo);
-      case 'calificacionEntidad':
-        return getDescripcionCalificacionEmisor(codigo);
-      case 'calificadoraRiesgo':
-        return getDescripcionCalificadoraRiesgo(codigo);
-      default:
-        return codigo.toString();
-    }
+    // ✅ L08: Retornar código como string hasta que se conecten las APIs reales
+    return codigo.toString();
+    
+    // switch (tipo) {
+    //   case 'codigoLiquidez':
+    //     return getDescripcionLiquidez(codigo);
+    //   case 'tipoInstrumento':
+    //     return getDescripcionTipoInstrumento(codigo);
+    //   case 'calificacionEntidad':
+    //     return getDescripcionCalificacionEmisor(codigo);
+    //   case 'calificadoraRiesgo':
+    //     return getDescripcionCalificadoraRiesgo(codigo);
+    //   default:
+    //     return codigo.toString();
+    // }
   }
 
   /**

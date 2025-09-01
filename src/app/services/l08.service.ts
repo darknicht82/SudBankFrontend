@@ -10,12 +10,13 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { L08, L08Frontend, L08Response } from '../models/l08.model';
 import { L08Validator } from '../validators/l08.validator';
-import { 
-  getDescripcionLiquidez, 
-  getDescripcionTipoInstrumento,
-  getDescripcionCalificacionEmisor,
-  getDescripcionCalificadoraRiesgo
-} from '../catalogs';
+// ✅ L08: Catálogos comentados temporalmente - No conectados a APIs reales
+// import { 
+//   getDescripcionLiquidez, 
+//   getDescripcionTipoInstrumento,
+//   getDescripcionCalificacionEmisor,
+//   getDescripcionCalificadoraRiesgo
+// } from '../catalogs';
 
 export interface L08ReportRequest {
   fechaInicio: string;
@@ -396,14 +397,23 @@ export class L08Service {
 
   /**
    * Obtener descripción de códigos para UI
+   * ✅ L08: Catálogos comentados temporalmente - No conectados a APIs reales
    */
   getDescripciones(detalle: any): any {
+    // ✅ L08: Retornar códigos como strings hasta que se conecten las APIs reales
     return {
-      codigoLiquidez: getDescripcionLiquidez(detalle.codigoLiquidez),
-      tipoInstrumento: getDescripcionTipoInstrumento(detalle.tipoInstrumento),
-      calificacionEntidad: getDescripcionCalificacionEmisor(detalle.calificacionEntidad),
-      calificadoraRiesgo: getDescripcionCalificadoraRiesgo(detalle.calificadoraRiesgo)
+      codigoLiquidez: detalle.codigoLiquidez.toString(),
+      tipoInstrumento: detalle.tipoInstrumento.toString(),
+      calificacionEntidad: detalle.calificacionEntidad.toString(),
+      calificadoraRiesgo: detalle.calificadoraRiesgo.toString()
     };
+    
+    // return {
+    //   codigoLiquidez: getDescripcionLiquidez(detalle.codigoLiquidez),
+    //   tipoInstrumento: getDescripcionTipoInstrumento(detalle.tipoInstrumento),
+    //   calificacionEntidad: getDescripcionCalificacionEmisor(detalle.calificacionEntidad),
+    //   calificadoraRiesgo: getDescripcionCalificadoraRiesgo(detalle.calificadoraRiesgo)
+    // };
   }
 }
 
