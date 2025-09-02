@@ -119,8 +119,7 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th *ngFor="let column of displayedColumns" (mouseenter)="showFieldTooltip(column, $event)"
-                  (mouseleave)="hideTooltip()">
+                <th *ngFor="let column of displayedColumns">
                   {{ getColumnTitle(column) }}
                 </th>
               </tr>
@@ -180,29 +179,7 @@
     </div>
   </div>
 
-  <!-- TOOLTIP L01 -->
-  <div *ngIf="showTooltip && currentTooltip" class="tooltip-popup" [style.left.px]="tooltipPosition.x + 10"
-    [style.top.px]="tooltipPosition.y - 10">
-    <div class="tooltip-content">
-      <h4>{{ currentTooltip.title }}</h4>
-      <p>{{ currentTooltip.description }}</p>
 
-      <div class="tooltip-details">
-        <div class="tooltip-row">
-          <strong>Formato:</strong> {{ currentTooltip.format }}
-        </div>
-        <div class="tooltip-row">
-          <strong>Validación:</strong> {{ currentTooltip.validation }}
-        </div>
-        <div class="tooltip-row">
-          <strong>Ejemplo:</strong> {{ currentTooltip.example }}
-        </div>
-        <div class="tooltip-row">
-          <strong>Fuente:</strong> {{ currentTooltip.source }}
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- LOADING -->
   <div *ngIf="loading" class="loading-overlay">

@@ -45,10 +45,7 @@ export class L01MainComponent implements OnInit {
   error = '';
   registrosFiltrados = 0;
   
-  // Propiedades para tooltips
-  showTooltip = false;
-  currentTooltip: any = null;
-  tooltipPosition = { x: 0, y: 0 };
+
   
   // Catálogos para traducción
   tabla4: any[] = [];
@@ -337,17 +334,7 @@ export class L01MainComponent implements OnInit {
     return 'Desconocido';
   }
 
-  // Métodos para tooltips (implementación básica)
-  showFieldTooltip(column: string, event: MouseEvent): void {
-    this.tooltipPosition = { x: event.clientX, y: event.clientY };
-    this.currentTooltip = { title: column, description: `Descripción de ${column}` };
-    this.showTooltip = true;
-  }
 
-  hideTooltip(): void {
-    this.showTooltip = false;
-    this.currentTooltip = null;
-  }
 
   getColumnTitle(column: string): string {
     const titles: { [key: string]: string } = {
