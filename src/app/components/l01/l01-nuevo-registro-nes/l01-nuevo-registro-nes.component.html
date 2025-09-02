@@ -104,17 +104,17 @@
       </form>
     </div>
 
-                    <!-- Footer -->
-                <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary" [disabled]="l01Form.invalid || isSubmitting" (click)="onSubmit()">
-                    <i *ngIf="!isSubmitting" class="bi bi-check"></i>
-                    <i *ngIf="isSubmitting" class="bi bi-hourglass-split"></i>
-                    {{ isSubmitting ? 'Guardando...' : 'Guardar Registro' }}
-                  </button>
-                  <button type="button" (click)="closeModal()" class="btn btn-secondary" [disabled]="isSubmitting">
-                    <i class="bi bi-x"></i> Cancelar
-                  </button>
-                </div>
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="l01Form.invalid || isSubmitting" (click)="onSubmit()">
+        <i *ngIf="!isSubmitting" class="bi bi-check"></i>
+        <i *ngIf="isSubmitting" class="bi bi-hourglass-split"></i>
+        {{ isSubmitting ? 'Guardando...' : 'Guardar Registro' }}
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary" [disabled]="isSubmitting">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
 
   </div>
 </div>
