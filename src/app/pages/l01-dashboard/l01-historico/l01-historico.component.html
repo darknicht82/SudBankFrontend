@@ -1,0 +1,229 @@
+<!-- Superintendencia de Bancos del Ecuador - L01 Histórico -->
+
+<div class="L01-historico-container">
+  <!-- CABECERA -->
+  <div class="header">
+    <h1>L01 - Histórico de Emisores, Custodios y Contrapartes</h1>
+    <p class="subtitle">Sistema de consulta histórica y trazabilidad para la estructura L01</p>
+  </div>
+
+  <!-- INDICADOR DE MODO DE DATOS -->
+  <div class="data-mode-indicator" [ngClass]="dataMode">
+    <div class="mode-badge">
+      <i class="pi" [ngClass]="dataMode === 'mock-mode' ? 'pi-database' : 'pi-cloud'"></i>
+      <span>{{ dataMode === 'mock-mode' ? 'Modo Datos Simulados' : 'Modo Datos Reales' }}</span>
+      <button (click)="toggleDataMode()" class="btn btn-sm">
+        {{ dataMode === 'mock-mode' ? 'Cambiar a Reales' : 'Cambiar a Simulados' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- FILTROS DE HISTORIAL -->
+  <div class="history-filters">
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Filtros de Histórico L01</h3>
+      </div>
+      <div class="card-content">
+        <div class="filters-grid">
+          <div class="form-field">
+            <label for="fechaDesde">Fecha Desde:</label>
+            <input type="date" id="fechaDesde" class="form-control" [(ngModel)]="filtros.fechaDesde">
+          </div>
+          <div class="form-field">
+            <label for="fechaHasta">Fecha Hasta:</label>
+            <input type="date" id="fechaHasta" class="form-control" [(ngModel)]="filtros.fechaHasta">
+          </div>
+          <div class="form-field">
+            <label for="clasificacion">Clasificación:</label>
+            <select id="clasificacion" class="form-control" [(ngModel)]="filtros.clasificacion">
+              <option value="">Todas</option>
+              <option value="1">Emisor</option>
+              <option value="2">Custodio</option>
+              <option value="3">Depositario</option>
+              <option value="4">Contraparte</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="tipoIdentificacion">Tipo Identificación:</label>
+            <select id="tipoIdentificacion" class="form-control" [(ngModel)]="filtros.tipoIdentificacion">
+              <option value="">Todos</option>
+              <option value="R">R - RUC Nacional</option>
+              <option value="X">X - Código Extranjero</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="estadoHistorico">Estado Histórico:</label>
+            <select id="estadoHistorico" class="form-control" [(ngModel)]="filtros.estadoHistorico">
+              <option value="">Todos</option>
+              <option value="active">Activo</option>
+              <option value="inactive">Inactivo</option>
+              <option value="archived">Archivado</option>
+              <option value="pending">Pendiente</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button (click)="consultarHistorico()" class="btn btn-primary">
+            <i class="pi pi-search"></i>
+            Consultar Histórico
+          </button>
+          <button (click)="limpiarFiltros()" class="btn btn-secondary">
+            <i class="pi pi-refresh"></i>
+            Limpiar Filtros
+          </button>
+          <button (click)="exportarHistorico()" class="btn btn-success">
+            <i class="pi pi-download"></i>
+            Exportar Histórico
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMEN DE HISTORIAL -->
+  <div class="history-summary">
+    <div class="card">
+      <div class="card-header">
+        <h3>📊 Resumen de Histórico</h3>
+      </div>
+      <div class="card-content">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <label>Total Registros Históricos:</label>
+            <span>{{ totalRegistrosHistoricos }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Registros Activos:</label>
+            <span>{{ registrosActivos }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Registros Inactivos:</label>
+            <span>{{ registrosInactivos }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Registros Archivados:</label>
+            <span>{{ registrosArchivados }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Registros Pendientes:</label>
+            <span>{{ registrosPendientes }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Período Consultado:</label>
+            <span>{{ periodoConsultado }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA DE HISTORIAL -->
+  <div class="history-table-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Histórico de Registros L01</h3>
+      </div>
+      <div class="card-content">
+        <div class="table-container">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Tipo Identificación</th>
+                <th>Identificación</th>
+                <th>Clasificación</th>
+                <th>Tipo Emisor</th>
+                <th>Fecha Creación</th>
+                <th>Fecha Modificación</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of datosHistoricos" class="data-row">
+                <td class="history-cell">
+                  <div class="cell-content">
+                    <span class="cell-value">{{ item.tipoIdentificacion === 'R' ? 'R - RUC Nacional' : 'X - Código Extranjero' }}</span>
+                    <button class="history-btn btn btn-sm btn-info" (click)="verDetalle(item)">
+                      <i class="pi pi-eye"></i>
+                    </button>
+                  </div>
+                </td>
+                <td class="history-cell">
+                  <div class="cell-content">
+                    <span class="cell-value">{{ item.identificacion }}</span>
+                  </div>
+                </td>
+                <td class="history-cell">
+                  <div class="cell-content">
+                    <span class="cell-value">{{ getClasificacionDesc(item.clasificacion) }}</span>
+                  </div>
+                </td>
+                <td class="history-cell">
+                  <div class="cell-content">
+                    <span class="cell-value">{{ getTipoEmisorDesc(item.tipoEmisor) }}</span>
+                  </div>
+                </td>
+                <td class="history-cell">
+                  <div class="cell-content">
+                    <span class="cell-value">{{ item.fechaCreacion | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                </td>
+                <td class="history-cell">
+                  <div class="cell-content">
+                    <span class="cell-value">{{ item.fechaModificacion | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                </td>
+                <td class="history-cell">
+                  <span class="history-status" [ngClass]="getHistoryStatusClass(item)">
+                    {{ getHistoryStatusText(item) }}
+                  </span>
+                </td>
+                <td class="history-cell">
+                  <div class="cell-content">
+                    <button class="history-btn btn btn-sm btn-primary" (click)="verHistorialCambios(item)">
+                      <i class="pi pi-history"></i>
+                    </button>
+                    <button class="history-btn btn btn-sm btn-success" (click)="restaurarVersion(item)">
+                      <i class="pi pi-undo"></i>
+                    </button>
+                    <button class="history-btn btn btn-sm btn-warning" (click)="compararVersiones(item)">
+                      <i class="pi pi-copy"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOLTIP -->
+  <div *ngIf="showTooltip" class="tooltip-popup" [style.left.px]="tooltipPosition.x + 10" [style.top.px]="tooltipPosition.y - 10">
+    <div class="tooltip-content">
+      <h4>{{ currentTooltip.title }}</h4>
+      <p>{{ currentTooltip.description }}</p>
+      <div class="tooltip-details">
+        <div class="tooltip-row">
+          <strong>Histórico:</strong>
+          <span>{{ currentTooltip.history }}</span>
+        </div>
+        <div class="tooltip-row">
+          <strong>Ejemplo:</strong>
+          <span>{{ currentTooltip.example }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Consultando histórico L01...</p>
+    </div>
+  </div>
+</div>
