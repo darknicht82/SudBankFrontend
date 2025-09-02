@@ -1,0 +1,193 @@
+<!-- ========================================
+   COMPONENTE L03 MAIN - TEMPLATE CORREGIDO
+   ======================================== -->
+
+<div class="l03-main-container">
+  <!-- HEADER L03 -->
+  <div class="header">
+    <h1>Dashboard L03 - Estructura de Inversiones</h1>
+    <p class="subtitle">Gestión y monitoreo de estructuras L03 según manual SB</p>
+  </div>
+
+  <!-- INFORMACIÓN DE ESTRUCTURA L03 -->
+  <div class="structure-info">
+    <div class="card">
+      <div class="card-header">
+        <h3>Información de Estructura L03</h3>
+      </div>
+      <div class="card-content">
+        <p><strong>Descripción:</strong> Estructura de inversiones y títulos de deuda</p>
+        <p><strong>Periodicidad:</strong> Mensual</p>
+        <p><strong>Plazo entrega:</strong> Día 15 del mes siguiente</p>
+        <p><strong>Código Banco:</strong> 1038</p>
+        <p><strong>Formato archivo:</strong> TXT (RVC)</p>
+        <p><strong>Fuente:</strong> Manual SB - Control de Inversiones</p>
+        
+        <div class="requirements">
+          <h4>Requisitos:</h4>
+          <ul>
+            <li>Datos de títulos de deuda e inversiones</li>
+            <li>Valores en USD</li>
+            <li>Calificaciones de riesgo</li>
+            <li>Información de custodios</li>
+          </ul>
+        </div>
+
+        <strong>Campos Oficiales:</strong>
+        <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
+          <app-l03-fields-table></app-l03-fields-table>
+        </div> 
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMEN L03 -->
+  <div class="summary-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>Resumen de Datos L03</h3>
+      </div>
+      <div class="card-content">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <label>Total Registros:</label>
+            <span>{{ getTotalRegistros() }}</span>
+          </div>
+          
+          <div class="summary-item">
+            <label>Registros Filtrados:</label>
+            <span>{{ filteredDataL03.length }}</span>
+          </div>
+          
+          <div class="summary-item">
+            <label>Fecha Generación:</label>
+            <span>{{ getFechaGeneracion() }}</span>
+          </div>
+          
+          <div class="summary-item">
+            <label>Usuario:</label>
+            <span>{{ usuarioActual }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA DE DATOS L03 -->
+  <div class="data-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>Datos L03 - Estructura de Inversiones</h3>
+      </div>
+      <div class="card-content">
+        <!-- MENSAJE CUANDO NO HAY DATOS -->
+        <div *ngIf="datosL03.length === 0 && !loading" class="no-data-message">
+          <div class="alert alert-info">
+            <h4>No hay datos disponibles</h4>
+            <p>No se encontraron registros L03 en el sistema.</p>
+            <div class="debug-info">
+              <h5>Información de Debug:</h5>
+              <ul>
+                <li><strong>Estado:</strong> {{ loading ? 'Cargando...' : 'Completado' }}</li>
+                <li><strong>Error:</strong> {{ error || 'Ninguno' }}</li>
+                <li><strong>Total registros:</strong> {{ datosL03.length }}</li>
+              </ul>
+              <button (click)="loadData()" class="btn btn-primary">
+                <i class="fas fa-sync-alt me-2"></i>
+                Intentar Cargar Nuevamente
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MENSAJE DE REGISTROS FILTRADOS -->
+        <div *ngIf="filteredDataL03.length < datosL03.length && datosL03.length > 0" class="filtered-records-message">
+          <div class="alert alert-warning">
+            <h4>Registros Filtrados</h4>
+            <p>Se están mostrando <strong>{{ filteredDataL03.length }}</strong> de <strong>{{ datosL03.length }}</strong> registros totales.</p>
+            <ul>
+              <li><strong>Filtros aplicados:</strong></li>
+              <li *ngIf="tipoIdentificacion">Tipo de Identificación: {{ getTipoIdentificacionDesc(tipoIdentificacion) }}</li>
+              <li *ngIf="clasificacion">Clasificación: {{ getClasificacionDesc(clasificacion) }}</li>
+              <li *ngIf="tipoEmisor">Tipo Emisor: {{ getTipoEmisorDesc(tipoEmisor) }}</li>
+            </ul>
+            <div class="text-muted">
+              <small>Para ver todos los registros, limpie los filtros aplicados.</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLA DE DATOS -->
+        <div *ngIf="filteredDataL03.length > 0" class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th *ngFor="let column of displayedColumns" 
+                    (mouseenter)="showFieldTooltip(column, $event)"
+                    (mouseleave)="hideFieldTooltip()">
+                  {{ column | titlecase }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of filteredDataL03" class="data-row">
+                <td>{{ item.codigoTipoIdentificacionEmisor }}</td>
+                <td>{{ item.codigoIdentificacionEmisor }}</td>
+                <td>{{ item.descripcionIdentificacionEmisor }}</td>
+                <td>{{ item.numeroTitulo }}</td>
+                <td>{{ item.fechaEmision | date:'dd/MM/yyyy' }}</td>
+                <td>{{ item.fechaCompra | date:'dd/MM/yyyy' }}</td>
+                <td>{{ item.descripcionEstadoTitulo }}</td>
+                <td>{{ item.codigoCategoriaInversion }}</td>
+                <td>{{ item.descripcionRangoVencimiento }}</td>               
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCIONES PRINCIPALES L03 -->
+  <div class="action-buttons">
+    <button (click)="loadData()" [disabled]="loading" class="btn btn-primary">
+      <i class="fas fa-sync-alt me-2"></i>
+      {{ loading ? 'Cargando...' : 'Cargar Datos L03' }}
+    </button>
+    
+    <button (click)="openNewRecordModal()" class="btn btn-info">
+      <i class="fas fa-plus me-2"></i>
+      Nuevo Registro L03
+    </button>
+    
+    <button (click)="exportToTxt()" [disabled]="datosL03.length === 0" class="btn btn-success">
+      <i class="fas fa-download me-2"></i>
+      Exportar TXT
+    </button>
+    
+  </div>
+
+  <!-- TOOLTIP L03 -->
+  <div *ngIf="showTooltip && currentTooltip" 
+       class="tooltip-popup" 
+       [style.left.px]="tooltipPosition.x + 10"
+       [style.top.px]="tooltipPosition.y - 10">
+    <div class="tooltip-content">
+      <h4>{{ currentTooltip?.title || 'Información del Campo' }}</h4>
+      <p>{{ currentTooltip?.description || 'Descripción no disponible' }}</p>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Generando reporte L03...</p>
+    </div>
+  </div>
+
+  <app-l03-new-record
+    [isVisible]="showModalForm"
+    (modalClosed)="onModalClosed()"></app-l03-new-record>
+
+</div>
