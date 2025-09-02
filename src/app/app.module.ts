@@ -9,7 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeuix/themes/dist/aura';
 
 // ✅ L01: Componentes eliminados - Solo se mantiene L01ModalFormComponent (standalone)
 
@@ -32,12 +31,7 @@ import Aura from '@primeuix/themes/dist/aura';
   ],
   providers: [
     DatePipe,
-    providePrimeNG({
-      theme: {
-        preset: Aura
-      }
-    })
-
+    providePrimeNG()
   ],
   bootstrap: []
 })
