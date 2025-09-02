@@ -14,6 +14,15 @@ export interface L01FieldTooltip {
   validation: string;
 }
 
+export interface L01FieldTooltipTable {
+  no: number;
+  campo: string;
+  tipoDeDato: string;
+  obligatoriedad: string;
+  tabla: string;
+  descripcion: string;
+}
+
 export const L01_FIELD_TOOLTIPS: L01FieldTooltip[] = [
   {
     field: 'tipoIdentificacion',
@@ -50,6 +59,41 @@ export const L01_FIELD_TOOLTIPS: L01FieldTooltip[] = [
     example: '0=Supranacionales, 2=Pública financiera, 3=Privada financiera, 4=Pública no financiera, 5=Privada no financiera, 7=Fondos inversión, 8=Estados Soberanos, 9=Multilaterales',
     format: 'Numérico (1)',
     validation: 'Obligatorio - Según tabla 73, excluyendo códigos 1 y 6'
+  }
+];
+
+export const L01_FIELD_TOOLTIPS_TABLE: L01FieldTooltipTable[] = [
+  {
+    "no": 1,
+    "campo": "Tipo de identificación",
+    "tipoDeDato": "caracter (1)",
+    "obligatoriedad": "X",
+    "tabla": "4",
+    "descripcion": "Se refiere al tipo de identificación del emisor, custodio, depositario o contraparte, puede ser \"R\" ó \"X\". Si es una institución del Ecuador, corresponderá el código \"R\". Si es del exterior el código \"X\"."
+  },
+  {
+    "no": 2,
+    "campo": "Identificación",
+    "tipoDeDato": "caracter (13)",
+    "obligatoriedad": "X",
+    "tabla": "164",
+    "descripcion": "Corresponde al número de identificación. Para emisores nacionales será el número de RUC (13 dígitos); para emisores del exterior la identificación se reportará conforme a la tabla No. 164 (7 dígitos)."
+  },
+  {
+    "no": 3,
+    "campo": "Clasificación",
+    "tipoDeDato": "numérico (1)",
+    "obligatoriedad": "X",
+    "tabla": "173",
+    "descripcion": "Clasificación según tabla 173 del manual oficial. Define el rol de la entidad en el sistema financiero: Emisor (emite valores), Custodio (custodia inversiones), Depositario (deposita fondos), Contraparte (operaciones reporto)."
+  },
+  {
+    "no": 4,
+    "campo": "Tipo de emisor",
+    "tipoDeDato": "numérico (1)",
+    "obligatoriedad": "X",
+    "tabla": "73",
+    "descripcion": "Tipo según tabla 73 del manual oficial. Clasifica la entidad por sector: Supranacionales (BCE/BIESS), Pública/Privada financiera/no financiera, Fondos, Estados Soberanos, Multilaterales. Excluye: código 1 (Persona Natural) y código 6 (Fondos jubilación) que no aplican para L01."
   }
 ];
 

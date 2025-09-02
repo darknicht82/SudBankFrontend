@@ -249,6 +249,58 @@
   padding: var(--sudbank-spacing-md);
 }
 
+.success-message-sudbank {
+  color: var(--sudbank-success, #10b981);
+  font-size: var(--sudbank-font-size-sm);
+  margin-top: var(--sudbank-spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--sudbank-spacing-xs);
+  font-weight: 500;
+}
+
+/* ========================================
+   VALIDACIÓN DE DUPLICADOS - ICONOS
+   ======================================== */
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.checking-icon {
+  position: absolute;
+  right: 12px;
+  color: var(--sudbank-warning, #f59e0b);
+  font-size: 16px;
+  animation: spin 1s linear infinite;
+}
+
+.valid-icon {
+  position: absolute;
+  right: 12px;
+  color: var(--sudbank-success, #10b981);
+  font-size: 16px;
+}
+
+.invalid-icon {
+  position: absolute;
+  right: 12px;
+  color: var(--sudbank-danger, #ef4444);
+  font-size: 16px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Ajustar padding del input cuando hay icono */
+.input-container .p-inputtext {
+  padding-right: 40px !important;
+}
+
 /* ========================================
    RESPONSIVE
    ======================================== */
