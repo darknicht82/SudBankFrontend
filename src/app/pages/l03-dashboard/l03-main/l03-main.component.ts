@@ -11,9 +11,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { L01CatalogService } from '../../../services/l01-catalog.service';
 import { L01ExportService } from '../../../services/l01-export.service';
-import { LogMonitorComponent } from '../../../components/debug/log-monitor/log-monitor.component';
 import { L03FieldsTableComponent } from '../../../components/l03/l03-table/l03-fields-table.component';
-// import { L03TableComponent } from '../../../components/l03/l03-table/l03-table.component';
 import { LoggerService } from '../../../services/logger.service';
 import { TxtLoggerService } from '../../../services/txt-logger.service';
 import { environment } from '../../../../environments/environment';
@@ -28,9 +26,7 @@ import { L03NewRecordComponent } from '../../../components/l03/l03-new-record/l0
   imports: [
     CommonModule,
     FormsModule,
-    LogMonitorComponent,
     L03FieldsTableComponent,
-    // L03TableComponent,
     L03NewRecordComponent
   ],
 })
