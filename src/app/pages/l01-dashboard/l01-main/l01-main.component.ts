@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { L01NuevoRegistroNesComponent } from '../../../components/l01/l01-nuevo-registro-nes/l01-nuevo-registro-nes.component';
 import { L01NuevoEmisorComponent } from '../../../components/l01/l01-nuevo-emisor/l01-nuevo-emisor.component';
+import { L01FieldsTableComponent } from '../../../components/l01/l01-fields-table/l01-fields-table.component';
 import { L01CatalogService, L01Resume } from '../../../services/l01-catalog.service';
 import { L01Service, L01Record } from '../../../services/l01/l01.service';
 import { T4Service } from '../../../services/t4.service';
@@ -23,7 +24,7 @@ import { T164Service } from '../../../services/t164.service';
   templateUrl: './l01-main.component.html',
   styleUrls: ['./l01-main.component.scss'],
   standalone: true,
-  imports: [FormsModule, CommonModule, L01NuevoRegistroNesComponent, L01NuevoEmisorComponent]
+  imports: [FormsModule, CommonModule, L01NuevoRegistroNesComponent, L01NuevoEmisorComponent, L01FieldsTableComponent]
 })
 export class L01MainComponent implements OnInit {
   // ========================================
