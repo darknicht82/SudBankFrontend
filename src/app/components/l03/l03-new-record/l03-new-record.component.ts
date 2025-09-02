@@ -48,10 +48,34 @@ export class L03NewRecordComponent implements OnInit {
       codigoEstadoTitulo: [null, Validators.required],
       codigoCategoriaInversion: [null, Validators.required],
       codigoRangoVencimiento: [null, Validators.required],
+
+      tasaInteresNominal: [null, [Validators.required, Validators.min(0), Validators.max(9.9999)]],
+      montoInteresesUsd: [null, [Validators.required, Validators.min(0), Validators.max(9999999999999.99)]],
+      valorLibrosUsd: [null, [Validators.min(0), Validators.max(9999999999999.99)]],
+      precioMercado: [null, [Validators.min(0), Validators.max(9.9999)]],
+      fechaValorMercado: [null],
+      valorMercadoUsd: [null, [Validators.min(0), Validators.max(9999999999999.99)]],
+      codigoFuenteInfoMercado: [null],
+      tasaRetornoTir: [null, [Validators.min(0), Validators.max(9.9999)]],
+      valorPresenteUsd: [null, [Validators.min(0), Validators.max(9999999999999.99)]],
+      provisionRequerida: [null, [Validators.min(0), Validators.max(9999999999999.99)]],
+      provisionConstituida: [null, [Validators.min(0), Validators.max(9999999999999.99)]],
+      gananciasPerdidasPeriodo: [null, [Validators.min(0), Validators.max(9999999999999.99)]],
+      codigoCalificacionRiesgo: [null],
+      codigoCategoriaCalificacion: [null],
+      codigoCalificadoraRiesgo: [null],
+
       fechaUltimaCalificacion: [null, Validators.required],
       fechaLiquidacionVenta: [null, Validators.required],
       precioLiquidacionVenta: [null, Validators.required],
-      valorFondoInversionUsd: [null, Validators.required]
+      valorFondoInversionUsd: [null, [Validators.required, Validators.min(0), Validators.max(9999999999999.99)]],
+
+      codigoFondoInversion: [null],
+      codigoTipoIdentificacionCustodio: [null],
+      codigoIdentificacionCustodio: [null],
+      codigoCalificacionRiesgoCustodio: [null],
+      codigoCalificadoraRiesgoCustodio: [null],
+      codigoSubsidiaria: [null]
     });
   }
 
