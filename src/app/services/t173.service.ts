@@ -65,10 +65,7 @@ export class T173Service {
    */
   getForL01(): Observable<T173[]> {
     return this.getAll().pipe(
-      map(clasificaciones => clasificaciones.filter(c => 
-        c.estado === '1' && 
-        ['1', '2', '3', '4'].includes(c.codigo)
-      ))
+      map(clasificaciones => clasificaciones.filter(c => ['1', '2', '3', '4'].includes(c.codigo) && c.estado === '1'))
     );
   }
 

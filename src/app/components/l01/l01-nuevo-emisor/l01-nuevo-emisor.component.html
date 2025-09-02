@@ -35,12 +35,19 @@
 
     <div class="field">
       <label class="label-sudbank required">Código/Identificación *</label>
-      <input pInputText formControlName="codigo" [placeholder]="getPlaceholder()" [maxlength]="getMaxLength()" class="input-sudbank">
+      <div class="input-container">
+        <input pInputText formControlName="codigo" [placeholder]="getPlaceholder()" [maxlength]="getMaxLength()" class="input-sudbank">
+        <i *ngIf="checkingDuplicate" class="pi pi-spinner pi-spin checking-icon"></i>
+        <i *ngIf="!checkingDuplicate && form.get('codigo')?.value && !form.get('codigo')?.errors?.['duplicate']" class="pi pi-check-circle valid-icon"></i>
+        <i *ngIf="!checkingDuplicate && form.get('codigo')?.errors?.['duplicate']" class="pi pi-times-circle invalid-icon"></i>
+      </div>
       <small class="error-message-sudbank" *ngIf="form.get('codigo')?.errors?.['required']">El código es obligatorio</small>
       <small class="error-message-sudbank" *ngIf="form.get('codigo')?.errors?.['rucLongitud']">El RUC debe tener exactamente 13 dígitos</small>
       <small class="error-message-sudbank" *ngIf="form.get('codigo')?.errors?.['rucPrefijo']">Prefijo RUC inválido. Debe ser: 00, 10, 15, 17, 20, 21, 25 o 30</small>
       <small class="error-message-sudbank" *ngIf="form.get('codigo')?.errors?.['rucVerificador']">Dígito verificador del RUC inválido</small>
       <small class="error-message-sudbank" *ngIf="form.get('codigo')?.errors?.['pattern']">Formato general inválido</small>
+      <small class="error-message-sudbank" *ngIf="form.get('codigo')?.errors?.['duplicate']">⚠️ Este código ya existe. Por favor, use un código diferente.</small>
+      <small class="success-message-sudbank" *ngIf="!checkingDuplicate && form.get('codigo')?.value && !form.get('codigo')?.errors?.['duplicate'] && !form.get('codigo')?.errors?.['required']">✅ Código disponible</small>
     </div>
 
     <div class="field">

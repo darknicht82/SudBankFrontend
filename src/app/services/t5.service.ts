@@ -6,9 +6,9 @@ import { environment } from '../../environments/environment';
 
 export interface T5 {
   id: number;
+  codigo: string;
   descripcion: string;
   estado: string;
-  codigo?: string;
 }
 
 @Injectable({
@@ -47,7 +47,27 @@ export class T5Service {
     );
   }
 
+  /**
+   * Obtener país por código
+   */
+  getByCodigo(codigo: string): Observable<T5 | null> {
+    return this.http.get<T5[]>(this.apiUrl).pipe(
+      map(paises => paises.find(p => p.codigo === codigo) || null),
+      catchError(error => {
+        console.error(`❌ API T5 - Error obteniendo país por código ${codigo}:`, error);
+        return of(null);
+      })
+    );
+  }
 
+  /**
+   * Obtener solo países válidos para L01
+   */
+  getForL01(): Observable<T5[]> {
+    return this.getAll().pipe(
+      map(paises => paises.filter(p => p.estado === '1'))
+    );
+  }
 
   /**
    * Verificar estado de la API
