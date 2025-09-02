@@ -16,7 +16,7 @@ import { LoggerService } from '../../../services/logger.service';
 import { TxtLoggerService } from '../../../services/txt-logger.service';
 import { environment } from '../../../../environments/environment';
 import { L03DetailsDto, L03Dto, L03StructureService } from '../../../services/structures/l03/l03.service';
-import { L03NewRecordComponent } from '../../../components/l03/l03-new-record/l03-new-record.component'
+import { L03NewRecordComponent } from '../../../components/l03/l03-new-record/l03-new-record.component';
 
 @Component({
   selector: 'app-l03-main',
