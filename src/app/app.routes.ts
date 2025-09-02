@@ -11,6 +11,7 @@ import { L08CompararComponent } from './pages/l08-dashboard/l08-comparar/l08-com
 import { L08AuditoriaComponent } from './pages/l08-dashboard/l08-auditoria/l08-auditoria.component';
 import { L01MainComponent } from './pages/l01-dashboard/l01-main/l01-main.component';
 import { L02MainComponent } from './pages/l02-dashboard/l02-main/l02-main.component';
+import { L03MainComponent } from './pages/l03-dashboard/l03-main/l03-main.component';
 
 // Componentes L01 eliminados - Solo se mantiene L01MainComponent
 
@@ -25,6 +26,7 @@ export const routes: Routes = [
   // Rutas directas (para compatibilidad)
   { path: 'l01', component: L01MainComponent },
   { path: 'l02', component: L02MainComponent },
+  { path: 'l03', component: L03MainComponent },
   { path: 'l08', children: [
     { path: '', component: L08MainComponent },
     { path: 'historico', component: L08HistoricoComponent },
@@ -36,6 +38,7 @@ export const routes: Routes = [
   { path: 'regulatory', children: [
     { path: 'l01', component: L01MainComponent },
     { path: 'l02', component: L02MainComponent },
+    { path: 'l03', component: L03MainComponent },
     { path: 'l08', children: [
       { path: '', component: L08MainComponent },
       { path: 'historico', component: L08HistoricoComponent },
