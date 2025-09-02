@@ -319,3 +319,10 @@
 .modal {
   z-index: 10000 !important;
 }
+
+.separator {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, #ccc, #888, #ccc);
+  margin: 1.5rem 0;
+}
