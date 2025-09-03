@@ -6,7 +6,7 @@ import { MatTableModule } from '@angular/material/table';
 @Component({
   selector: 'app-l03-fields-table',
   templateUrl: './l03-fields-table.component.html',
-  styleUrls: ['./l03-fields-table.component.css'],
+  styleUrls: ['./l03-fields-table.component.scss'],
   standalone: true,
   imports: [MatTableModule]
 })
