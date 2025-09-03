@@ -1,0 +1,177 @@
+<!-- Modal del Formulario l05 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro L05</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <form [formGroup]="l05Form" (ngSubmit)="onSubmit()" class="w-100">
+
+        <!-- Sección: Título -->
+        <h5 class="mt-3 mb-2 border-bottom pb-1">Título</h5>
+        <div class="row g-2">
+          <!-- Tipo Identificación -->
+          <div class="col-md-6">
+            <label for="tipoIdentificacion" class="form-label">Tipo de identificación del depositario</label>
+            <select 
+              id="tipoIdentificacion" 
+              class="form-select"
+              formControlName="tipoIdentificacion">
+              <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+              <option *ngFor="let item of arrayTipoIdentificacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoIdentificacion')" class="text-danger small mt-1">
+              Escoga un tipo de identificación
+            </div>
+          </div>
+
+          <!-- identificacionDepositario -->
+          <div class="col-md-6">
+            <label for="identificacionDepositario" class="form-label">Identificación del depositario</label>
+            <select 
+              id="identificacionDepositario" 
+              class="form-select"
+              formControlName="identificacionDepositario">
+              <option [ngValue]="null" disabled selected>Seleccione una identificación</option>
+              <option *ngFor="let item of arrayIdentificacionDepositario" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('identificacionDepositario')" class="text-danger small mt-1">
+              La identificación es obligatoria
+            </div>
+          </div>
+
+          <!-- tipoDeposito -->
+          <div class="col-md-6">
+            <label for="tipoDeposito" class="form-label">Tipo de depósito</label>
+            <select 
+              id="tipoDeposito" 
+              class="form-select"
+              formControlName="tipoDeposito">
+              <option [ngValue]="null" disabled selected>Seleccione una identificación</option>
+              <option *ngFor="let item of arrayTipoDeposito" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoDeposito')" class="text-danger small mt-1">
+              La identificación es obligatoria
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="numeroIdentificacionDeposito" class="form-label">Número de identificación del depósito</label>
+            <input type="text" id="numeroIdentificacionDeposito" class="form-control" formControlName="numeroIdentificacionDeposito" />
+            <div *ngIf="isInvalid('numeroIdentificacionDeposito')" class="text-danger small mt-1">
+              El número de identificaion es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="cuentaContable" class="form-label">Cuenta contable</label>
+            <input type="number" id="cuentaContable" class="form-control" formControlName="cuentaContable" />
+            <div *ngIf="isInvalid('cuentaContable')" class="text-danger small mt-1">
+              Ingrese un cuenta contable válida (mayor a 0)
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="moneda" class="form-label">Moneda de denominación</label>
+            <select 
+              id="moneda" 
+              class="form-select"
+              formControlName="moneda">
+              <option [ngValue]="null" disabled selected>Seleccione una moneda</option>
+              <option *ngFor="let item of arrayMonedaDenominacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('moneda')" class="text-danger small mt-1">
+              La moneda es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorMonedaDenominacion" class="form-label">Valor Nominal en moneda de denominación</label>
+            <input type="number" id="valorMonedaDenominacion" class="form-control" formControlName="valorMonedaDenominacion" />
+            <div *ngIf="isInvalid('valorMonedaDenominacion')" class="text-danger small mt-1">
+              Ingrese un valor válido (mayor a 0)
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorLibrosDolares" class="form-label">Valor en libros en dólares</label>
+            <input type="number" id="valorLibrosDolares" class="form-control" formControlName="valorLibrosDolares" />
+            <div *ngIf="isInvalid('valorLibrosDolares')" class="text-danger small mt-1">
+              Ingrese un valor válido (mayor a 0)
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="calificacionRiesgoDepositario" class="form-label">Calificación de riesgo del depositario</label>
+            <select 
+              id="calificacionRiesgoDepositario" 
+              class="form-select"
+              formControlName="calificacionRiesgoDepositario">
+              <option [ngValue]="null" disabled selected>Seleccione una calificacion</option>
+              <option *ngFor="let item of arrayCalificacionRiesgoDepositario" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('calificacionRiesgoDepositario')" class="text-danger small mt-1">
+              La calificacion es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="calificacionRiesgo" class="form-label">Calificación de riesgo</label>
+            <select 
+              id="calificacionRiesgo" 
+              class="form-select"
+              formControlName="calificacionRiesgo">
+              <option [ngValue]="null" disabled selected>Seleccione una calificacion</option>
+              <option *ngFor="let item of arrayCalificacionRiesgo" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('calificacionRiesgo')" class="text-danger small mt-1">
+              La calificacion es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="fechaUltimaCalificacion" class="form-label">Fecha de última calificación</label>
+            <input type="date" id="fechaUltimaCalificacion" class="form-control" formControlName="fechaUltimaCalificacion" />
+            <div *ngIf="isInvalid('fechaUltimaCalificacion')" class="text-danger small mt-1">
+              La fecha de calificación es obligatoria
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="l05Form.invalid" (click)="onSubmit()">
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+
+  </div>
+</div>

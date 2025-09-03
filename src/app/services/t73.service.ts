@@ -61,15 +61,11 @@ export class T73Service {
   }
 
   /**
-   * Obtener solo tipos válidos para L01 (excluyendo "no aplica")
+   * Obtener solo tipos válidos para L01
    */
   getForL01(): Observable<T73[]> {
     return this.getAll().pipe(
-      map(tipos => tipos.filter(t => 
-        t.estado === '1' && 
-        !t.descripcion.toLowerCase().includes('no aplica l01') &&
-        !t.descripcion.toLowerCase().includes('no aplica en estructura l01')
-      ))
+      map(tipos => tipos.filter(t => t.estado === '1'))
     );
   }
 

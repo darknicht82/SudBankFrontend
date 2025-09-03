@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+// import { Component, OnInit } from '@angular/core';
 import { L03_FIELD_TOOLTIPS } from '../../../utils/l03-field-tooltips';
 import { MatTableModule } from '@angular/material/table';
 
@@ -11,6 +12,7 @@ import { MatTableModule } from '@angular/material/table';
   imports: [MatTableModule]
 })
 export class L03FieldsTableComponent {
+// export class L03FieldsTableComponent implements OnInit {
   displayedColumns: string[] = ['no', 'campo', 'tipoDeDato', 'obligatoriedad', 'tabla', 'descripcion'];
   dataSource = L03_FIELD_TOOLTIPS;
 }
