@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { FormGroup, FormControl, Validators, AsyncValidatorFn, AbstractControl, ValidationErrors } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
 import { DialogModule } from "primeng/dialog";
@@ -7,6 +7,8 @@ import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { SelectModule } from "primeng/select";
 import { LoggerService } from "../../../services/logger.service";
+import { Observable, of } from "rxjs";
+import { map, catchError, debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 
 import { T5Service, T5 } from "../../../services/t5.service";
 import { T164Service, T164 } from "../../../services/t164.service";
@@ -34,6 +36,7 @@ export class L01NuevoEmisorComponent implements OnInit {
   paises: T5[] = [];
   loading = false;
   error = "";
+  checkingDuplicate = false;
 
   constructor(
     private loggerService: LoggerService,
@@ -44,6 +47,62 @@ export class L01NuevoEmisorComponent implements OnInit {
   ngOnInit() {
     this.setupFormValidation();
     this.loadPaises();
+    this.setupDuplicateValidation();
+  }
+
+  /**
+   * Configura la validación asíncrona para verificar duplicados
+   */
+  private setupDuplicateValidation(): void {
+    const codigoControl = this.form.get('codigo');
+    
+    if (codigoControl) {
+      codigoControl.valueChanges.pipe(
+        debounceTime(500), // Esperar 500ms después del último cambio
+        distinctUntilChanged(), // Solo si el valor cambió
+        switchMap((value: string | null) => {
+          if (!value || value.length < 3) {
+            return of(null); // No validar si es muy corto
+          }
+          
+          this.checkingDuplicate = true;
+          return this.checkDuplicateCode(value);
+        })
+      ).subscribe((isDuplicate: boolean | null) => {
+        this.checkingDuplicate = false;
+        
+        if (isDuplicate === true) {
+          codigoControl.setErrors({ 'duplicate': true });
+        } else if (isDuplicate === false) {
+          // Limpiar error de duplicado si existe
+          const errors = codigoControl.errors;
+          if (errors && errors['duplicate']) {
+            delete errors['duplicate'];
+            codigoControl.setErrors(Object.keys(errors).length > 0 ? errors : null);
+          }
+        }
+      });
+    }
+  }
+
+  /**
+   * Verifica si el código ya existe en la base de datos
+   */
+  private checkDuplicateCode(codigo: string): Observable<boolean | null> {
+    return this.t164Service.getAll().pipe(
+      map((emisores: T164[]) => {
+        const existe = emisores.some(emisor => 
+          emisor.codigo.toLowerCase() === codigo.toLowerCase()
+        );
+        
+        console.log(`🔍 Verificando duplicado: "${codigo}" - ${existe ? 'EXISTE' : 'NO EXISTE'}`);
+        return existe;
+      }),
+      catchError(error => {
+        console.error('❌ Error verificando duplicado:', error);
+        return of(null); // En caso de error, no bloquear
+      })
+    );
   }
 
   /**

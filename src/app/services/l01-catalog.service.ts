@@ -10,6 +10,15 @@ export interface L01Catalog {
   descripcion: string;
 }
 
+export interface L01Resume {
+  id: number;
+  codigoTipoIdentificacion: number;
+  codigoEmisor: number;
+  codigoClasificacionEmisor: number;
+  codigoTipoEmisor: number;
+  identificacion: string | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -182,6 +191,42 @@ export class L01CatalogService {
   getTabla164ForL01(): Observable<L01Catalog[]> {
     // Esta tabla es para códigos extranjeros, no necesita filtrado adicional
     return this.getTabla164();
+  }
+
+  getResume(): Observable<L01Resume[]> {
+    return this.http.get<L01Resume[]>(`${this.baseUrl}/structures/l01`)
+      .pipe(
+        catchError(error => {
+          console.error('Error al obtener L01 desde API real:', error);
+          throw error;
+        })
+      );
+  }
+
+  saveL01(form: any): Observable<any> {
+    const formValue = form;
+    console.log('formValue: ', formValue);
+
+    // Transform form into expected payload
+    const payload = {
+      codigoTipoIdentificacion: formValue.tipoIdentificacion?.id,
+      codigoEmisor: formValue.identificacion?.id,
+      codigoClasificacionEmisor: formValue.clasificacion?.id,
+      codigoTipoEmisor: formValue.tipoEmisor?.id
+    };
+
+    console.log('Payload to send:', payload);
+
+    return this.http.post(`${this.baseUrl}/structures/l01`, payload).pipe(
+      map(response => {
+        console.log('✅ Saved successfully', response);
+        return response;
+      }),
+      catchError(error => {
+        console.error('❌ Error saving', error);
+        throw error;
+      })
+    );
   }
 
 

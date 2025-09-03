@@ -1,0 +1,406 @@
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro L03</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form [formGroup]="newEditRecordForm" (ngSubmit)="onSubmit()" class="w-100">
+
+        <div class="row g-2">
+          <div class="col-md-6">
+            <label for="codigoTipoIdentificacionEmisor" class="form-label">Tipo Identificación Emisor</label>
+            <select 
+              id="codigoTipoIdentificacionEmisor" 
+              class="form-select"
+              formControlName="codigoTipoIdentificacionEmisor">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayTipoIdentificacionEmisor" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('codigoTipoIdentificacionEmisor')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoIdentificacionEmisor" class="form-label">Identificación del emisor</label>
+            <select 
+              id="codigoIdentificacionEmisor" 
+              class="form-select"
+              formControlName="codigoIdentificacionEmisor">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayIdentificacionEmisor" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('codigoIdentificacionEmisor')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="numeroTitulo" class="form-label">Número de título</label>
+            <input type="text" id="numeroTitulo" class="form-control" formControlName="numeroTitulo" />
+            <div *ngIf="isInvalid('numeroTitulo')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>          
+
+          <div class="col-md-6">
+            <label for="fechaEmision" class="form-label">Fecha de Emisión</label>
+            <input type="date" id="fechaEmision" class="form-control" formControlName="fechaEmision" />
+            <div *ngIf="isInvalid('fechaEmision')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="fechaCompra" class="form-label">Fecha de Compra</label>
+            <input type="date" id="fechaCompra" class="form-control" formControlName="fechaCompra" />
+            <div *ngIf="isInvalid('fechaCompra')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoEstadoTitulo" class="form-label">Estado del título</label>
+            <select 
+              id="codigoEstadoTitulo" 
+              class="form-select"
+              formControlName="codigoEstadoTitulo">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayEstadoTitulo" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('codigoEstadoTitulo')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoCategoriaInversion" class="form-label">Categoría de Inversión</label>
+            <select 
+              id="codigoCategoriaInversion" 
+              class="form-select"
+              formControlName="codigoCategoriaInversion">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayCategoriaInversion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('codigoCategoriaInversion')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoRangoVencimiento" class="form-label">Rango de Vencimiento</label>
+            <select 
+              id="codigoRangoVencimiento" 
+              class="form-select"
+              formControlName="codigoRangoVencimiento">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayRangoVencimiento" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('codigoRangoVencimiento')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>
+
+        </div>
+
+        <hr class="separator" />
+
+        <div class="row g-2">
+          <div class="col-md-6">
+            <label for="tasaInteresNominal" class="form-label">Tasa Interés Nominal</label>
+            <input id="tasaInteresNominal" class="form-control" formControlName="tasaInteresNominal" type="number"
+              step="0.0001"
+              min="0"
+              max="9.9999" class="form-control"/>
+          </div>  
+
+          <div class="col-md-6">
+            <label for="montoInteresesUsd" class="form-label">Monto de Intereses (USD)</label>
+            <input id="montoInteresesUsd"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="9999999999999.99"
+                  formControlName="montoInteresesUsd" class="form-control" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorLibrosUsd" class="form-label">Valor en Libros (USD)</label>
+            <input id="valorLibrosUsd"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="9999999999999.99"
+                  formControlName="valorLibrosUsd" class="form-control" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="precioMercado" class="form-label">Precio de Mercado</label>
+            <input id="precioMercado"
+                  type="number"
+                  step="0.0001"
+                  min="0"
+                  max="9.9999"
+                  formControlName="precioMercado" class="form-control" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorMercadoUsd" class="form-label">Valor de Mercado (USD)</label>
+            <input id="valorMercadoUsd"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="9999999999999.99"
+                  formControlName="valorMercadoUsd" class="form-control" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="tasaRetornoTir" class="form-label">Tasa de Retorno (TIR)</label>
+            <input id="tasaRetornoTir"
+                  type="number"
+                  step="0.0001"
+                  min="0"
+                  max="9.9999"
+                  formControlName="tasaRetornoTir" class="form-control" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorPresenteUsd" class="form-label">Valor Presente (USD)</label>
+            <input id="valorPresenteUsd"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="9999999999999.99"
+                  formControlName="valorPresenteUsd" class="form-control" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="provisionRequerida" class="form-label">Provisión Requerida</label>
+            <input id="provisionRequerida"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="9999999999999.99"
+                  formControlName="provisionRequerida" class="form-control" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="provisionConstituida" class="form-label">Provisión Constituida</label>
+            <input id="provisionConstituida"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="9999999999999.99"
+                  formControlName="provisionConstituida" class="form-control" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="gananciasPerdidasPeriodo" class="form-label">Ganancias/Pérdidas del Período</label>
+            <input id="gananciasPerdidasPeriodo"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="9999999999999.99"
+                  formControlName="gananciasPerdidasPeriodo" class="form-control" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoCalificacionRiesgo" class="form-label">Código Calificación Riesgo</label>
+            <select 
+              id="codigoCalificacionRiesgo" 
+              class="form-select"
+              formControlName="codigoCalificacionRiesgo">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayCalificacionRiesgo" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>           
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoCategoriaCalificacion" class="form-label">Código Categoría Calificación</label>
+            <select 
+              id="codigoCategoriaCalificacion" 
+              class="form-select"
+              formControlName="codigoCategoriaCalificacion">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayCategoriaCalificacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>           
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoCalificadoraRiesgo" class="form-label">Código Calificadora Riesgo</label>
+            <select 
+              id="codigoCalificadoraRiesgo" 
+              class="form-select"
+              formControlName="codigoCalificadoraRiesgo">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayCalificadoraRiesgo" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>           
+          </div>
+
+          <!-- <div class="col-md-6">
+            <label for="valorFondoInversionUsd">Valor del Fondo de Inversión (USD)</label>
+            <input id="valorFondoInversionUsd"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="9999999999999.99"
+                  formControlName="valorFondoInversionUsd" />
+          </div> -->
+
+        </div>
+
+        <hr class="separator" />
+
+        <div class="row g-3">         
+
+          <div class="col-md-6">
+            <label for="fechaUltimaCalificacion" class="form-label">Fecha de Última Calificación</label>
+            <input type="date" id="fechaUltimaCalificacion" class="form-control" formControlName="fechaUltimaCalificacion" />
+            <div *ngIf="isInvalid('fechaUltimaCalificacion')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="fechaLiquidacionVenta" class="form-label">Fecha de Última Calificación</label>
+            <input type="date" id="fechaLiquidacionVenta" class="form-control" formControlName="fechaLiquidacionVenta" />
+            <div *ngIf="isInvalid('fechaLiquidacionVenta')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="precioLiquidacionVenta" class="form-label">Precio Liquidación de Venta</label>
+            <input type="text" id="precioLiquidacionVenta" class="form-control" formControlName="precioLiquidacionVenta" />
+            <div *ngIf="isInvalid('precioLiquidacionVenta')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorFondoInversionUsd" class="form-label">Valor Fondo Inversión (USD)</label>
+            <input id="valorFondoInversionUsd" type="number"
+                  step="0.01"
+                  min="0"
+                  max="9999999999999.99" class="form-control" formControlName="valorFondoInversionUsd" />
+            <div *ngIf="isInvalid('valorFondoInversionUsd')" class="text-danger small mt-1">
+              obligatorio
+            </div>
+          </div>
+
+        </div>
+
+        <hr class="separator" />
+
+        <div class="row g-3">
+     
+          <div class="col-md-6">
+            <label for="codigoFondoInversion" class="form-label">Código Fondo de Inversión</label>
+            <select 
+              id="codigoFondoInversion" 
+              class="form-select"
+              formControlName="codigoFondoInversion">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayFondoInversion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoTipoIdentificacionCustodio" class="form-label">Código Tipo Identificación Custodio</label>
+            <select 
+              id="codigoTipoIdentificacionCustodio" 
+              class="form-select"
+              formControlName="codigoTipoIdentificacionCustodio">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayTipoIdentificacionCustodio" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoIdentificacionCustodio" class="form-label">Código Identificación Custodio</label>
+            <select 
+              id="codigoIdentificacionCustodio" 
+              class="form-select"
+              formControlName="codigoIdentificacionCustodio">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayIdentificacionCustodio" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoCalificacionRiesgoCustodio" class="form-label">Código Calificación Riesgo Custodio</label>
+            <select 
+              id="codigoCalificacionRiesgoCustodio" 
+              class="form-select"
+              formControlName="codigoCalificacionRiesgoCustodio">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayCalificacionRiesgoCustodio" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoCalificadoraRiesgoCustodio" class="form-label">Código Calificadora Riesgo Custodio</label>
+            <select 
+              id="codigoCalificadoraRiesgoCustodio" 
+              class="form-select"
+              formControlName="codigoCalificadoraRiesgoCustodio">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayCalificadoraRiesgoCustodio" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoSubsidiaria" class="form-label">Código Subsidiaria</label>
+            <input type="text" id="codigoSubsidiaria" class="form-control" formControlName="codigoSubsidiaria" />
+          </div>
+
+        </div>
+
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="newEditRecordForm.invalid" (click)="onSubmit()">
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+
+  </div>
+</div>
