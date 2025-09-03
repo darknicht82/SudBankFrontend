@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { L01ArchiveComponent } from './l01-archive.component';
+import { L03TableComponent } from './l03-table.component';
 
-describe('L01ArchiveComponent', () => {
-  let component: L01ArchiveComponent;
-  let fixture: ComponentFixture<L01ArchiveComponent>;
+describe('L03TableComponent', () => {
+  let component: L03TableComponent;
+  let fixture: ComponentFixture<L03TableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ L01ArchiveComponent ]
+      imports: [L03TableComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(L01ArchiveComponent);
+    fixture = TestBed.createComponent(L03TableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

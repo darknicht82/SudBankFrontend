@@ -32,78 +32,11 @@
             <li>Información de custodios</li>
           </ul>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ACCIONES PRINCIPALES L03 -->
-  <div class="action-buttons">
-    <button (click)="loadData()" [disabled]="loading" class="btn btn-primary">
-      <i class="fas fa-sync-alt me-2"></i>
-      {{ loading ? 'Cargando...' : 'Cargar Datos L03' }}
-    </button>
-    
-    <button (click)="openNewRecordModal()" class="btn btn-info">
-      <i class="fas fa-plus me-2"></i>
-      Nuevo Registro L03
-    </button>
-    
-    <button (click)="exportToTxt()" [disabled]="datosL03.length === 0" class="btn btn-success">
-      <i class="fas fa-download me-2"></i>
-      Exportar TXT
-    </button>
-    
-    <button (click)="clearGridFilters()" [disabled]="filteredDataL03.length === datosL03.length" class="btn btn-secondary">
-      <i class="fas fa-filter me-2"></i>
-      Limpiar Filtros
-    </button>
-  </div>
-
-  <!-- FILTROS L03 -->
-  <div class="filters-section">
-    <div class="card">
-      <div class="card-header">
-        <h3>Filtros de Búsqueda</h3>
-      </div>
-      <div class="card-content">
-        <div class="filters-grid">
-          <div class="form-field">
-            <label for="tipoIdentificacion">Tipo de Identificación</label>
-            <select id="tipoIdentificacion" [(ngModel)]="tipoIdentificacion" class="form-control">
-              <option value="">Todos</option>
-              <option *ngFor="let tipo of tiposIdentificacionL01" [value]="tipo.codigo">
-                {{ tipo.codigo }} - {{ tipo.descripcion }}
-              </option>
-            </select>
-          </div>
-          
-          <div class="form-field">
-            <label for="clasificacion">Clasificación</label>
-            <select id="clasificacion" [(ngModel)]="clasificacion" class="form-control">
-              <option value="">Todas</option>
-              <option *ngFor="let clasif of clasificacionesL01" [value]="clasif.codigo">
-                {{ clasif.codigo }} - {{ clasif.descripcion }}
-              </option>
-            </select>
-          </div>
-          
-          <div class="form-field">
-            <label for="tipoEmisor">Tipo de Emisor</label>
-            <select id="tipoEmisor" [(ngModel)]="tipoEmisor" class="form-control">
-              <option value="">Todos</option>
-              <option *ngFor="let tipo of tiposEmisorL01" [value]="tipo.codigo">
-                {{ tipo.codigo }} - {{ tipo.descripcion }}
-              </option>
-            </select>
-          </div>
-        </div>
-        
-        <div class="actions">
-          <button (click)="applyGridFilters()" class="btn btn-primary">
-            <i class="fas fa-search me-2"></i>
-            Aplicar Filtros
-          </button>
-        </div>
+        <strong>Campos Oficiales:</strong>
+        <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
+          <app-l03-fields-table></app-l03-fields-table>
+        </div> 
       </div>
     </div>
   </div>
@@ -194,29 +127,19 @@
                     (mouseleave)="hideFieldTooltip()">
                   {{ column | titlecase }}
                 </th>
-                <th class="action-header">
-                  <span class="column-title">Acciones</span>
-                </th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let item of filteredDataL03" class="data-row">
                 <td>{{ item.codigoTipoIdentificacionEmisor }}</td>
                 <td>{{ item.codigoIdentificacionEmisor }}</td>
+                <td>{{ item.descripcionIdentificacionEmisor }}</td>
                 <td>{{ item.numeroTitulo }}</td>
                 <td>{{ item.fechaEmision | date:'dd/MM/yyyy' }}</td>
-                <td>{{ item.valorLibrosUsd | currency:'USD':'symbol':'1.2-2' }}</td>
-                <td>{{ item.valorMercadoUsd | currency:'USD':'symbol':'1.2-2' }}</td>
-                <td class="action-cell">
-                  <div class="action-buttons">
-                    <button (click)="openEditRecordModal(item)" class="btn btn-sm btn-primary">
-                      <i class="fas fa-edit"></i>
-                    </button>
-                    <button (click)="refreshData()" class="btn btn-sm btn-info">
-                      <i class="fas fa-sync-alt"></i>
-                    </button>
-                  </div>
-                </td>
+                <td>{{ item.fechaCompra | date:'dd/MM/yyyy' }}</td>
+                <td>{{ item.descripcionEstadoTitulo }}</td>
+                <td>{{ item.codigoCategoriaInversion }}</td>
+                <td>{{ item.descripcionRangoVencimiento }}</td>               
               </tr>
             </tbody>
           </table>
@@ -243,6 +166,7 @@
     </button>
     
   </div>
+
   <!-- TOOLTIP L03 -->
   <div *ngIf="showTooltip && currentTooltip" 
        class="tooltip-popup" 
@@ -254,51 +178,6 @@
     </div>
   </div>
 
-  <!-- CONTROLES DE PRUEBA Y DEBUG -->
-  <div class="debug-controls" *ngIf="!loading && showLogMonitor">
-    <div class="card">
-      <div class="card-header">
-        <h5>
-          <i class="fas fa-tools me-2"></i>
-          Controles de Prueba
-        </h5>
-      </div>
-      <div class="card-content">
-        <div class="row">
-          <div class="col-md-3">
-            <button class="btn btn-outline-danger btn-sm w-100" (click)="testError()">
-              <i class="fas fa-bug me-2"></i>
-              Simular Error
-            </button>
-          </div>
-          <div class="col-md-3">
-            <button class="btn btn-outline-warning btn-sm w-100" (click)="testWarning()">
-              <i class="fas fa-exclamation-triangle me-2"></i>
-              Simular Advertencia
-            </button>
-          </div>
-          <div class="col-md-3">
-            <button class="btn btn-outline-info btn-sm w-100" (click)="refreshData()">
-              <i class="fas fa-sync-alt me-2"></i>
-              Refrescar Datos
-            </button>
-          </div>
-          <div class="col-md-3">
-            <button class="btn btn-outline-secondary btn-sm w-100" (click)="toggleLogMonitor()">
-              <i class="fas fa-eye me-2"></i>
-              {{ showLogMonitor ? 'Ocultar' : 'Mostrar' }} Monitor
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MONITOR DE LOGS -->
-  <div class="log-monitor-section" *ngIf="showLogMonitor">
-    <app-log-monitor></app-log-monitor>
-  </div>
-
   <!-- LOADING -->
   <div *ngIf="loading" class="loading-overlay">
     <div class="loading-spinner">
@@ -307,27 +186,8 @@
     </div>
   </div>
 
-  <!-- MODAL DEL FORMULARIO L03 (PLACEHOLDER) -->
-  <div *ngIf="showModalForm" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>{{ editData ? 'Editar Registro L03' : 'Nuevo Registro L03' }}</h3>
-        <button (click)="onModalClosed()" class="close-button">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Componente modal L03 en desarrollo...</p>
-        <p>Datos: {{ editData ? 'Modo edición' : 'Modo creación' }}</p>
-      </div>
-      <div class="modal-footer">
-        <button (click)="onModalClosed()" class="btn btn-secondary">
-          Cancelar
-        </button>
-        <button (click)="onModalDataSaved(editData)" class="btn btn-primary">
-          {{ editData ? 'Actualizar' : 'Crear' }}
-        </button>
-      </div>
-    </div>
-  </div>
+  <app-l03-new-record
+    [isVisible]="showModalForm"
+    (modalClosed)="onModalClosed()"></app-l03-new-record>
+
 </div>

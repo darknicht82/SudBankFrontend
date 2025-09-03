@@ -1,27 +1,16 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component } from '@angular/core';
+import { L03_FIELD_TOOLTIPS } from '../../../utils/l03-field-tooltips';
 import { MatTableModule } from '@angular/material/table';
-import { MatTableDataSource } from '@angular/material/table';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
-  selector: 'app-l03-table',
+  selector: 'app-l03-fields-table',
   templateUrl: './l03-table.component.html',
-  styleUrls: ['./l03-table.component.css'],
+  styleUrls: ['./l03-table.component.scss'],
   standalone: true,
-  imports: [MatTableModule, CommonModule]
+  imports: [MatTableModule]
 })
-export class L03TableComponent implements OnChanges {
-  @Input() data: any[] = [];
-
-
-  displayedColumns: string[] = [];
-  dataSource = new MatTableDataSource<any>();
-
-  ngOnChanges(): void {
-    if (this.data && this.data.length > 0) {
-      // Get keys from first row as columns
-      this.displayedColumns = Object.keys(this.data[0]);
-      this.dataSource.data = this.data;
-    }
-  }
+export class L03FieldsTableComponent {
+  displayedColumns: string[] = ['no', 'campo', 'tipoDeDato', 'obligatoriedad', 'tabla', 'descripcion'];
+  dataSource = L03_FIELD_TOOLTIPS;
 }

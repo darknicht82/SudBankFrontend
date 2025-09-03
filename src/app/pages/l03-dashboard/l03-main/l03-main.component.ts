@@ -9,17 +9,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { L01CatalogService } from '../../../services/l01/l01-catalog.service';
-import { L01ExportService } from '../../../services/l01/l01-export.service';
-import { LogMonitorComponent } from '../../../components/debug/log-monitor/log-monitor.component';
-import { L03FieldsTableComponent } from '../../../components/l03/l03-table/l03-fields-table.component';
-import { L03TableComponent } from '../../../components/l03/l03-table/l03-table.component';
-
+import { L01CatalogService } from '../../../services/l01-catalog.service';
+import { L01ExportService } from '../../../services/l01-export.service';
+import { L03FieldsTableComponent } from '../../../components/l03/l03-table/l03-table.component';
 import { LoggerService } from '../../../services/logger.service';
 import { TxtLoggerService } from '../../../services/txt-logger.service';
 import { environment } from '../../../../environments/environment';
-import { L03Dto, L03StructureService } from '../../../services/l03/l03-structure.service';
+import { L03DetailsDto, L03Dto, L03StructureService } from '../../../services/structures/l03/l03.service';
+import { L03NewRecordComponent } from '../../../components/l03/l03-new-record/l03-new-record.component';
 
 @Component({
   selector: 'app-l03-main',
@@ -30,7 +27,6 @@ import { L03Dto, L03StructureService } from '../../../services/l03/l03-structure
     CommonModule,
     FormsModule,
     L03FieldsTableComponent,
-    L03TableComponent
     L03NewRecordComponent
   ],
 })
@@ -40,7 +36,8 @@ export class L03MainComponent implements OnInit {
   // ========================================
   
   // Datos del reporte
-  datosL03: L03Dto[] = [];
+  // datosL03: L03Dto[] = [];
+  datosL03: L03DetailsDto[] = [];
   registrosFiltrados: number = 0;
   loading = false;
   error = '';
@@ -52,18 +49,21 @@ export class L03MainComponent implements OnInit {
   
   // Columnas de la tabla según especificación oficial L03
   displayedColumns: string[] = [
-    'codigoTipoIdentificacionEmisor',
-    'codigoIdentificacionEmisor',
-    'numeroTitulo',
-    'fechaEmision',
-    'valorLibrosUsd',
-    'valorMercadoUsd'
+    'Tipo Id. Emisor',
+    'Codigo Emisor',
+    'Emisor',
+    'Número Título',
+    'Fecha Emisión',
+    'Fecha Compra',
+    'Estado Título',
+    'Cod. Categoría Inversión',
+    'Rango Vencimiento'
   ];
 
   // Datos para exportación
   exportData: any[] = [];
   fechaCorte: Date = new Date();
-  usuarioActual = 'Christian Aguirre';
+  usuarioActual = 'Erick Chiri';
   
   // Control del monitor de logs
   showLogMonitor = !environment.production;
@@ -87,7 +87,8 @@ export class L03MainComponent implements OnInit {
   tooltipPosition = { x: 0, y: 0 };
   
   // Datos filtrados para el grid
-  filteredDataL03: L03Dto[] = [];
+  // filteredDataL03: L03Dto[] = [];
+  filteredDataL03: L03DetailsDto[] = [];
 
   // ========================================
   // CONSTRUCTOR E INICIALIZACIÓN
@@ -161,7 +162,7 @@ export class L03MainComponent implements OnInit {
       this.txtLogger.info('L03MainComponent', 'Cargando datos L03...');
       
       // Cargar datos desde el servicio L03 usando el método getAll()
-      const data = await this.service.getAll().toPromise();
+      const data = await this.service.getAllDetails().toPromise();
       this.datosL03 = data || [];
       this.filteredDataL03 = [...this.datosL03];
       
@@ -300,9 +301,9 @@ export class L03MainComponent implements OnInit {
         codigoTipoIdentificacionEmisor: item.codigoTipoIdentificacionEmisor,
         codigoIdentificacionEmisor: item.codigoIdentificacionEmisor,
         numeroTitulo: item.numeroTitulo,
-        fechaEmision: item.fechaEmision,
-        valorLibrosUsd: item.valorLibrosUsd,
-        valorMercadoUsd: item.valorMercadoUsd
+        fechaEmision: item.fechaEmision
+        // valorLibrosUsd: item.valorLibrosUsd,
+        // valorMercadoUsd: item.valorMercadoUsd
       }));
 
       // Exportar usando el servicio (solo TXT está disponible)
