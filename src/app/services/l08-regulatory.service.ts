@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface L08EmisoresCustodiosDetalle {
   id: number;
@@ -22,7 +23,7 @@ export interface L08EmisoresCustodiosDetalle {
   providedIn: 'root'
 })
 export class L08RegulatoryService {
-  private baseUrl = 'http://localhost:8085/api/regulatory/l08';
+  private baseUrl = `${environment.backendEndpoint}/regulatory/l08`;
 
   // Datos mock específicos para L08
   private mockL08Data: L08EmisoresCustodiosDetalle[] = [

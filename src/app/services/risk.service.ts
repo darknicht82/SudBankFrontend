@@ -4,13 +4,13 @@ import { Observable, of, catchError } from 'rxjs';
 import { RiskMetric, RiskStatus } from '../models/risk-metric.model';
 import { RiskAlert, AlertType, RiskLevel, AlertStatus } from '../models/risk-alert.model';
 import { RiskTrend, TrendDirection } from '../models/risk-trend.model';
-import { API_URL } from '../app.constants';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RiskService {
-  private baseUrl: string;
+  private baseUrl = environment.backendEndpoint;
 
   // Datos mock para desarrollo cuando el backend no esté disponible
   private mockMetrics: RiskMetric[] = [
@@ -132,8 +132,8 @@ export class RiskService {
     }
   ];
 
-  constructor(private http: HttpClient, @Inject(API_URL) apiUrl: string) {
-    this.baseUrl = `${apiUrl}/risk`;
+  constructor(private http: HttpClient) {
+    // baseUrl ya está configurado usando environment.backendEndpoint
   }
 
   // Métricas de Riesgo - HTTP con fallback a mock

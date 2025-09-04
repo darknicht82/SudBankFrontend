@@ -11,6 +11,7 @@ import { L02ModalFormComponent } from '../../../components/l02/l02-modal-form/l0
 import { L02FieldsTableComponent } from '../../../components/l02/l02-table/l02-fields-table/l02-fields-table.component';
 import { L01NuevoRegistroNesComponent } from "../../../components/l01/l01-nuevo-registro-nes/l01-nuevo-registro-nes.component";
 import { L02CatalogService } from '../../../services/l02-catalog.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-l02-main',
@@ -40,12 +41,30 @@ export class L02MainComponent implements OnInit {
   }
 
   private loadResume(): void{
+    console.log('🔄 L02 - Iniciando carga de datos...');
+    console.log('🌐 L02 - Endpoint configurado:', environment.backendEndpoint);
+    
     this.l02CatalogService.getResume().subscribe({
       next: (data) => {
-        this.arrayResume = data;
+        console.log('✅ L02 - Respuesta recibida del servidor:', data);
+        console.log('📊 L02 - Tipo de datos:', typeof data);
+        console.log('📊 L02 - Es array:', Array.isArray(data));
+        console.log('📊 L02 - Cantidad de registros:', data?.length || 0);
+        
+        if (data && Array.isArray(data) && data.length > 0) {
+          console.log('🔍 L02 - Primer registro:', data[0]);
+          console.log('🔍 L02 - Estructura del primer registro:', Object.keys(data[0]));
+        }
+        
+        this.arrayResume = data || [];
+        console.log('✅ L02 - Datos asignados al arrayResume:', this.arrayResume.length);
       },
       error: (error) => {
-        console.error('Error al cargar Resumen:', error);
+        console.error('❌ L02 - Error completo:', error);
+        console.error('❌ L02 - Status:', error.status);
+        console.error('❌ L02 - Message:', error.message);
+        console.error('❌ L02 - URL:', error.url);
+        this.arrayResume = [];
       }
     });
   }

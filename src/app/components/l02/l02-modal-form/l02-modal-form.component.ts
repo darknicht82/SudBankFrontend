@@ -98,14 +98,23 @@ export class L02ModalFormComponent implements OnInit {
 
     if (this.l02Form.valid) {
       const formData = this.l02Form.value;
-      console.log('📌 Form Data:', formData);
-      this.l02catalogService.saveL02(formData);
-
-      this.l02Form.reset();
-      this.formSubmitted = false;
-
-      this.isVisible = false;
-      this.modalClosed.emit();
+      console.log('📌 L02 - Form Data:', formData);
+      
+      this.l02catalogService.saveL02(formData).subscribe({
+        next: (response) => {
+          console.log('✅ L02 - Registro guardado exitosamente:', response);
+          this.l02Form.reset();
+          this.formSubmitted = false;
+          this.isVisible = false;
+          this.modalClosed.emit();
+        },
+        error: (error) => {
+          console.error('❌ L02 - Error al guardar registro:', error);
+          // No cerrar el modal si hay error, para que el usuario pueda corregir
+        }
+      });
+    } else {
+      console.log('❌ L02 - Formulario inválido:', this.l02Form.errors);
     }
   }
 
@@ -162,9 +171,18 @@ export class L02ModalFormComponent implements OnInit {
     this.t62AService.getAll().subscribe({
       next: (data) => {
         this.arrayTipoInstrumento = data;
+        console.log('✅ Tabla 62A cargada:', data.length, 'registros');
       },
       error: (error) => {
-        console.error('Error al cargar Tipos de Identificación:', error);
+        console.error('❌ Error al cargar Tabla 62A (Tipos de Instrumento):', error);
+        // Fallback: usar datos mock para desarrollo
+        this.arrayTipoInstrumento = [
+          { id: 1, codigo: 'BON', descripcion: 'Bono' },
+          { id: 2, codigo: 'ACC', descripcion: 'Acción' },
+          { id: 3, codigo: 'CDP', descripcion: 'Certificado de Depósito' },
+          { id: 4, codigo: 'LET', descripcion: 'Letra' }
+        ];
+        console.log('⚠️ Usando datos mock para Tipos de Instrumento');
       }
     });
   }

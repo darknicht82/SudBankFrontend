@@ -10,6 +10,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { L08, L08Frontend, L08Response } from '../models/l08.model';
 import { L08Validator } from '../validators/l08.validator';
+import { environment } from '../../environments/environment';
 // ✅ L08: Catálogos comentados temporalmente - No conectados a APIs reales
 // import { 
 //   getDescripcionLiquidez, 
@@ -42,10 +43,10 @@ export interface L08ReportResponse {
   providedIn: 'root'
 })
 export class L08Service {
-  // URLs de los servicios
-  private adapterUrl = 'http://localhost:8080/api'; // SQL Server Adapter
-  private regulatoryUrl = 'http://localhost:8085/api'; // Regulatory Service
-  private baseUrl = '/api'; // Proxy para desarrollo
+  // URLs de los servicios usando environment
+  private baseUrl = environment.backendEndpoint; // Endpoint principal del backend
+  private adapterUrl = `${environment.backendEndpoint}/adapter`; // SQL Server Adapter
+  private regulatoryUrl = `${environment.backendEndpoint}/regulatory`; // Regulatory Service
 
   constructor(private http: HttpClient) { }
 

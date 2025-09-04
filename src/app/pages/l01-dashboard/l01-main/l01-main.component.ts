@@ -18,6 +18,7 @@ import { T4Service } from '../../../services/t4.service';
 import { T73Service } from '../../../services/t73.service';
 import { T173Service } from '../../../services/t173.service';
 import { T164Service } from '../../../services/t164.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-l01-main',
@@ -141,19 +142,33 @@ export class L01MainComponent implements OnInit {
    */
   private loadResume(): void {
     this.loading = true;
+    console.log('🔄 L01 - Iniciando carga de datos...');
+    console.log('🌐 L01 - Endpoint configurado:', environment.backendEndpoint);
     
     this.l01CatalogService.getResume().subscribe({
       next: (data) => {
-        this.arrayResume = data;
+        console.log('✅ L01 - Respuesta recibida del servidor:', data);
+        console.log('📊 L01 - Tipo de datos:', typeof data);
+        console.log('📊 L01 - Es array:', Array.isArray(data));
+        console.log('📊 L01 - Cantidad de registros:', data?.length || 0);
+        
+        if (data && Array.isArray(data) && data.length > 0) {
+          console.log('🔍 L01 - Primer registro:', data[0]);
+          console.log('🔍 L01 - Estructura del primer registro:', Object.keys(data[0]));
+        }
+        
+        this.arrayResume = data || [];
         this.loading = false;
-        console.log('✅ L01 - Datos cargados exitosamente:', data.length);
-        console.log('🔍 L01 - Estructura de datos recibida:', data[0]);
-        console.log('🔍 L01 - Todos los datos:', data);
+        console.log('✅ L01 - Datos asignados al arrayResume:', this.arrayResume.length);
       },
       error: (error) => {
-        console.error('❌ L01 - Error al cargar datos:', error);
+        console.error('❌ L01 - Error completo:', error);
+        console.error('❌ L01 - Status:', error.status);
+        console.error('❌ L01 - Message:', error.message);
+        console.error('❌ L01 - URL:', error.url);
         this.loading = false;
         this.arrayResume = [];
+        this.error = `Error al cargar datos: ${error.message || error.statusText || 'Error desconocido'}`;
       }
     });
   }

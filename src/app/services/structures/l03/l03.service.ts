@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, timeout, catchError } from 'rxjs';
+import { Observable, throwError, timeout, catchError, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 export interface L03Dto {
@@ -41,20 +41,58 @@ export interface L03Dto {
 }
 
 export interface L03DetailsDto {
-  id: number;
+  // Campos idénticos a L03Dto
+  id?: number;
   codigoTipoIdentificacionEmisor: string;
-  descripcionTipoIdentificacionEmisor: string;
   codigoIdentificacionEmisor: string;
-  descripcionIdentificacionEmisor: string;
   numeroTitulo: string;
   fechaEmision: string;
   fechaCompra: string;
   codigoEstadoTitulo: string;
-  descripcionEstadoTitulo: string;
   codigoCategoriaInversion: string;
-  descripcionCategoriaInversion: string;
-  codigoRangoVencimiento: string;
-  descripcionRangoVencimiento: string;
+  codigoRangoVencimiento: number;
+  tasaInteresNominal: number;
+  montoInteresesUsd: number;
+  valorLibrosUsd: number;
+  precioMercado: number;
+  fechaValorMercado: string;
+  valorMercadoUsd: number;
+  codigoFuenteInfoMercado: string;
+  tasaRetornoTir: number;
+  valorPresenteUsd: number;
+  provisionRequerida: number;
+  provisionConstituida: number;
+  gananciasPerdidasPeriodo: number;
+  codigoCalificacionRiesgo: number;
+  codigoCategoriaCalificacion: number;
+  codigoCalificadoraRiesgo: number;
+  fechaUltimaCalificacion: string;
+  fechaLiquidacionVenta: string;
+  precioLiquidacionVenta: number;
+  valorFondoInversionUsd: number;
+  codigoFondoInversion: number;
+  codigoTipoIdentificacionCustodio: string;
+  codigoIdentificacionCustodio: string;
+  codigoCalificacionRiesgoCustodio: number;
+  codigoCalificadoraRiesgoCustodio: number;
+  codigoSubsidiaria: number;
+  
+  // Campos adicionales con descripciones para mostrar en la UI
+  descripcionTipoIdentificacionEmisor?: string;
+  descripcionIdentificacionEmisor?: string;
+  descripcionEstadoTitulo?: string;
+  descripcionCategoriaInversion?: string;
+  descripcionRangoVencimiento?: string;
+  descripcionFuenteInfoMercado?: string;
+  descripcionCalificacionRiesgo?: string;
+  descripcionCategoriaCalificacion?: string;
+  descripcionCalificadoraRiesgo?: string;
+  descripcionFondoInversion?: string;
+  descripcionTipoIdentificacionCustodio?: string;
+  descripcionIdentificacionCustodio?: string;
+  descripcionCalificacionRiesgoCustodio?: string;
+  descripcionCalificadoraRiesgoCustodio?: string;
+  descripcionSubsidiaria?: string;
 }
 
 @Injectable({
@@ -71,9 +109,9 @@ export class L03StructureService {
     return this.http.get<L03DetailsDto[]>(url);
   }
 
-  saveL03(form: any ): void{
+  saveL03(form: any ): Observable<any>{
     const formValue = form;
-    console.log('formValue: ', formValue);
+    console.log('📝 L03 - Formulario recibido:', formValue);
 
     const payload = {
       codigoTipoIdentificacionEmisor: formValue.codigoTipoIdentificacionEmisor?.id,
@@ -115,11 +153,20 @@ export class L03StructureService {
       codigoSubsidiaria: formValue.codigoSubsidiaria
     };
 
-    console.log('Payload to send:', payload);
+    console.log('📤 L03 - Payload a enviar:', payload);
+    console.log('🌐 L03 - URL:', `${this.baseUrl}/structures/l03`);
 
-    this.http.post(`${this.baseUrl}/structures/l03`, payload).subscribe({
-      next: (res) => console.log('Saved successfully', res),
-      error: (err) => console.error('Error saving', err)
-    });
+    return this.http.post(`${this.baseUrl}/structures/l03`, payload).pipe(
+      map(response => {
+        console.log('✅ L03 - Guardado exitoso:', response);
+        return response;
+      }),
+      catchError(error => {
+        console.error('❌ L03 - Error al guardar:', error);
+        console.error('❌ L03 - Status:', error.status);
+        console.error('❌ L03 - Message:', error.message);
+        throw error;
+      })
+    );
   }
 }

@@ -194,11 +194,18 @@ export class L01CatalogService {
   }
 
   getResume(): Observable<L01Resume[]> {
-    return this.http.get<L01Resume[]>(`${this.baseUrl}/structures/l01`)
+    return this.http.get<L01Resume[]>(`${this.baseUrl}/structures/l01/resume`)
       .pipe(
         catchError(error => {
           console.error('Error al obtener L01 desde API real:', error);
-          throw error;
+          // Fallback: intentar con endpoint alternativo
+          return this.http.get<L01Resume[]>(`${this.baseUrl}/structures/l01`)
+            .pipe(
+              catchError(fallbackError => {
+                console.error('Error en fallback L01:', fallbackError);
+                throw fallbackError;
+              })
+            );
         })
       );
   }
