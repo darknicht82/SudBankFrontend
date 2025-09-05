@@ -1,0 +1,326 @@
+/* ========================================
+   SISTEMA DE ESTILOS SUDBANK - ARCHIVO PRINCIPAL CONSOLIDADO
+   ======================================== */
+
+/* ========================================
+   VARIABLES CSS BASE SUDBANK
+   ======================================== */
+
+:root {
+  /* Fuente */
+  --sudbank-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  
+  /* Espaciado */
+  --sudbank-spacing-xs: 0.25rem;   /* 4px */
+  --sudbank-spacing-sm: 0.5rem;    /* 8px */
+  --sudbank-spacing-md: 1rem;      /* 16px */
+  --sudbank-spacing-lg: 1.5rem;    /* 24px */
+  --sudbank-spacing-xl: 2rem;      /* 32px */
+  --sudbank-spacing-2xl: 3rem;     /* 48px */
+  
+  /* Colores base */
+  --sudbank-gray-50: #f9fafb;
+  --sudbank-gray-100: #f3f4f6;
+  --sudbank-gray-200: #e5e7eb;
+  --sudbank-gray-300: #d1d5db;
+  --sudbank-gray-400: #9ca3af;
+  --sudbank-gray-500: #6b7280;
+  --sudbank-gray-600: #4b5563;
+  --sudbank-gray-700: #374151;
+  --sudbank-gray-800: #1f2937;
+  --sudbank-gray-900: #111827;
+  
+  /* Colores principales */
+  --sudbank-primary: #1e3a8a;
+  --sudbank-primary-dark: #1e40af;
+  --sudbank-primary-light: #3b82f6;
+  --sudbank-secondary: #0f766e;
+  --sudbank-accent: #06b6d4;
+  
+  /* Colores de estado */
+  --sudbank-success: #059669;
+  --sudbank-success-dark: #047857;
+  --sudbank-warning: #d97706;
+  --sudbank-warning-dark: #b45309;
+  --sudbank-danger: #dc2626;
+  --sudbank-danger-dark: #b91c1c;
+  --sudbank-info: #0891b2;
+  --sudbank-info-dark: #0e7490;
+  
+  /* Tipografía */
+  --sudbank-font-size-xs: 0.75rem;    /* 12px */
+  --sudbank-font-size-sm: 0.875rem;   /* 14px */
+  --sudbank-font-size-base: 1rem;     /* 16px */
+  --sudbank-font-size-lg: 1.125rem;   /* 18px */
+  --sudbank-font-size-xl: 1.25rem;    /* 20px */
+  --sudbank-font-size-2xl: 1.5rem;    /* 24px */
+  --sudbank-font-size-3xl: 1.875rem;  /* 30px */
+  --sudbank-font-size-4xl: 2.25rem;   /* 36px */
+  
+  /* Bordes */
+  --sudbank-border-radius: 0.5rem;     /* 8px */
+  --sudbank-border-radius-lg: 0.75rem; /* 12px */
+  --sudbank-border-radius-xl: 1rem;    /* 16px */
+  
+  /* Sombras */
+  --sudbank-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --sudbank-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --sudbank-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --sudbank-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --sudbank-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Transiciones */
+  --sudbank-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   ESTILOS BASE GLOBALES
+   ======================================== */
+
+body {
+  font-family: var(--sudbank-font-family);
+  font-size: var(--sudbank-font-size-base);
+  line-height: 1.6;
+  color: var(--sudbank-gray-800);
+  background-color: var(--sudbank-gray-50);
+}
+
+/* Tipografía base */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0 0 var(--sudbank-spacing-md) 0;
+  color: var(--sudbank-gray-900);
+}
+
+h1 { font-size: var(--sudbank-font-size-4xl); }
+h2 { font-size: var(--sudbank-font-size-3xl); }
+h3 { font-size: var(--sudbank-font-size-2xl); }
+h4 { font-size: var(--sudbank-font-size-xl); }
+h5 { font-size: var(--sudbank-font-size-lg); }
+h6 { font-size: var(--sudbank-font-size-base); }
+
+p {
+  margin: 0 0 var(--sudbank-spacing-md) 0;
+  line-height: 1.6;
+}
+
+a {
+  color: var(--sudbank-primary);
+  text-decoration: none;
+    transition: var(--sudbank-transition);
+}
+
+a:hover {
+  color: var(--sudbank-primary-dark);
+  text-decoration: underline;
+}
+
+/* ========================================
+   COMPONENTES BASE SUDBANK
+   ======================================== */
+
+/* Botones base */
+.btn-sudbank {
+  display: inline-flex;
+    align-items: center;
+    gap: var(--sudbank-spacing-sm);
+  padding: var(--sudbank-spacing-sm) var(--sudbank-spacing-lg);
+  border-radius: var(--sudbank-border-radius);
+    font-weight: 600;
+    font-size: var(--sudbank-font-size-sm);
+  text-decoration: none;
+    transition: var(--sudbank-transition);
+  border: 2px solid transparent;
+  cursor: pointer;
+  min-width: 120px;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-sudbank:hover {
+        transform: translateY(-1px);
+  box-shadow: var(--sudbank-shadow-md);
+}
+
+.btn-sudbank:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Variantes de botones */
+.btn-sudbank-primary {
+  background: var(--sudbank-primary);
+  color: white;
+  border-color: var(--sudbank-primary);
+}
+
+.btn-sudbank-primary:hover {
+  background: var(--sudbank-primary-dark);
+  border-color: var(--sudbank-primary-dark);
+}
+
+.btn-sudbank-success {
+  background: var(--sudbank-success);
+  color: white;
+  border-color: var(--sudbank-success);
+}
+
+.btn-sudbank-success:hover {
+  background: #047857;
+  border-color: #047857;
+}
+
+.btn-sudbank-warning {
+  background: var(--sudbank-warning);
+  color: white;
+  border-color: var(--sudbank-warning);
+}
+
+.btn-sudbank-warning:hover {
+  background: #b45309;
+  border-color: #b45309;
+}
+
+.btn-sudbank-danger {
+  background: var(--sudbank-danger);
+  color: white;
+  border-color: var(--sudbank-danger);
+}
+
+.btn-sudbank-danger:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.btn-sudbank-outline {
+  background: transparent;
+  color: var(--sudbank-primary);
+  border-color: var(--sudbank-primary);
+}
+
+.btn-sudbank-outline:hover {
+  background: var(--sudbank-primary);
+    color: white;
+}
+
+/* ========================================
+   TEMAS MODULARES SUDBANK
+   ======================================== */
+
+/* Tema L01 - Inversiones */
+.theme-l01,
+.l01-dashboard {
+  --sudbank-primary: #0f766e;
+  --sudbank-primary-dark: #0d5a52;
+  --sudbank-primary-light: #14b8a6;
+  --sudbank-secondary: #059669;
+  --sudbank-accent: #06b6d4;
+  
+  --gradient-primary: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+  --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  --gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+}
+
+/* Tema L08 - Riesgos */
+.theme-l08,
+.l08-dashboard {
+  --sudbank-primary: #dc2626;
+  --sudbank-primary-dark: #b91c1c;
+  --sudbank-primary-light: #ef4444;
+  --sudbank-secondary: #d97706;
+  --sudbank-accent: #f59e0b;
+  
+  --gradient-primary: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  --gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
+  --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+}
+
+/* ========================================
+   UTILIDADES SUDBANK
+   ======================================== */
+
+/* Espaciado */
+.m-xs { margin: var(--sudbank-spacing-xs); }
+.m-sm { margin: var(--sudbank-spacing-sm); }
+.m-md { margin: var(--sudbank-spacing-md); }
+.m-lg { margin: var(--sudbank-spacing-lg); }
+.m-xl { margin: var(--sudbank-spacing-xl); }
+
+.p-xs { padding: var(--sudbank-spacing-xs); }
+.p-sm { padding: var(--sudbank-spacing-sm); }
+.p-md { padding: var(--sudbank-spacing-md); }
+.p-lg { padding: var(--sudbank-spacing-lg); }
+.p-xl { padding: var(--sudbank-spacing-xl); }
+
+/* Espaciado vertical específico */
+.space-y-xs > * + * { margin-top: var(--sudbank-spacing-xs); }
+.space-y-sm > * + * { margin-top: var(--sudbank-spacing-sm); }
+.space-y-md > * + * { margin-top: var(--sudbank-spacing-md); }
+.space-y-lg > * + * { margin-top: var(--sudbank-spacing-lg); }
+.space-y-xl > * + * { margin-top: var(--sudbank-spacing-xl); }
+
+/* Tipografía */
+.text-xs { font-size: var(--sudbank-font-size-xs); }
+.text-sm { font-size: var(--sudbank-font-size-sm); }
+.text-base { font-size: var(--sudbank-font-size-base); }
+.text-lg { font-size: var(--sudbank-font-size-lg); }
+.text-xl { font-size: var(--sudbank-font-size-xl); }
+.text-2xl { font-size: var(--sudbank-font-size-2xl); }
+
+.font-400 { font-weight: 400; }
+.font-500 { font-weight: 500; }
+.font-600 { font-weight: 600; }
+.font-700 { font-weight: 700; }
+
+.text-primary { color: var(--sudbank-primary); }
+.text-secondary { color: var(--sudbank-secondary); }
+.text-success { color: var(--sudbank-success); }
+.text-warning { color: var(--sudbank-warning); }
+.text-danger { color: var(--sudbank-danger); }
+.text-info { color: var(--sudbank-info); }
+
+/* Layout */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-row { flex-direction: row; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+
+/* Bordes y sombras */
+.border-sm { border: 1px solid var(--sudbank-gray-200); }
+.border-md { border: 2px solid var(--sudbank-gray-300); }
+.border-lg { border: 3px solid var(--sudbank-gray-400); }
+
+.rounded-sm { border-radius: var(--sudbank-border-radius); }
+.rounded-md { border-radius: var(--sudbank-border-radius-lg); }
+.rounded-lg { border-radius: var(--sudbank-border-radius-xl); }
+
+.shadow-sm { box-shadow: var(--sudbank-shadow-sm); }
+.shadow-md { box-shadow: var(--sudbank-shadow-md); }
+.shadow-lg { box-shadow: var(--sudbank-shadow-lg); }
+.shadow-xl { box-shadow: var(--sudbank-shadow-xl); }
+
+/* ========================================
+   OVERRIDES PARA PRIMENG Y BOOTSTRAP
+   ======================================== */
+
+/* Asegurar que los estilos SudBank tengan prioridad */
+.btn-sudbank {
+  z-index: 1;
+}
+
+.theme-l01,
+.theme-l08,
+.theme-l06,
+.theme-b,
+.theme-r,
+.theme-t {
+  z-index: 1;
+}
