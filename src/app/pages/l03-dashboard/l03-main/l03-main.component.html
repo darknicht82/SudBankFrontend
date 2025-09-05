@@ -89,10 +89,6 @@
             <th>Estado del Título</th>
             <th>Categoría de Inversión</th>
             <th>Rango de Vencimiento</th>
-            <th>Tasa de Interés</th>
-            <th>Valor en Libros USD</th>
-            <th>Valor de Mercado USD</th>
-            <th>Calificación de Riesgo</th>
           </tr>
         </thead>
         <tbody>
@@ -120,18 +116,6 @@
             </td>
             <td class="data-cell">
               <span class="cell-value">{{ item.descripcionRangoVencimiento }}</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">{{ item.tasaInteresNominal | percent:'1.2-4' || '-' }}</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">{{ item.valorLibrosUsd | currency:'USD':'symbol':'1.2-2' || '-' }}</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">{{ item.valorMercadoUsd | currency:'USD':'symbol':'1.2-2' || '-' }}</span>
-            </td>
-            <td class="data-cell">
-              <span class="cell-value">{{ item.descripcionCalificacionRiesgo || '-' }}</span>
             </td>
           </tr>
         </tbody>
