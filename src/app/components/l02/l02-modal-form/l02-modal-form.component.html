@@ -1,7 +1,7 @@
 <!-- Modal del Formulario L02 -->
 <div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
   <div class="modal" (click)="$event.stopPropagation()">
-    
+
     <!-- Header -->
     <div class="modal-header">
       <div class="header-content">
@@ -23,10 +23,7 @@
           <!-- Tipo Identificación -->
           <div class="col-md-6">
             <label for="tipoIdentificacion" class="form-label">Tipo de Identificación</label>
-            <select 
-              id="tipoIdentificacion" 
-              class="form-select"
-              formControlName="tipoIdentificacion">
+            <select id="tipoIdentificacion" class="form-select" formControlName="tipoIdentificacion">
               <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
               <option *ngFor="let item of arrayTipoIdentificacion" [ngValue]="item">
                 {{ item.descripcion }}
@@ -40,10 +37,7 @@
           <!-- identificacionEmisor -->
           <div class="col-md-6">
             <label for="identificacionEmisor" class="form-label">Identificación del emisor</label>
-            <select 
-              id="identificacionEmisor" 
-              class="form-select"
-              formControlName="identificacionEmisor">
+            <select id="identificacionEmisor" class="form-select" formControlName="identificacionEmisor">
               <option [ngValue]="null" disabled selected>Seleccione una identificación</option>
               <option *ngFor="let item of arrayIdentificacionEmisor" [ngValue]="item">
                 {{ item.descripcion }}
@@ -107,10 +101,7 @@
           <!-- Código del instrumento -->
           <div class="col-md-6">
             <label for="codigoInstrumento" class="form-label">Código del Instrumento</label>
-            <select 
-              id="codigoInstrumento" 
-              class="form-select"
-              formControlName="codigoInstrumento">
+            <select id="codigoInstrumento" class="form-select" formControlName="codigoInstrumento">
               <option [ngValue]="null" disabled selected>Seleccione un código</option>
               <option *ngFor="let item of arrayCodigoIdentifadorInstrumento" [ngValue]="item">
                 {{ item.descripcion }}
@@ -124,7 +115,8 @@
           <!-- Identificacion del instrumento -->
           <div class="col-md-6">
             <label for="identificacionInstrumento" class="form-label">Identificación del Instrumento</label>
-            <input type="text" id="identificacionInstrumento" class="form-control" formControlName="identificacionInstrumento" />
+            <input type="text" id="identificacionInstrumento" class="form-control"
+              formControlName="identificacionInstrumento" />
             <div *ngIf="isInvalid('identificacionInstrumento')" class="text-danger small mt-1">
               La identificación del instrumento es obligatorio
             </div>
@@ -133,10 +125,7 @@
           <!-- Categoria del instrumento -->
           <div class="col-md-6">
             <label for="categoriaInstrumento" class="form-label">Categoría del Instrumento</label>
-            <select 
-              id="categoriaInstrumento" 
-              class="form-select"
-              formControlName="categoriaInstrumento">
+            <select id="categoriaInstrumento" class="form-select" formControlName="categoriaInstrumento">
               <option [ngValue]="null" disabled selected>Seleccione una categoría</option>
               <option *ngFor="let item of arrayCategoriaInstrumento" [ngValue]="item">
                 {{ item.descripcion }}
@@ -150,10 +139,7 @@
           <!-- Tipo del instrumento -->
           <div class="col-md-6">
             <label for="tipoInstrumento" class="form-label">Tipo de Instrumento</label>
-            <select 
-              id="tipoInstrumento" 
-              class="form-select"
-              formControlName="tipoInstrumento">
+            <select id="tipoInstrumento" class="form-select" formControlName="tipoInstrumento">
               <option [ngValue]="null" disabled selected>Seleccione una tipo</option>
               <option *ngFor="let item of arrayTipoInstrumento" [ngValue]="item">
                 {{ item.descripcion }}
@@ -167,10 +153,7 @@
           <!-- Opcionalidad -->
           <div class="col-md-6">
             <label for="opcionalidad" class="form-label">Opcionalidad</label>
-            <select 
-              id="opcionalidad" 
-              class="form-select"
-              formControlName="opcionalidad">
+            <select id="opcionalidad" class="form-select" formControlName="opcionalidad">
               <option [ngValue]="null" disabled selected>Seleccione una opcionalidad</option>
               <option *ngFor="let item of arrayOpcionalidad" [ngValue]="item">
                 {{ item.descripcion }}
@@ -188,10 +171,7 @@
           <!-- Tasa Base -->
           <div class="col-md-6">
             <label for="tasaBase" class="form-label">Tasa base</label>
-            <select 
-              id="tasaBase" 
-              class="form-select"
-              formControlName="tasaBase">
+            <select id="tasaBase" class="form-select" formControlName="tasaBase">
               <option [ngValue]="null" disabled selected>Seleccione una tasa base</option>
               <option *ngFor="let item of arrayTasaBase" [ngValue]="item">
                 {{ item.descripcion }}
@@ -212,10 +192,7 @@
 
           <div class="col-md-6">
             <label for="tipoTasa" class="form-label">Tipo de tasa</label>
-            <select 
-              id="tipoTasa" 
-              class="form-select"
-              formControlName="tipoTasa">
+            <select id="tipoTasa" class="form-select" formControlName="tipoTasa">
               <option [ngValue]="null" disabled selected>Seleccione un tipo de tasa</option>
               <option *ngFor="let item of arrayTipoTasa" [ngValue]="item">
                 {{ item.descripcion }}
@@ -228,10 +205,7 @@
 
           <div class="col-md-6">
             <label for="moneda" class="form-label">Moneda de denominación</label>
-            <select 
-              id="moneda" 
-              class="form-select"
-              formControlName="moneda">
+            <select id="moneda" class="form-select" formControlName="moneda">
               <option [ngValue]="null" disabled selected>Seleccione una moneda</option>
               <option *ngFor="let item of arrayMonedaDenominacion" [ngValue]="item">
                 {{ item.descripcion }}
@@ -252,7 +226,8 @@
 
           <div class="col-md-6">
             <label for="valorNominalDenominacion" class="form-label">Valor Nominal en moneda de denominación</label>
-            <input type="number" id="valorNominalDenominacion" class="form-control" formControlName="valorNominalDenominacion" />
+            <input type="number" id="valorNominalDenominacion" class="form-control"
+              formControlName="valorNominalDenominacion" />
             <div *ngIf="isInvalid('valorNominalDenominacion')" class="text-danger small mt-1">
               Ingrese un valor válido (mayor a 0)
             </div>
@@ -280,7 +255,8 @@
 
           <div class="col-md-6">
             <label for="valorCompraDenominacion" class="form-label">Valor de compra en moneda de denominación</label>
-            <input type="number" id="valorCompraDenominacion" class="form-control" formControlName="valorCompraDenominacion" />
+            <input type="number" id="valorCompraDenominacion" class="form-control"
+              formControlName="valorCompraDenominacion" />
             <div *ngIf="isInvalid('valorCompraDenominacion')" class="text-danger small mt-1">
               Ingrese un valor válido (mayor a 0)
             </div>
