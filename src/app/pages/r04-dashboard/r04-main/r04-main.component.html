@@ -13,21 +13,22 @@
                 <h3>📋 Información de la Estructura R04</h3>
             </div>
             <div class="card-content">
-                <p><strong>Descripción:</strong> Si un título que salió del portafolio de la entidad es adquirido o
-                    reingresado nuevamente en otro mes, debe volverse a reportar con la nueva fecha de compra.</p>
-                <p><strong>Periodicidad:</strong> Mensual </p>
-                <p><strong>Plazo entrega:</strong> Según requerimientos de la SB</p>
+                <p><strong>Descripción:</strong> Contiene los saldos de todas las operaciones crediticias activas y contingentes que se encuentren registradas en el balance de la entidad financiera a la fecha de corte. Incluye el detalle de operaciones por vencer, vencidas, y en diferentes rangos de morosidad.</p>
+                <p><strong>Periodicidad:</strong> Mensual (M)</p>
+                <p><strong>Plazo entrega:</strong> Según requerimientos de la Superintendencia de Bancos</p>
                 <p><strong>Código Banco:</strong> 1038</p>
                 <p><strong>Formato archivo:</strong> r04Exxxxddmmaaaa.txt</p>
-                <p><strong>Fuente:</strong> Manual de Control de Inversiones - SB Marzo 2017</p>
+                <p><strong>Fuente:</strong> Manual Técnico de Estructuras de Datos de Operaciones Activas y Contingentes - Versión 13.0 - 27/09/2023</p>
 
                 <div class="requirements">
                     <strong>Requisitos:</strong>
                     <ul>
-                        <li>Estructura eventual (no mensual)</li>
-                        <li>4 campos oficiales obligatorios</li>
+                        <li>Estructura mensual obligatoria</li>
+                        <li>50 campos oficiales (12 obligatorios, 38 opcionales)</li>
                         <li>Formato TXT con separador tabulador</li>
                         <li>Validaciones según manual SB</li>
+                        <li>Reporte de saldos por vencer y vencidos</li>
+                        <li>Clasificación por rangos de morosidad</li>
                     </ul>
                 </div>
 
@@ -49,23 +50,19 @@
                 <div class="summary-grid">
                     <div class="summary-item">
                         <label>Total Registros:</label>
-                        <span>{{ 20 }}</span>
+                        <span>{{ getTotalRegistros() }}</span>
                     </div>
                     <div class="summary-item">
                         <label>Fecha Generación:</label>
-                        <span> 2025/08/20 </span>
+                        <span>{{ getFechaGeneracion() }}</span>
                     </div>
                     <div class="summary-item">
-                        <label>Emisores:</label>
-                        <span>{{ 20 }}</span>
+                        <label>Emisores Únicos:</label>
+                        <span>{{ getTotalEmisores() }}</span>
                     </div>
                     <div class="summary-item">
-                        <label>Custodios:</label>
-                        <span>{{ 20 }}</span>
-                    </div>
-                    <div class="summary-item">
-                        <label>Depositarios:</label>
-                        <span>{{ 20 }}</span>
+                        <label>Operaciones Activas:</label>
+                        <span>{{ getTotalRegistros() }}</span>
                     </div>
                 </div>
             </div>
@@ -77,24 +74,24 @@
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>
-                            Tipo de Identificación
-                        </th>
-                        <th>
-                            Identificación del sujeto
-                        </th>
-                        <th>
-                            Número de operación
-                        </th>
-                        <th>
-                            Días de morosidad
-                        </th>
+                        <th>Tipo Identificación</th>
+                        <th>Identificación Sujeto</th>
+                        <th>Número Operación</th>
+                        <th>Días Morosidad</th>
+                        <th>Calificación Propia</th>
+                        <th>Tasa Interés</th>
+                        <th>Valor Vencido 1-30</th>
+                        <th>Valor Vencido 31-90</th>
+                        <th>Provisión Constituida</th>
+                        <th>Tipo Operación</th>
+                        <th>Fecha Exigibilidad Cuota</th>
+                        <th>Tipo Sistema Amortización</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of arrayResume">
                         <td class="data-cell">
-                            <span class="cell-value">{{ item.codigoTipoIdentificacion.description }}</span>
+                            <span class="cell-value">{{ getTipoIdentificacionDesc(item.tipoIdentificacion?.codigo) }}</span>
                         </td>
                         <td class="data-cell">
                             <span class="cell-value">{{ item.identificacionSujeto }}</span>
@@ -104,6 +101,30 @@
                         </td>
                         <td class="data-cell">
                             <span class="cell-value">{{ item.diasMorosidad }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ getCalificacionDesc(item.calificacionPropia?.codigo) }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.tasaInteres | percent:'1.2-2' }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.valorVencido1a30 | currency:'USD':'symbol':'1.2-2' }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.valorVencido31a90 | currency:'USD':'symbol':'1.2-2' }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.provisionConstituida | currency:'USD':'symbol':'1.2-2' }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ getTipoOperacionDesc(item.tipoOperacion?.codigo) }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.fechaExigibilidadCuota | date:'dd/MM/yyyy' }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ getTipoSistemaAmortizacionDesc(item.tipoSistemaAmortizacion?.codigo) }}</span>
                         </td>
                     </tr>
                 </tbody>

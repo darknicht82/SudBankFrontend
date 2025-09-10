@@ -1,18 +1,9 @@
 /**
- * TOOLTIPS Y GLOSARIO DE CAMPOS R04
- * Manual Técnico Control de Inversiones v3.0 - Marzo 2017
- * Superintendencia de Bancos del Ecuador
+ * TOOLTIPS Y GLOSARIO DE CAMPOS R04 - SALDOS DE OPERACIONES
+ * Manual Técnico de Estructuras de Datos de Operaciones Activas y Contingentes
+ * Superintendencia de Bancos del Ecuador - Versión 13.0 - 27/09/2023
  */
 
-// export interface R04FieldTooltip {
-//   field: string;
-//   title: string;
-//   description: string;
-//   source: string;
-//   example: string;
-//   format: string;
-//   validation: string;
-// }
 export interface R04FieldTooltip {
   no: number;
   campo: string;
@@ -25,196 +16,744 @@ export interface R04FieldTooltip {
 export const R04_FIELD_TOOLTIPS: R04FieldTooltip[] = [
   {
     "no": 1,
-    "campo": "Tipo de identificación del emisor",
-    "tipoDeDato": "caracter (1)",
+    "campo": "Tipo de identificación",
+    "tipoDeDato": "Caracter (1)",
     "obligatoriedad": "X",
     "tabla": "4",
-    "descripcion": "Se refiere al tipo de documento de identificación del sujeto, puede ser “C”, “R” o “E”."
+    "descripcion": "Tipo de documento de identificación del sujeto de riesgo. Valores: C=Cédula, R=RUC, E=Extranjero, P=Pasaporte."
   },
   {
     "no": 2,
-    "campo": "Identificación del emisor",
-    "tipoDeDato": "caracter (13)",
+    "campo": "Identificación del sujeto",
+    "tipoDeDato": "Caracter (13)",
     "obligatoriedad": "X",
-    "tabla": "164",
-    "descripcion": "Corresponde al número de identificación del emisor. Para emisores nacionales será el número de RUC; para emisores del exterior la identificación se reportará conforme a la tabla No. 164, publicada por la Superintendencia de Bancos y Seguros en la página web"
+    "tabla": "",
+    "descripcion": "Número de identificación del sujeto de riesgo. Para nacionales: RUC de 13 dígitos. Para extranjeros: número de identificación según país de origen."
   },
   {
     "no": 3,
-    "campo": "Número de título",
-    "tipoDeDato": "caracter (20)",
+    "campo": "Número de operación",
+    "tipoDeDato": "Caracter (32)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Corresponde a la numeración asignada por el emisor."
+    "descripcion": "Número único que identifica la operación crediticia en el sistema de la entidad financiera."
   },
   {
     "no": 4,
-    "campo": "Fecha de emisión",
-    "tipoDeDato": "dd/mm/aaaa",
+    "campo": "Días de morosidad",
+    "tipoDeDato": "Numérico (5)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Es la fecha en la que se crea la operación. Si es un bono, ésta será la fecha de emisión de dicho bono. Si es un derivado, esta fecha será la fecha de contratación de la operación. Si se trata de cuotas de participación en fondos de inversión, se deberá informar como fecha de emisión, la fecha de compra o la fecha de posición. "
+    "descripcion": "Número de días transcurridos desde la fecha de vencimiento de la cuota hasta la fecha de corte. Si la operación está al día, registrar 0."
   },
   {
     "no": 5,
-    "campo": "Fecha de compra",
-    "tipoDeDato": "dd/mm/aaaa",
+    "campo": "Metodología de calificación",
+    "tipoDeDato": "Caracter (1)",
     "obligatoriedad": "X",
-    "tabla": "",
-    "descripcion": "También conocida como fecha valor. Es la “fecha de negociación”, esto es la fecha en la que se asumen las obligaciones recíprocas que deben consumarse dentro del plazo establecido por las regulaciones y usos del mercado en el que se efectúe la operación."
+    "tabla": "218",
+    "descripcion": "Metodología utilizada para calificar el riesgo de la operación. Valores según tabla 218."
   },
   {
     "no": 6,
-    "campo": "Fecha de vencimiento",
-    "tipoDeDato": "dd/mm/aaaa",
+    "campo": "Calificación propia",
+    "tipoDeDato": "Caracter (2)",
     "obligatoriedad": "X",
-    "tabla": "",
-    "descripcion": "Es la fecha en la que la operación sale de los libros de la entidad. Para el caso de operaciones de balance, por ejemplo bonos o depósitos interbancarios, esta será la fecha de pago del principal. En el caso de instrumentos de inversión sin plazo de vencimiento (perpetuos) se incluirá la fecha de compra."
+    "tabla": "29",
+    "descripcion": "Calificación de riesgo asignada por la entidad financiera según su metodología interna. Valores según tabla 29."
   },
   {
     "no": 7,
-    "campo": "Código identificador del instrumento",
-    "tipoDeDato": "caracter (2)",
-    "obligatoriedad": "X",
-    "tabla": "165",
-    "descripcion": "Referencia tabla 165. Corresponde al tipo de identificador del instrumento de inversión"
+    "campo": "Calificación homologada",
+    "tipoDeDato": "Caracter (2)",
+    "obligatoriedad": "X*",
+    "tabla": "29",
+    "descripcion": "Calificación homologada por la Superintendencia de Bancos. Obligatoria cuando existe. Valores según tabla 29."
   },
   {
     "no": 8,
-    "campo": "Identificación del instrumento",
-    "tipoDeDato": "caracter (20)",
+    "campo": "Tasa de interés",
+    "tipoDeDato": "Numérico (4,2)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Corresponde al número de identificación asignado al instrumento de inversión según el sistema de codificación reportado en la tabla 165, “Código identificador del instrumento”"
+    "descripcion": "Tasa de interés nominal anual aplicada a la operación, expresada en porcentaje (ej: 12.50)."
   },
   {
     "no": 9,
-    "campo": "Categoría del instrumento",
-    "tipoDeDato": "caracter (1)",
+    "campo": "Valor por vencer de 1 a 30 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
-    "tabla": "166",
-    "descripcion": " Identifica la categoría a la que corresponde el instrumento de inversión."
+    "tabla": "",
+    "descripcion": "Valor de capital e intereses que vencen entre 1 y 30 días desde la fecha de corte."
   },
   {
     "no": 10,
-    "campo": "Tipo de instrumento",
-    "tipoDeDato": "numérico (2)",
+    "campo": "Valor por vencer de 31 a 90 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
-    "tabla": "62-A",
-    "descripcion": "Se identifica el tipo de inversión realizada por la institución financiera."
+    "tabla": "",
+    "descripcion": "Valor de capital e intereses que vencen entre 31 y 90 días desde la fecha de corte."
   },
   {
     "no": 11,
-    "campo": "Opcionalidad",
-    "tipoDeDato": "caracter (1)",
+    "campo": "Valor por vencer de 91 a 180 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
-    "tabla": "167",
-    "descripcion": "En este campo se indicará si el instrumento de inversión tiene o no una opción asociada."
+    "tabla": "",
+    "descripcion": "Valor de capital e intereses que vencen entre 91 y 180 días desde la fecha de corte."
   },
   {
     "no": 12,
-    "campo": "Tasa base",
-    "tipoDeDato": "numérico (1)",
-    "obligatoriedad": "X*",
-    "tabla": "64",
-    "descripcion": "Se trata de la curva de tasas de interés de referencia que se asocia con el mercado de la operación. "
+    "campo": "Valor por vencer de 181 a 360 días",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor de capital e intereses que vencen entre 181 y 360 días desde la fecha de corte."
   },
   {
     "no": 13,
-    "campo": "Diferencial de revisión",
-    "tipoDeDato": "numérico (5)",
+    "campo": "Valor por vencer de más de 360 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Son los puntos básicos a añadir a la tasa de la curva de referencia, con los que se calculará la nueva tasa de interés a aplicar a la operación"
+    "descripcion": "Valor de capital e intereses que vencen después de 360 días desde la fecha de corte."
   },
   {
     "no": 14,
-    "campo": "Tipo de tasa",
-    "tipoDeDato": "caracter (1)",
+    "campo": "Valor que no devenga intereses de 1 a 30 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
-    "tabla": "168",
-    "descripcion": "Para instrumentos de deuda, indicar “C” si es un instrumento cero cupón, 'F' si es un instrumento de tasa fija, o 'V', si es un instrumento con cupones de tasa variable. Para instrumentos de capital el campo deberá ser reportado NULO."
+    "tabla": "",
+    "descripcion": "Valor de capital que no devenga intereses y vence entre 1 y 30 días desde la fecha de corte."
   },
   {
     "no": 15,
-    "campo": "Moneda de denominación",
-    "tipoDeDato": "caracter (3)",
+    "campo": "Valor que no devenga intereses de 31 a 90 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
-    "tabla": "33",
-    "descripcion": "Se refiere a la moneda en la cual está denominado el instrumento de inversión. "
+    "tabla": "",
+    "descripcion": "Valor de capital que no devenga intereses y vence entre 31 y 90 días desde la fecha de corte."
   },
   {
     "no": 16,
-    "campo": "Unidades adquiridas",
-    "tipoDeDato": "numérico (15)",
+    "campo": "Valor que no devenga intereses de 91 a 180 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Corresponde a la cantidad de títulos o cuotas de participación negociadas."
+    "descripcion": "Valor de capital que no devenga intereses y vence entre 91 y 180 días desde la fecha de corte."
   },
   {
     "no": 17,
-    "campo": "Valor nominal en moneda de denominación",
-    "tipoDeDato": "numérico (15,2)",
+    "campo": "Valor que no devenga intereses de 181 a 360 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Es el valor nominal o facial del instrumento reportado, en su moneda de denominación"
+    "descripcion": "Valor de capital que no devenga intereses y vence entre 181 y 360 días desde la fecha de corte."
   },
   {
     "no": 18,
-    "campo": "Valor nominal en dólares",
-    "tipoDeDato": "numérico (15,2)",
+    "campo": "Valor que no devenga intereses de más de 360 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Es el valor nominal o facial del instrumento expresado en su importe equivalente en dólares. En el caso de cuotas en fondos administrados incluir el valor de cierre (NAV) a la fecha de compra."
+    "descripcion": "Valor de capital que no devenga intereses y vence después de 360 días desde la fecha de corte."
   },
   {
     "no": 19,
-    "campo": "Precio de compra",
-    "tipoDeDato": "numérico (1,5)",
+    "campo": "Valor vencido de 1 a 30 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Es la cotización a la que se adquirió el título. Debe ser reportado en formato numérico y no porcentual, por ejemplo.- un precio del 98.5% debe reportarse en este campo como 0.9850 y un precio del 101.3%, debe reportarse en este campo como 1.0130"
+    "descripcion": "Valor vencido entre 1 y 30 días desde la fecha de corte."
   },
   {
     "no": 20,
-    "campo": "Valor de compra en moneda de denominación",
-    "tipoDeDato": "numérico (15,2)",
+    "campo": "Valor vencido de 31 a 90 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Es el valor de adquisición del instrumento en la moneda original negociada. "
+    "descripcion": "Valor vencido entre 31 y 90 días desde la fecha de corte."
   },
   {
     "no": 21,
-    "campo": "Valor de compra en dólares",
-    "tipoDeDato": "numérico (15,2)",
+    "campo": "Valor vencido de 91 a 180 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Es el valor de adquisición del instrumento expresado en el importe equivalente en dólares"
+    "descripcion": "Valor vencido entre 91 y 180 días desde la fecha de corte."
   },
   {
     "no": 22,
-    "campo": "Frecuencia de revisión",
-    "tipoDeDato": "numérico (5)",
+    "campo": "Valor vencido de 181 a 360 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Indica la frecuencia o periodicidad con la cual se modifican las tasas de interés. Este campo se expresa en número de días. Si no existe frecuencia de revisión (tasa fija) o se trata de instrumentos representativos de capital, registrar en este campo el valor cero (0)."
+    "descripcion": "Valor vencido entre 181 y 360 días desde la fecha de corte."
   },
   {
     "no": 23,
-    "campo": "Periodicidad de pago de cupón",
-    "tipoDeDato": "numérico (3)",
+    "campo": "Valor vencido de más de 360 días",
+    "tipoDeDato": "Numérico (15,2)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Corresponde al período contractual de cobro de los rendimientos generados por el instrumento de inversión, expresado en número días. En caso de instrumentos cero cupón y aquellos representativos de capital se deberá hacer constar el valor cero (0) "
+    "descripcion": "Valor vencido después de 360 días desde la fecha de corte."
+  },
+  {
+    "no": 24,
+    "campo": "Valor vencido de 181 a 270 días",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor vencido entre 181 y 270 días desde la fecha de corte."
+  },
+  {
+    "no": 25,
+    "campo": "Valor vencido de más de 270 días",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor vencido después de 270 días desde la fecha de corte."
+  },
+  {
+    "no": 26,
+    "campo": "Valor vencido De 91 a 270 días",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor vencido entre 91 y 270 días desde la fecha de corte."
+  },
+  {
+    "no": 27,
+    "campo": "Valor vencido de 271 a 360 días",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor vencido entre 271 y 360 días desde la fecha de corte."
+  },
+  {
+    "no": 28,
+    "campo": "Valor vencido de 361 a 720 días",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor vencido entre 361 y 720 días desde la fecha de corte."
+  },
+  {
+    "no": 29,
+    "campo": "Valor vencido de más de 720 días",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor vencido después de 720 días desde la fecha de corte."
+  },
+  {
+    "no": 30,
+    "campo": "Gastos de recuperación de cartera vencida",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Gastos incurridos en la recuperación de cartera vencida."
+  },
+  {
+    "no": 31,
+    "campo": "Interés ordinario",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Intereses ordinarios devengados y no pagados."
+  },
+  {
+    "no": 32,
+    "campo": "Interés sobre mora",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Intereses de mora devengados y no pagados."
+  },
+  {
+    "no": 33,
+    "campo": "Valor en demanda judicial",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor de la operación que se encuentra en proceso judicial."
+  },
+  {
+    "no": 34,
+    "campo": "Cartera castigada",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor de la cartera que ha sido castigada por la entidad."
+  },
+  {
+    "no": 35,
+    "campo": "Provisión requerida original",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Provisión requerida originalmente según normativa vigente."
+  },
+  {
+    "no": 36,
+    "campo": "Provisión requerida reducida",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X*",
+    "tabla": "",
+    "descripcion": "Provisión requerida reducida por garantías o avales. Obligatoria cuando aplica."
+  },
+  {
+    "no": 37,
+    "campo": "Provisión constituida",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Provisión efectivamente constituida por la entidad."
+  },
+  {
+    "no": 38,
+    "campo": "Tipo de operación",
+    "tipoDeDato": "Caracter (3)",
+    "obligatoriedad": "X",
+    "tabla": "35",
+    "descripcion": "Tipo de operación crediticia según clasificación de la entidad. Valores según tabla 35."
+  },
+  {
+    "no": 39,
+    "campo": "Objeto del fideicomiso",
+    "tipoDeDato": "Caracter (1)",
+    "obligatoriedad": "X*",
+    "tabla": "55",
+    "descripcion": "Objeto del fideicomiso cuando aplica. Obligatorio para operaciones fiduciarias. Valores según tabla 55."
+  },
+  {
+    "no": 40,
+    "campo": "Prima o descuento",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Prima o descuento aplicado a la operación."
+  },
+  {
+    "no": 41,
+    "campo": "Cuota del crédito",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor de la cuota del crédito."
+  },
+  {
+    "no": 42,
+    "campo": "Valor de Intereses de la Cuota del Crédito",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor de los intereses incluidos en la cuota del crédito."
+  },
+  {
+    "no": 43,
+    "campo": "Valor del Seguro",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor del seguro asociado a la operación."
+  },
+  {
+    "no": 44,
+    "campo": "Saldo de la cuota de capital diferida",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Saldo de capital diferido en la cuota."
+  },
+  {
+    "no": 45,
+    "campo": "Valor del interés de capital diferido",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor de los intereses del capital diferido."
+  },
+  {
+    "no": 46,
+    "campo": "Fecha de transferencia a cuentas vencidas",
+    "tipoDeDato": "Fecha (dd/mm/aaaa)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Fecha en que la operación fue transferida a cuentas vencidas."
+  },
+  {
+    "no": 47,
+    "campo": "Intereses acumulados por cobrar",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X*",
+    "tabla": "",
+    "descripcion": "Intereses acumulados por cobrar. Obligatorio cuando aplica."
+  },
+  {
+    "no": 48,
+    "campo": "Intereses reversados",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X*",
+    "tabla": "",
+    "descripcion": "Intereses que han sido reversados. Obligatorio cuando aplica."
+  },
+  {
+    "no": 49,
+    "campo": "Fecha de exigibilidad de la cuota",
+    "tipoDeDato": "Fecha (dd/mm/aaaa)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Fecha en que la cuota se vuelve exigible."
+  },
+  {
+    "no": 50,
+    "campo": "Tipo de sistema de amortización",
+    "tipoDeDato": "Caracter (2)",
+    "obligatoriedad": "X",
+    "tabla": "317",
+    "descripcion": "Tipo de sistema de amortización aplicado a la operación. Valores según tabla 317."
   }
-]
-;
+];
+
+/**
+ * Información estructural de R04 - SALDOS DE OPERACIONES
+ */
+export const R04_STRUCTURE_INFO = {
+  title: 'Estructura R04 - Saldos de Operaciones',
+  description: 'Contiene los saldos de todas las operaciones crediticias activas y contingentes que se encuentren registradas en el balance de la entidad financiera a la fecha de corte. Incluye el detalle de operaciones por vencer, vencidas, y en diferentes rangos de morosidad.',
+  periodicity: 'Mensual (M)',
+  deadline: 'Según requerimientos de la Superintendencia de Bancos',
+  source: 'Manual Técnico de Estructuras de Datos de Operaciones Activas y Contingentes - Versión 13.0 - 27/09/2023',
+  bankCode: '1038 - Banco Sudamericano',
+  fileFormat: 'r04Exxxxddmmaaaa.txt',
+  requirements: {
+    "table": "R04 - Saldos de Operaciones",
+    "requisites": {
+      "scope": [
+        "Incluir todas las operaciones crediticias activas y contingentes",
+        "Reportar saldos por vencer y vencidos según rangos de tiempo",
+        "Incluir operaciones en diferentes estados de morosidad"
+      ],
+      "preconditions": [
+        "La operación debe estar registrada en el sistema de la entidad",
+        "Debe tener saldo pendiente a la fecha de corte"
+      ],
+      "fieldRules": [
+        "Todos los campos numéricos deben expresarse en dólares",
+        "Las fechas deben seguir el formato dd/mm/aaaa",
+        "Los códigos deben corresponder a las tablas de referencia"
+      ]
+    }
+  },
+  fields: [
+    {
+      position: 1,
+      name: 'Tipo de identificación',
+      description: 'Tipo de documento del sujeto de riesgo',
+      table: 'Tabla 4'
+    },
+    {
+      position: 2,
+      name: 'Identificación del sujeto',
+      description: 'Número de identificación del sujeto',
+      table: 'Sin tabla'
+    },
+    {
+      position: 3,
+      name: 'Número de operación',
+      description: 'Identificador único de la operación',
+      table: 'Sin tabla'
+    },
+    {
+      position: 4,
+      name: 'Días de morosidad',
+      description: 'Días transcurridos desde el vencimiento',
+      table: 'Sin tabla'
+    },
+    {
+      position: 5,
+      name: 'Metodología de calificación',
+      description: 'Metodología utilizada para calificar el riesgo',
+      table: 'Tabla 218'
+    },
+    {
+      position: 6,
+      name: 'Calificación propia',
+      description: 'Calificación de riesgo asignada por la entidad',
+      table: 'Tabla 29'
+    },
+    {
+      position: 7,
+      name: 'Calificación homologada',
+      description: 'Calificación homologada por la Superintendencia de Bancos',
+      table: 'Tabla 29'
+    },
+    {
+      position: 8,
+      name: 'Tasa de interés',
+      description: 'Tasa de interés nominal anual aplicada a la operación',
+      table: 'Sin tabla'
+    },
+    {
+      position: 9,
+      name: 'Valor por vencer de 1 a 30 días',
+      description: 'Valor de capital e intereses que vencen entre 1 y 30 días',
+      table: 'Sin tabla'
+    },
+    {
+      position: 10,
+      name: 'Valor por vencer de 31 a 90 días',
+      description: 'Valor de capital e intereses que vencen entre 31 y 90 días',
+      table: 'Sin tabla'
+    },
+    {
+      position: 11,
+      name: 'Valor por vencer de 91 a 180 días',
+      description: 'Valor de capital e intereses que vencen entre 91 y 180 días',
+      table: 'Sin tabla'
+    },
+    {
+      position: 12,
+      name: 'Valor por vencer de 181 a 360 días',
+      description: 'Valor de capital e intereses que vencen entre 181 y 360 días',
+      table: 'Sin tabla'
+    },
+    {
+      position: 13,
+      name: 'Valor por vencer de más de 360 días',
+      description: 'Valor de capital e intereses que vencen después de 360 días',
+      table: 'Sin tabla'
+    },
+    {
+      position: 14,
+      name: 'Valor que no devenga intereses de 1 a 30 días',
+      description: 'Valor de capital que no devenga intereses de 1 a 30 días',
+      table: 'Sin tabla'
+    },
+    {
+      position: 15,
+      name: 'Valor que no devenga intereses de 31 a 90 días',
+      description: 'Valor de capital que no devenga intereses de 31 a 90 días',
+      table: 'Sin tabla'
+    },
+    {
+      position: 16,
+      name: 'Valor que no devenga intereses de 91 a 180 días',
+      description: 'Valor de capital que no devenga intereses de 91 a 180 días',
+      table: 'Sin tabla'
+    },
+    {
+      position: 17,
+      name: 'Valor que no devenga intereses de 181 a 360 días',
+      description: 'Valor de capital que no devenga intereses de 181 a 360 días',
+      table: 'Sin tabla'
+    },
+    {
+      position: 18,
+      name: 'Valor que no devenga intereses de más de 360 días',
+      description: 'Valor de capital que no devenga intereses de más de 360 días',
+      table: 'Sin tabla'
+    },
+    {
+      position: 19,
+      name: 'Valor vencido de 1 a 30 días',
+      description: 'Valor vencido entre 1 y 30 días desde la fecha de corte',
+      table: 'Sin tabla'
+    },
+    {
+      position: 20,
+      name: 'Valor vencido de 31 a 90 días',
+      description: 'Valor vencido entre 31 y 90 días desde la fecha de corte',
+      table: 'Sin tabla'
+    },
+    {
+      position: 21,
+      name: 'Valor vencido de 91 a 180 días',
+      description: 'Valor vencido entre 91 y 180 días desde la fecha de corte',
+      table: 'Sin tabla'
+    },
+    {
+      position: 22,
+      name: 'Valor vencido de 181 a 360 días',
+      description: 'Valor vencido entre 181 y 360 días desde la fecha de corte',
+      table: 'Sin tabla'
+    },
+    {
+      position: 23,
+      name: 'Valor vencido de más de 360 días',
+      description: 'Valor vencido después de 360 días desde la fecha de corte',
+      table: 'Sin tabla'
+    },
+    {
+      position: 24,
+      name: 'Valor vencido de 181 a 270 días',
+      description: 'Valor vencido entre 181 y 270 días desde la fecha de corte',
+      table: 'Sin tabla'
+    },
+    {
+      position: 25,
+      name: 'Valor vencido de más de 270 días',
+      description: 'Valor vencido después de 270 días desde la fecha de corte',
+      table: 'Sin tabla'
+    },
+    {
+      position: 26,
+      name: 'Valor vencido de 91 a 270 días',
+      description: 'Valor vencido entre 91 y 270 días desde la fecha de corte',
+      table: 'Sin tabla'
+    },
+    {
+      position: 27,
+      name: 'Valor vencido de 271 a 360 días',
+      description: 'Valor vencido entre 271 y 360 días desde la fecha de corte',
+      table: 'Sin tabla'
+    },
+    {
+      position: 28,
+      name: 'Valor vencido de 361 a 720 días',
+      description: 'Valor vencido entre 361 y 720 días desde la fecha de corte',
+      table: 'Sin tabla'
+    },
+    {
+      position: 29,
+      name: 'Valor vencido de más de 720 días',
+      description: 'Valor vencido después de 720 días desde la fecha de corte',
+      table: 'Sin tabla'
+    },
+    {
+      position: 30,
+      name: 'Gastos de recuperación de cartera vencida',
+      description: 'Gastos incurridos en la recuperación de cartera vencida',
+      table: 'Sin tabla'
+    },
+    {
+      position: 31,
+      name: 'Interés ordinario',
+      description: 'Intereses ordinarios devengados y no pagados',
+      table: 'Sin tabla'
+    },
+    {
+      position: 32,
+      name: 'Interés sobre mora',
+      description: 'Intereses de mora devengados y no pagados',
+      table: 'Sin tabla'
+    },
+    {
+      position: 33,
+      name: 'Valor en demanda judicial',
+      description: 'Valor de la operación que se encuentra en proceso judicial',
+      table: 'Sin tabla'
+    },
+    {
+      position: 34,
+      name: 'Cartera castigada',
+      description: 'Valor de la cartera que ha sido castigada por la entidad',
+      table: 'Sin tabla'
+    },
+    {
+      position: 35,
+      name: 'Provisión requerida original',
+      description: 'Provisión requerida originalmente según normativa vigente',
+      table: 'Sin tabla'
+    },
+    {
+      position: 36,
+      name: 'Provisión requerida reducida',
+      description: 'Provisión requerida reducida por garantías o avales',
+      table: 'Sin tabla'
+    },
+    {
+      position: 37,
+      name: 'Provisión constituida',
+      description: 'Provisión efectivamente constituida por la entidad',
+      table: 'Sin tabla'
+    },
+    {
+      position: 38,
+      name: 'Tipo de operación',
+      description: 'Tipo de operación crediticia según clasificación de la entidad',
+      table: 'Tabla 35'
+    },
+    {
+      position: 39,
+      name: 'Objeto del fideicomiso',
+      description: 'Objeto del fideicomiso cuando aplica',
+      table: 'Tabla 55'
+    },
+    {
+      position: 40,
+      name: 'Prima o descuento',
+      description: 'Prima o descuento aplicado a la operación',
+      table: 'Sin tabla'
+    },
+    {
+      position: 41,
+      name: 'Cuota del crédito',
+      description: 'Valor de la cuota del crédito',
+      table: 'Sin tabla'
+    },
+    {
+      position: 42,
+      name: 'Valor de Intereses de la Cuota del Crédito',
+      description: 'Valor de los intereses incluidos en la cuota del crédito',
+      table: 'Sin tabla'
+    },
+    {
+      position: 43,
+      name: 'Valor del Seguro',
+      description: 'Valor del seguro asociado a la operación',
+      table: 'Sin tabla'
+    },
+    {
+      position: 44,
+      name: 'Saldo de la cuota de capital diferida',
+      description: 'Saldo de capital diferido en la cuota',
+      table: 'Sin tabla'
+    },
+    {
+      position: 45,
+      name: 'Valor del interés de capital diferido',
+      description: 'Valor de los intereses del capital diferido',
+      table: 'Sin tabla'
+    },
+    {
+      position: 46,
+      name: 'Fecha de transferencia a cuentas vencidas',
+      description: 'Fecha en que la operación fue transferida a cuentas vencidas',
+      table: 'Sin tabla'
+    },
+    {
+      position: 47,
+      name: 'Intereses acumulados por cobrar',
+      description: 'Intereses acumulados por cobrar',
+      table: 'Sin tabla'
+    },
+    {
+      position: 48,
+      name: 'Intereses reversados',
+      description: 'Intereses que han sido reversados',
+      table: 'Sin tabla'
+    },
+    {
+      position: 49,
+      name: 'Fecha de exigibilidad de la cuota',
+      description: 'Fecha en que la cuota se vuelve exigible',
+      table: 'Sin tabla'
+    },
+    {
+      position: 50,
+      name: 'Tipo de sistema de amortización',
+      description: 'Tipo de sistema de amortización aplicado a la operación',
+      table: 'Tabla 317'
+    }
+  ]
+};
 
 /**
  * Obtener tooltip para un campo específico de R04
  */
 export function getR04FieldTooltip(fieldName: string): R04FieldTooltip | null {
-  // return R04_FIELD_TOOLTIPS.find(tooltip => tooltip.field === fieldName) || null;
   return R04_FIELD_TOOLTIPS.find(tooltip => tooltip.campo === fieldName) || null;
 }
 
@@ -224,115 +763,3 @@ export function getR04FieldTooltip(fieldName: string): R04FieldTooltip | null {
 export function getAllR04FieldTooltips(): R04FieldTooltip[] {
   return R04_FIELD_TOOLTIPS;
 }
-
-/**
- * Información estructural de R04
- */
-export const R04_STRUCTURE_INFO = {
-  title: 'Estructura R04 - Emisores, Custodios y Contrapartes',
-  description: 'Contiene los saldos de todos los títulos que se encuentren registrados en el balance de la entidad, incluso de aquellos que se encuentren vencidos y por lo tanto registrados en la cuenta 1612. Incluye el detalle de los títulos que, habiendo sido reportado su saldo en el mes inmediato anterior, han sido liquidados o vendidos en el mes de reporte por lo que ya no constan en el portafolio de la entidad a la fecha de corte de la estructura.',
-  periodicity: 'Mensual (M) - Solo cuando hay nuevos registros',
-  deadline: '8 días hábiles desde la fecha de corte',
-  source: 'Manual Técnico De Estructuras De Datos Del Sistema De Control De Inversiones v3.0 - Marzo 2017',
-  bankCode: '1038 - Banco Sudamericano',
-  fileFormat: 'R04E1038ddmmaaaa.txt',
-  requirements: {
-      "table": "R04 - Saldo y Liquidaciones de inversiones",
-      "requisites": {
-        "scope": [
-          "Incluir saldos de todos los títulos registrados en el balance, incluyendo los vencidos en la cuenta 1612",
-          "Incluir títulos reportados en el mes anterior que fueron liquidados o vendidos en el mes de reporte",
-          "Reportar título por título, sin agrupar instrumentos aunque sean de la misma serie"
-        ],
-        "preconditions": [
-          "El título debe haber sido reportado previamente en R04 en el mismo mes o en meses anteriores"
-        ],
-        "balanceReconciliation": [
-          "La estructura debe cuadrar con las subcuentas del balance a la fecha de corte",
-          "Usar categoría de inversión (tabla 67) y rango de vencimiento (tabla 68) según el Catálogo Único de Cuentas",
-          "Los títulos vencidos deben reportarse con el código 1 de la tabla 68 ('De 1 a 30 días')"
-        ],
-        "liquidationsAndSales": {
-          "codes": {
-            "LP": "Venta parcial",
-            "LI": "Liquidación total"
-          },
-          "totalLiquidation": [
-            "Usar código 'LI'",
-            "Reportar un solo registro",
-            "No reportar saldo remanente en cero"
-          ],
-          "partialSale": [
-            "Reportar dos registros: uno con saldo remanente y otro con la parte vendida",
-            "En cortes siguientes, reportar solo el saldo remanente",
-            "No es necesario volverlo a reportar en R04"
-          ]
-        },
-        "exclusions": [
-          "No reportar devengamiento de cupones como liquidación",
-          "En devengamientos, solo actualizar el nuevo saldo en libros"
-        ],
-        "repurchaseAfterLiquidation": [
-          "Si se recompra un título liquidado con 'LI', reportar en R04 con mismo número de título y fecha de emisión pero nueva fecha de compra",
-          "Usar campo 'fecha de compra' en R04 para diferenciar recompra de liquidación anterior"
-        ],
-        "fieldRules": [
-          "El campo 'valor de liquidación o venta' debe completarse según corresponda a liquidación total o venta parcial"
-        ]
-      }
-    },
-  fields: [
-    {
-      position: 1,
-      name: 'Tipo de identificación',
-      description: 'R para RUC nacional, X para código exterior',
-             table: 'Tabla t4'
-    },
-    {
-      position: 2,
-      name: 'Identificación',
-      description: 'RUC 13 dígitos (nacional) o código 7 dígitos (exterior)',
-             table: 'Tabla t164'
-    },
-    {
-      position: 3,
-      name: 'Clasificación',
-      description: '1=Emisor, 2=Custodio, 3=Depositario, 4=Contraparte',
-             table: 'Tabla t173'
-    },
-    {
-      position: 4,
-      name: 'Tipo de emisor',
-      description: 'Sector según tabla 73 (excluyendo códigos 1 y 6)',
-             table: 'Tabla t73'
-    }
-  ]
-};
-
-/**
- * Validaciones específicas para campos R04
- */
-export const R04_FIELD_VALIDATIONS = {
-  tipoIdentificacion: {
-    required: true,
-    pattern: /^[RX]$/,
-    message: 'Solo se permite R (RUC Nacional) o X (Código Exterior)'
-  },
-  identificacion: {
-    required: true,
-    minLength: 7,
-    maxLength: 13,
-    pattern: /^\d+$/,
-    message: 'RUC: 13 dígitos numéricos, Código exterior: 7 dígitos numéricos'
-  },
-  clasificacion: {
-    required: true,
-    pattern: /^[1-4]$/,
-    message: 'Solo valores 1, 2, 3 o 4 según tabla 173'
-  },
-  tipoEmisor: {
-    required: true,
-    pattern: /^[02345789]$/,
-    message: 'Valores válidos según tabla 73, excluyendo códigos 1 y 6'
-  }
-};
