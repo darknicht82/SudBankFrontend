@@ -6,9 +6,8 @@ import { environment } from '../../environments/environment';
 import { FormGroup } from '@angular/forms';
 
 export interface R04Catalog {
-  id: number;
-  codigo: string;
-  descripcion: string;
+  code: number;
+  description: string;
 }
 
 export interface R04Resume {
