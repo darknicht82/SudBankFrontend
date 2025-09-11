@@ -19,7 +19,7 @@ export class T317Service {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<T317[]> {
-    return this.http.get<T317[]>(`${this.baseUrl}/catalogs/t317`)
+    return this.http.get<T317[]>(`${this.baseUrl}/api/catalogs/t317`)
       .pipe(
         map(response => {
           console.log('✅ T317 - Catálogo cargado:', response);

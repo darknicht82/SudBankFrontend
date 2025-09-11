@@ -19,7 +19,7 @@ export class T218Service {
   constructor(private http: HttpClient) {}
 
   getAllT218(): Observable<T218[]> {
-    return this.http.get<T218[]>(`${this.baseUrl}/api/catalogs/t218`)
+    return this.http.get<T218[]>(`${this.baseUrl}/catalogs/t218`)
       .pipe(
         catchError(error => {
           console.error('❌ API T218 - Error obteniendo metodologías de calificación:', error);

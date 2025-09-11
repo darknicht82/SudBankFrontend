@@ -19,7 +19,7 @@ export class T55Service {
   constructor(private http: HttpClient) {}
 
   getAllT55(): Observable<T55[]> {
-    return this.http.get<T55[]>(`${this.baseUrl}/api/catalogs/t55`)
+    return this.http.get<T55[]>(`${this.baseUrl}/catalogs/t55`)
       .pipe(
         catchError(error => {
           console.error('❌ API T55 - Error obteniendo objetos de fideicomiso:', error);
