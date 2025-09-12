@@ -1,0 +1,119 @@
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    
+<!-- Header --> 
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro R02</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+<!-- Body -->
+    <div class="modal-body">
+        <form [formGroup]="r02Form" (ngSubmit)="onSubmit()" class="w-100">
+            <!-- Sección: Título -->
+            <h5 class="mt-3 mb-2 border-bottom pb-1">Título</h5>
+            <div class="row g-2">
+               <!-- Tipo Identificación -->
+          <div class="col-md-6">
+            <label for="tipoIdentificacion" class="form-label">Tipo de Identificación</label>
+            <select 
+              id="tipoIdentificacion" 
+              class="form-select"
+              formControlName="tipoIdentificacion">
+              <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+              <option *ngFor="let item of arrayTipoIdentificacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoIdentificacion')" class="text-danger small mt-1">
+              Escoga un tipo de identificación
+            </div>
+          </div>
+           <!--Identificación Sujeto-->
+            <div class="col-md-6">
+                <label for="identificacionSujeto" class="form-label">Identificación del Sujeto</label>
+                <input type="text" id="identificacionSujeto" class="form-control" formControlName="identificacionSujeto" />
+                <div *ngIf="isInvalid('identificacionSujeto')" class="text-danger small mt-1">
+                    La identificación del Sujeto es obligatorio
+                </div>
+          </div>
+
+          <!--Numero Operacion-->
+            <div class="col-md-6">
+                <label for="numeroOperacion" class="form-label">Número de Operación</label>
+                <input type="text" id="numeroOperacion" class="form-control" formControlName="numeroOperacion" />
+                <div *ngIf="isInvalid('numeroOperacion')" class="text-danger small mt-1">
+                    El número de Operación es obligatorio
+                </div>
+          </div>
+
+          <!--Valor de Operacion-->
+            <div class="col-md-6">
+                <label for="valorOperacion" class="form-label">Valor de Operación</label>
+                <input type="number" step="any" id="valorOperacion" class="form-control" formControlName="valorOperacion" />
+                <div *ngIf="isInvalid('valorOperacion')" class="text-danger small mt-1">
+                    El valor de la Operación es obligatorio
+                </div>
+            </div>
+          <!--Tasa de interes nominal-->
+          <div class="col-md-6">
+                <label for="tasaInteresNominal" class="form-label">Tasa de Interes Nominal</label>
+                <input type="number" step="any" id="tasaInteresNominal" class="form-control" formControlName="tasaInteresNominal" />
+                <div *ngIf="isInvalid('tasaInteresNominal')" class="text-danger small mt-1">
+                    La tasa de interes nominal es obligatoria
+                </div>
+            </div>
+          <!-- TEA -->  
+           <div class="col-md-6">
+                <label for="tea" class="form-label">TEA</label>
+                <input type="number" step="any" id="tea" class="form-control" formControlName="tea" />
+                <div *ngIf="isInvalid('tea')" class="text-danger small mt-1">
+                    El TEA es obligatoria
+                </div>
+            </div>
+          <!-- Codigo Moneda -->
+           <div class="col-md-6">
+            <label for="codigoMoneda" class="form-label">Moneda </label>
+            <select 
+              id="codigoMoneda" 
+              class="form-select"
+              formControlName="codigoMoneda">
+              <option [ngValue]="null" disabled selected>Seleccione una moneda</option>
+              <option *ngFor="let item of arrayMonedaDenominacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('codigoMoneda')" class="text-danger small mt-1">
+              La moneda es obligatorio
+            </div>
+          </div>
+          <!-- Fecha de Concesión -->
+           <div class="col-md-6">
+            <label for="fechaConcesion" class="form-label">Fecha de concesión</label>
+            <input type="date" id="fechaConcesion" class="form-control" formControlName="fechaConcesion" />
+            <div *ngIf="isInvalid('fechaConcesion')" class="text-danger small mt-1">
+              La fecha de consecion es obligatoria
+            </div>
+          </div>
+          </div>
+        </form>
+    </div>
+
+<!-- Footer -->
+ <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="r02Form.invalid" (click)="onSubmit()">
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+
+
+      </div>
+</div>
