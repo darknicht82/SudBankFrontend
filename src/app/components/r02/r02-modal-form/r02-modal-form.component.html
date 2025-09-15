@@ -100,6 +100,446 @@
               La fecha de consecion es obligatoria
             </div>
           </div>
+          <!-- Fecha de Vencimiento -->
+            <div class="col-md-6">
+              <label for="fechaVencimiento" class="form-label">Fecha de vencimiento</label>
+              <input type="date" id="fechaVencimiento" class="form-control" formControlName="fechaVencimiento" />
+              <div *ngIf="isInvalid('fechaVencimiento')" class="text-danger small mt-1">
+                La fecha de vencimiento es obligatoria
+              </div>
+            </div>
+          <!-- Linea de credito -->
+           <div class="col-md-6">
+            <label for="codigoLineaCredito" class="form-label">Línea de Crédito</label>
+            <select 
+              id="codigoLineaCredito" 
+              class="form-select"
+              formControlName="codigoLineaCredito">
+              <option [ngValue]="null" disabled selected>Seleccione una linea</option>
+              <option *ngFor="let item of arrayLineaCredito" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoIdentificacion')" class="text-danger small mt-1">
+              Escoga un tipo de línea de credito
+            </div>
+          </div>
+
+          <!-- Periodicidad de Pago -->
+          <div class="col-md-6">
+            <label for="codigoPeriodicidadPago" class="form-label">Periodicidad de Pago</label>
+            <select 
+              id="codigoPeriodicidadPago" 
+              class="form-select"
+              formControlName="codigoPeriodicidadPago">
+              <option [ngValue]="null" disabled selected>Seleccione una periodicidad</option>
+              <option *ngFor="let item of arrayPeriodicidadPago" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('codigoPeriodicidadPago')" class="text-danger small mt-1">
+              Escoga una periodicidad
+            </div>
+            </div>
+
+            <!-- Oficina de Concesión -->
+            <div class="col-md-6">
+              <label for="codigoOficinaConcesion" class="form-label">Oficina de Concesión</label>
+              <select 
+                id="codigoOficinaConcesion" 
+                class="form-select"
+                formControlName="codigoOficinaConcesion">
+                <option [ngValue]="null" disabled selected>Seleccione una oficina</option>
+                <option *ngFor="let item of arrayOficinaConcesion" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoOficinaConcesion')" class="text-danger small mt-1">
+                Escoga una oficina
+              </div>
+            </div>
+
+            <!-- Garantes o Garantias -->
+            <div class="col-md-6">
+              <label for="codigoGaranteGarantias" class="form-label">Garantes o Garantias</label>
+              <select 
+                id="codigoGaranteGarantias" 
+                class="form-select"
+                formControlName="codigoGaranteGarantias">
+                <option [ngValue]="null" disabled selected>Seleccione una garantia</option>
+                <option *ngFor="let item of arrayGaranteGarantias" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoGaranteGarantias')" class="text-danger small mt-1">
+                Escoga una garantia
+              </div>
+            </div>
+
+            <!-- Indicador de Operaciones Exenta -->
+            <div class="col-md-6">
+              <label for="codigoIndicadorOperacionesExenta" class="form-label">Indicador de Operaciones Exenta</label>
+              <select 
+                id="codigoIndicadorOperacionesExenta" 
+                class="form-select"
+                formControlName="codigoIndicadorOperacionesExenta">
+                <option [ngValue]="null" disabled selected>Seleccione un indicador</option>
+                <option *ngFor="let item of arrayIndicadorOperacionesExenta" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoIndicadorOperacionesExenta')" class="text-danger small mt-1">
+                Escoga un indicador
+              </div>
+            </div>
+
+            <!-- tipo de credito -->
+            <div class="col-md-6">
+              <label for="codigoTipoCredito" class="form-label">Tipo de Crédito</label>
+              <select 
+                id="codigoTipoCredito" 
+                class="form-select"
+                formControlName="codigoTipoCredito">
+                <option [ngValue]="null" disabled selected>Seleccione un tipo de credito</option>
+                <option *ngFor="let item of arrayTipoCredito" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoTipoCredito')" class="text-danger small mt-1">
+                Escoga un tipo de credito
+              </div>
+            </div>
+
+            <!-- Clase de credito -->
+            <div class="col-md-6">
+              <label for="codigoClaseCredito" class="form-label">Clase de Crédito</label>
+              <select 
+                id="codigoClaseCredito" 
+                class="form-select"
+                formControlName="codigoClaseCredito">
+                <option [ngValue]="null" disabled selected>Seleccione una clase de credito</option>
+                <option *ngFor="let item of arrayClaseCredito" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoClaseCredito')" class="text-danger small mt-1">
+                Escoga una clase de credito
+              </div>
+            </div>
+
+            <!-- Estado Operacion -->
+            <div class="col-md-6">
+              <label for="codigoEstadoOperacion" class="form-label">Estado Operación</label>
+              <select 
+                id="codigoEstadoOperacion" 
+                class="form-select"
+                formControlName="codigoEstadoOperacion">
+                <option [ngValue]="null" disabled selected>Seleccione un estado</option>
+                <option *ngFor="let item of arrayEstadoOperacion" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoEstadoOperacion')" class="text-danger small mt-1">
+                Escoga un estado
+              </div>
+            </div>
+
+            <!-- Situacion de la Operacion -->
+            <div class="col-md-6">
+              <label for="codigoSituaOperacion" class="form-label">Situación de la Operación</label>
+              <select 
+                id="codigoSituaOperacion" 
+                class="form-select"
+                formControlName="codigoSituaOperacion">
+                <option [ngValue]="null" disabled selected>Seleccione una situacion</option>
+                <option *ngFor="let item of arraySituacionOperacion" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoSituaOperacion')" class="text-danger small mt-1">
+                Escoga una situacion
+              </div>
+            </div>
+
+            <!-- Tipo de operacion -->
+            <div class="col-md-6">
+              <label for="codigoTipoOperacion" class="form-label">Tipo de Operación</label>
+              <select 
+                id="codigoTipoOperacion" 
+                class="form-select"
+                formControlName="codigoTipoOperacion">
+                <option [ngValue]="null" disabled selected>Seleccione un tipo de operacion</option>
+                <option *ngFor="let item of arrayTipoOperacion" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoTipoOperacion')" class="text-danger small mt-1">
+                Escoga un tipo de operacion
+              </div>
+            </div>
+
+            <!-- Destino Financiero -->
+            <div class="col-md-6">
+              <label for="codigoDestFinOperacion" class="form-label">Destino Financiero de la Operación</label>
+              <select 
+                id="codigoDestFinOperacion" 
+                class="form-select"
+                formControlName="codigoDestFinOperacion">
+                <option [ngValue]="null" disabled selected>Seleccione un destino financiero</option>
+                <option *ngFor="let item of arrayDestinoFinanciero" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoDestFinOperacion')" class="text-danger small mt-1">
+                Escoga un destino financiero
+              </div>
+            </div>
+
+            <!-- Actividad Economica  -->
+            <div class="col-md-6">
+              <label for="codigoActividadEconoReceptora" class="form-label">Actividad Economica Receptora de la Operación</label>
+              <select 
+                id="codigoActividadEconoReceptora" 
+                class="form-select"
+                formControlName="codigoActividadEconoReceptora">
+                <option [ngValue]="null" disabled selected>Seleccione una actividad economica</option>
+                <option *ngFor="let item of arrayActividadEconomica" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoActividadEconoReceptora')" class="text-danger small mt-1">
+                Escoga una actividad economica
+              </div>
+            </div>
+
+            <!-- Destino Geografico Pais -->
+            <div class="col-md-6">
+              <label for="codigoDestinoGeograficaPais" class="form-label">Destino Geografico - Pais</label>
+              <select 
+                id="codigoDestinoGeograficaPais" 
+                class="form-select"
+                formControlName="codigoDestinoGeograficaPais">
+                <option [ngValue]="null" disabled selected>Seleccione un pais</option>
+                <option *ngFor="let item of arrayDestinoPais" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoDestinoGeograficaPais')" class="text-danger small mt-1">
+                Escoga un pais
+              </div>
+            </div>
+
+            <!-- Destino Geografico Provincia -->
+            <div class="col-md-6">
+              <label for="codigoDestinoGeograficaProvincia" class="form-label">Destino Geografico - Provincia</label>
+              <select 
+                id="codigoDestinoGeograficaProvincia" 
+                class="form-select"
+                formControlName="codigoDestinoGeograficaProvincia">
+                <option [ngValue]="null" disabled selected>Seleccione una provincia</option>
+                <option *ngFor="let item of arrayDestinoProvincia" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoDestinoGeograficaProvincia')" class="text-danger small mt-1">
+                Escoga una provincia
+              </div>
+            </div>
+
+            <!-- Destino Geografico Canton -->
+            <div class="col-md-6">
+              <label for="codigoDestinoGeograficaCanton" class="form-label">Destino Geografico - Canton</label>
+              <select 
+                id="codigoDestinoGeograficaCanton" 
+                class="form-select"
+                formControlName="codigoDestinoGeograficaCanton">
+                <option [ngValue]="null" disabled selected>Seleccione un canton</option>
+                <option *ngFor="let item of arrayDestinoCanton" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoDestinoGeograficaCanton')" class="text-danger small mt-1">
+                Escoga un Canton
+              </div>
+            </div>
+
+            <!-- Destino Geografico Parroquia -->
+            <div class="col-md-6">
+              <label for="codigoDestinoGeograficaParroquia" class="form-label">Destino Geografico - Parroquia</label>
+              <select 
+                id="codigoDestinoGeograficaParroquia" 
+                class="form-select"
+                formControlName="codigoDestinoGeograficaParroquia">
+                <option [ngValue]="null" disabled selected>Seleccione una parroquia</option>
+                <option *ngFor="let item of arrayDestinoParroquia" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoDestinoGeograficaParroquia')" class="text-danger small mt-1">
+                Escoga una parroquia
+              </div>
+            </div>
+
+            <!-- Total Ingreso -->
+            <div class="col-md-6">
+                <label for="totalIngreso" class="form-label">Total Ingreso</label>
+                <input type="number" step="any" id="totalIngreso" class="form-control" formControlName="totalIngreso" />
+                <div *ngIf="isInvalid('totalIngreso')" class="text-danger small mt-1">
+                    El valor de lIngreso es obligatorio
+                </div>
+            </div>
+            <!-- Total Egreso -->
+             <div class="col-md-6">
+                <label for="totalEgreso" class="form-label">Total de Egreso</label>
+                <input type="number" step="any" id="totalEgreso" class="form-control" formControlName="totalEgreso" />
+                <div *ngIf="isInvalid('totalEgreso')" class="text-danger small mt-1">
+                    El valor del Egreso es obligatorio
+                </div>
+            </div>
+
+            <!-- Nivel de Estudios Esperado -->
+            <div class="col-md-6">
+              <label for="codigoNivEstudiosEsperado" class="form-label">Nivel de Estudios Esperado</label>
+              <select 
+                id="codigoNivEstudiosEsperado" 
+                class="form-select"
+                formControlName="codigoNivEstudiosEsperado">
+                <option [ngValue]="null" disabled selected>Seleccione un nivel de estudios</option>
+                <option *ngFor="let item of arrayNivelEstudios" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('codigoNivEstudiosEsperado')" class="text-danger small mt-1">
+                Escoga un nivel de estudios
+              </div>
+            </div>
+
+            <!-- Numero de empleados que se mantienen -->
+             <div class="col-md-6">
+                <label for="numEmpleadosMant" class="form-label">Número de empleados que se mantienen</label>
+                <input type="number" step="any" id="numEmpleadosMant" class="form-control" formControlName="numEmpleadosMant" />
+                <div *ngIf="isInvalid('numEmpleadosMant')" class="text-danger small mt-1">
+                    El número de empleados que se mantienen es obligatorio
+                </div>
+            </div>
+
+            <!-- Numero de empleados que se espera incrementar -->
+             <div class="col-md-6">
+                <label for="numEmpleadosIncrement" class="form-label">Número de empleados que se espera incrementar</label>
+                <input type="number" step="any" id="numEmpleadosIncrement" class="form-control" formControlName="numEmpleadosIncrement" />
+                <div *ngIf="isInvalid('numEmpleadosIncrement')" class="text-danger small mt-1">
+                    El número de empleados que se espera incrementar es obligatorio
+                </div>
+            </div>
+
+            <!-- Produccion actual que se mantiene -->
+             <div class="col-md-6">
+                <label for="produccionActual" class="form-label">Produccion actual que se mantiene</label>
+                <input type="number" step="any" id="produccionActual" class="form-control" formControlName="produccionActual" />
+                <div *ngIf="isInvalid('produccionActual')" class="text-danger small mt-1">
+                    El valor de la produccion actual es obligatorio
+                </div>
+            </div>
+
+            <!-- Incremento esperado de la produccion -->
+             <div class="col-md-6">
+                <label for="incrementActualEspe" class="form-label">Incremento esperado de la produccion</label>
+                <input type="number" step="any" id="incrementActualEspe" class="form-control" formControlName="incrementActualEspe" />
+                <div *ngIf="isInvalid('incrementActualEspe')" class="text-danger small mt-1">
+                    El incremento esperado de la produccion es obligatorio
+                </div>
+            </div>
+
+            <!-- Contribucion a mantener la produccion exportable -->
+             <div class="col-md-6">
+                <label for="mantenerProduccionExportable" class="form-label">Contribucion a mantener la produccion exportable</label>
+                <input type="number" step="any" id="mantenerProduccionExportable" class="form-control" formControlName="mantenerProduccionExportable" />
+                <div *ngIf="isInvalid('mantenerProduccionExportable')" class="text-danger small mt-1">
+                    La contribucion a mantener la produccion exportable es obligatoria
+                </div>
+            </div>
+
+            <!-- Incremento esperado de la produccion exportable -->
+             <div class="col-md-6">
+                <label for="incrementoProduccionExportable" class="form-label">Incremento esperado de la produccion exportable</label>
+                <input type="number" step="any" id="incrementoProduccionExportable" class="form-control" formControlName="incrementoProduccionExportable" />
+                <div *ngIf="isInvalid('incrementoProduccionExportable')" class="text-danger small mt-1">
+                    El incremento esperado de la produccion exportable es obligatorio
+                </div>
+            </div>
+
+            <!-- Contribucion al sostenimiento de la inversion - FBK -->
+             <div class="col-md-6">
+                <label for="contribucionFbk" class="form-label">Contribucion al sostenimiento de la inversion - FBK</label>
+                <input type="number" step="any" id="contribucionFbk" class="form-control" formControlName="contribucionFbk" />
+                <div *ngIf="isInvalid('contribucionFbk')" class="text-danger small mt-1">
+                    La contribucion al sostenimiento de la inversion - FBK es obligatoria
+                </div>
+            </div>
+
+            <!-- Incrmeneto en la inversion - FBK -->
+             <div class="col-md-6">
+                <label for="incremnetoInvFbk" class="form-label">Incrmeneto en la inversion - FBK</label>
+                <input type="number" step="any" id="incremnetoInvFbk" class="form-control" formControlName="incremnetoInvFbk" />
+                <div *ngIf="isInvalid('incremnetoInvFbk')" class="text-danger small mt-1">
+                    El incremento en la inversion - FBK es obligatorio
+                </div>
+            </div>
+
+            <!-- Contribucion para atención integral del cáncer -->
+             <div class="col-md-6">
+                <label for="contribucionIntCancer" class="form-label">Contribucion para atención integral del cáncer</label>
+                <input type="number" step="any" id="contribucionIntCancer" class="form-control" formControlName="contribucionIntCancer" />
+                <div *ngIf="isInvalid('contribucionIntCancer')" class="text-danger small mt-1">
+                    La contribucion para atención integral del cáncer es obligatoria
+                </div>
+            </div>
+
+            <!-- Destino de credito para bienes inmuebles -->
+             <div class="col-md-6">
+              <label for="destiCredInmueble" class="form-label">Destino de credito para bienes inmuebles</label>
+              <select 
+                id="destiCredInmueble" 
+                class="form-select"
+                formControlName="destiCredInmueble">
+                <option [ngValue]="null" disabled selected>Seleccione un bien inmueble</option>
+                <option *ngFor="let item of arrayNivelEstudios" [ngValue]="item">
+                  {{ item.descripcion }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('destiCredInmueble')" class="text-danger small mt-1">
+                Escoga un bien inmueble
+              </div>
+            </div>
+
+            <!-- Valor comercial del inmueble -->
+             <div class="col-md-6">
+                <label for="valorComercial" class="form-label">Valor comercial del inmueble</label>
+                <input type="number" step="any" id="valorComercial" class="form-control" formControlName="valorComercial" />
+                <div *ngIf="isInvalid('valorComercial')" class="text-danger small mt-1">
+                    El valor comercial del inmueble es obligatorio
+                </div>
+            </div>
+
+            <!-- Metros cuadrados -->
+             <div class="col-md-6">
+                <label for="metrosCuadrados" class="form-label">Metros cuadrados</label>
+                <input type="number" step="any" id="metrosCuadrados" class="form-control" formControlName="metrosCuadrados" />
+                <div *ngIf="isInvalid('metrosCuadrados')" class="text-danger small mt-1">
+                    Los metros cuadrados son obligatorios
+                </div>
+            </div>
+
+            <!-- Numero de personas que aportan al totla de ingresos -->
+             <div class="col-md-6">
+                <label for="numeroTotalPersonaAportan" class="form-label">Numero de personas que aportan al total de ingresos</label>
+                <input type="number" step="any" id="numeroTotalPersonaAportan" class="form-control" formControlName="numeroTotalPersonaAportan" />
+                <div *ngIf="isInvalid('numeroTotalPersonaAportan')" class="text-danger small mt-1">
+                    El numero de personas que aportan al totla de ingresos es obligatorio
+                </div>
+            </div>
+
+
           </div>
         </form>
     </div>
