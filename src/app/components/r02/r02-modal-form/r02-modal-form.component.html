@@ -142,6 +142,15 @@
             </div>
             </div>
 
+            <!-- Frecuencia_Revision -->
+             <div class="col-md-6">
+                <label for="frecuenciaRevision" class="form-label">Frecuencia de Revisión</label>
+                <input type="number" step="any" id="frecuenciaRevision" class="form-control" formControlName="frecuenciaRevision" />
+                <div *ngIf="isInvalid('frecuenciaRevision')" class="text-danger small mt-1">
+                    La frecuencia de obligacion es obligatoria
+                </div>
+            </div>
+
             <!-- Oficina de Concesión -->
             <div class="col-md-6">
               <label for="codigoOficinaConcesion" class="form-label">Oficina de Concesión</label>
@@ -399,17 +408,17 @@
 
             <!-- Nivel de Estudios Esperado -->
             <div class="col-md-6">
-              <label for="codigoNivEstudiosEsperado" class="form-label">Nivel de Estudios Esperado</label>
+              <label for="codigoNivEstudioEsperado" class="form-label">Nivel de Estudios Esperado</label>
               <select 
-                id="codigoNivEstudiosEsperado" 
+                id="codigoNivEstudioEsperado" 
                 class="form-select"
-                formControlName="codigoNivEstudiosEsperado">
+                formControlName="codigoNivEstudioEsperado">
                 <option [ngValue]="null" disabled selected>Seleccione un nivel de estudios</option>
                 <option *ngFor="let item of arrayNivelEstudios" [ngValue]="item">
                   {{ item.descripcion }}
                 </option>
               </select>
-              <div *ngIf="isInvalid('codigoNivEstudiosEsperado')" class="text-danger small mt-1">
+              <div *ngIf="isInvalid('codigoNivEstudioEsperado')" class="text-danger small mt-1">
                 Escoga un nivel de estudios
               </div>
             </div>
@@ -470,9 +479,9 @@
 
             <!-- Contribucion al sostenimiento de la inversion - FBK -->
              <div class="col-md-6">
-                <label for="contribucionFbk" class="form-label">Contribucion al sostenimiento de la inversion - FBK</label>
-                <input type="number" step="any" id="contribucionFbk" class="form-control" formControlName="contribucionFbk" />
-                <div *ngIf="isInvalid('contribucionFbk')" class="text-danger small mt-1">
+                <label for="contribucFbk" class="form-label">Contribucion al sostenimiento de la inversion - FBK</label>
+                <input type="number" step="any" id="contribucFbk" class="form-control" formControlName="contribucFbk" />
+                <div *ngIf="isInvalid('contribucFbk')" class="text-danger small mt-1">
                     La contribucion al sostenimiento de la inversion - FBK es obligatoria
                 </div>
             </div>

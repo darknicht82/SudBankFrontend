@@ -93,7 +93,7 @@ export class R02ModalFormComponent implements OnInit{
       codigoDestinoGeograficaParroquia: [null, Validators.required],
       totalIngreso: [null, Validators.required],
       totalEgreso: [null, Validators.required],
-      codigoNivEstudiosEsperado: [null, Validators.required],
+      codigoNivEstudioEsperado: [null, Validators.required],
       numEmpleadosMant: [null, Validators.required],
       numEmpleadosIncrement: [null, Validators.required],
       produccionActual: [null, Validators.required],
@@ -102,7 +102,7 @@ export class R02ModalFormComponent implements OnInit{
       mantenerProduccionExportable: [null, Validators.required],
       incrementoProduccionExportable: [null, Validators.required],
 
-      contribucionFbk: [null, Validators.required],
+      contribucFbk: [null, Validators.required],
       incremnetoInvFbk: [null, Validators.required],
 
       contribucionIntCancer: [null, Validators.required],
