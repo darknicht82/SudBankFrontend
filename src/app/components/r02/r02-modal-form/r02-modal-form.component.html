@@ -497,17 +497,17 @@
 
             <!-- Destino de credito para bienes inmuebles -->
              <div class="col-md-6">
-              <label for="destiCredInmueble" class="form-label">Destino de credito para bienes inmuebles</label>
+              <label for="destiCredInmuebles" class="form-label">Destino de credito para bienes inmuebles</label>
               <select 
-                id="destiCredInmueble" 
+                id="destiCredInmuebles" 
                 class="form-select"
-                formControlName="destiCredInmueble">
+                formControlName="destiCredInmuebles">
                 <option [ngValue]="null" disabled selected>Seleccione un bien inmueble</option>
-                <option *ngFor="let item of arrayNivelEstudios" [ngValue]="item">
+                <option *ngFor="let item of arrayDestinoCreditoInmuebles" [ngValue]="item">
                   {{ item.descripcion }}
                 </option>
               </select>
-              <div *ngIf="isInvalid('destiCredInmueble')" class="text-danger small mt-1">
+              <div *ngIf="isInvalid('destiCredInmuebles')" class="text-danger small mt-1">
                 Escoga un bien inmueble
               </div>
             </div>
