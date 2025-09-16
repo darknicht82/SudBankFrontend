@@ -1,0 +1,136 @@
+/* ========================================
+   COMPONENTE L08 COMPARAR - ESTILOS ESPECÍFICOS
+   ======================================== */
+
+/* CONTAINER PRINCIPAL */
+.l08-comparar-container {
+  padding: var(--sudbank-spacing-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ========================================
+   ESTILOS ESPECÍFICOS L08 COMPARAR
+   ======================================== */
+
+/* Dashboard específico L08 Comparar */
+.l08-comparar-dashboard {
+  .comparar-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--sudbank-spacing-lg);
+    margin-bottom: var(--sudbank-spacing-xl);
+  }
+  
+  .comparar-stat-card {
+    background: var(--sudbank-bg-white);
+    padding: var(--sudbank-spacing-lg);
+    border-radius: var(--sudbank-border-radius-lg);
+    box-shadow: var(--sudbank-shadow);
+    text-align: center;
+    
+    .comparar-stat-number {
+      font-size: var(--sudbank-font-size-3xl);
+      font-weight: 700;
+      color: var(--sudbank-color-primary);
+      margin-bottom: var(--sudbank-spacing-sm);
+    }
+    
+    .comparar-stat-label {
+      color: var(--sudbank-text-secondary);
+      font-size: var(--sudbank-font-size-base);
+      font-weight: 500;
+    }
+  }
+}
+
+/* Acciones específicas L08 Comparar */
+.l08-comparar-actions {
+  display: flex;
+  gap: var(--sudbank-spacing-md);
+  margin-bottom: var(--sudbank-spacing-xl);
+  flex-wrap: wrap;
+  
+  .comparar-action-button {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+/* Filtros específicos L08 Comparar */
+.l08-comparar-filters {
+  background: var(--sudbank-bg-white);
+  padding: var(--sudbank-spacing-lg);
+  border-radius: var(--sudbank-border-radius-lg);
+  box-shadow: var(--sudbank-shadow-sm);
+  margin-bottom: var(--sudbank-spacing-xl);
+  
+  .comparar-filter-row {
+    display: flex;
+    gap: var(--sudbank-spacing-lg);
+    align-items: end;
+    flex-wrap: wrap;
+    
+    .comparar-filter-field {
+      flex: 1;
+      min-width: 200px;
+    }
+  }
+}
+
+/* Tabla específica L08 Comparar */
+.l08-comparar-table-container {
+  .l08-comparar-table {
+    .l08-comparar-row {
+      &:hover {
+        background: var(--sudbank-bg-light);
+      }
+      
+      .l08-comparar-cell {
+        &.comparar-status-cell {
+          text-align: center;
+          
+          .comparar-status-badge {
+            padding: var(--sudbank-spacing-xs) var(--sudbank-spacing-sm);
+            border-radius: 12px;
+            font-size: var(--sudbank-font-size-sm);
+            font-weight: 600;
+            
+            &.comparar-status-active {
+              background: rgba(40, 167, 69, 0.1);
+              color: var(--sudbank-color-success);
+            }
+            
+            &.comparar-status-inactive {
+              background: rgba(220, 53, 69, 0.1);
+              color: var(--sudbank-color-danger);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Responsive específico L08 Comparar */
+@media (max-width: 768px) {
+  .l08-comparar-container {
+    padding: var(--sudbank-spacing-md);
+  }
+  
+  .l08-comparar-actions {
+    flex-direction: column;
+    
+    .comparar-action-button {
+      min-width: 100%;
+    }
+  }
+  
+  .l08-comparar-filters .comparar-filter-row {
+    flex-direction: column;
+    
+    .comparar-filter-field {
+      min-width: 100%;
+    }
+  }
+} 

@@ -1,0 +1,120 @@
+<!-- Modal del Formulario L01 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro L01</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+                    <!-- Body -->
+                <div class="modal-body">
+                  <!-- Mensajes de feedback -->
+                  <div *ngIf="showMessage" class="alert" [ngClass]="messageType === 'success' ? 'alert-success' : 'alert-danger'">
+                    <div class="d-flex align-items-center">
+                      <i class="bi" [ngClass]="messageType === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'"></i>
+                      <span class="ms-2">{{ messageText }}</span>
+                    </div>
+                    <button type="button" class="btn-close" (click)="hideMessage()"></button>
+                  </div>
+
+                  <form [formGroup]="l01Form" (ngSubmit)="onSubmit()" class="w-100">
+
+        <!-- Sección: Identificación del Emisor -->
+        <h5 class="mt-3 mb-2 border-bottom pb-1">Identificación del Emisor</h5>
+        <div class="row g-2">
+          <!-- Tipo Identificación -->
+          <div class="col-md-6">
+            <label for="tipoIdentificacion" class="form-label">Tipo de Identificación</label>
+            <select 
+              id="tipoIdentificacion" 
+              class="form-select"
+              formControlName="tipoIdentificacion">
+              <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+              <option *ngFor="let item of tiposIdentificacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoIdentificacion')" class="text-danger small mt-1">
+              Escoga un tipo de identificación
+            </div>
+          </div>
+
+          <!-- Identificación -->
+          <div class="col-md-6">
+            <label for="identificacion" class="form-label">Identificación</label>
+            <select 
+              id="identificacion" 
+              class="form-select"
+              formControlName="identificacion">
+              <option [ngValue]="null" disabled selected>Seleccione una identificación</option>
+              <option *ngFor="let item of emisoresFiltrados" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('identificacion')" class="text-danger small mt-1">
+              La identificación es obligatoria
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección: Clasificación -->
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Clasificación</h5>
+        <div class="row g-2">
+          <!-- Clasificación -->
+          <div class="col-md-6">
+            <label for="clasificacion" class="form-label">Clasificación</label>
+            <select 
+              id="clasificacion" 
+              class="form-select"
+              formControlName="clasificacion">
+              <option [ngValue]="null" disabled selected>Seleccione una clasificación</option>
+              <option *ngFor="let item of clasificaciones" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('clasificacion')" class="text-danger small mt-1">
+              La clasificación es obligatoria
+            </div>
+          </div>
+
+          <!-- Tipo de Emisor -->
+          <div class="col-md-6">
+            <label for="tipoEmisor" class="form-label">Tipo de Emisor</label>
+            <select 
+              id="tipoEmisor" 
+              class="form-select"
+              formControlName="tipoEmisor">
+              <option [ngValue]="null" disabled selected>Seleccione un tipo de emisor</option>
+              <option *ngFor="let item of tiposEmisor" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoEmisor')" class="text-danger small mt-1">
+              El tipo de emisor es obligatorio
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="l01Form.invalid || isSubmitting" (click)="onSubmit()">
+        <i *ngIf="!isSubmitting" class="bi bi-check"></i>
+        <i *ngIf="isSubmitting" class="bi bi-hourglass-split"></i>
+        {{ isSubmitting ? 'Guardando...' : 'Guardar Registro' }}
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary" [disabled]="isSubmitting">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+
+  </div>
+</div>
