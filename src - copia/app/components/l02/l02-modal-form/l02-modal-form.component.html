@@ -1,0 +1,328 @@
+<!-- Modal del Formulario L02 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro L02</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <form [formGroup]="l02Form" (ngSubmit)="onSubmit()" class="w-100">
+
+        <!-- Sección: Título -->
+        <h5 class="mt-3 mb-2 border-bottom pb-1">Título</h5>
+        <div class="row g-2">
+          <!-- Tipo Identificación -->
+          <div class="col-md-6">
+            <label for="tipoIdentificacion" class="form-label">Tipo de Identificación</label>
+            <select 
+              id="tipoIdentificacion" 
+              class="form-select"
+              formControlName="tipoIdentificacion">
+              <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+              <option *ngFor="let item of arrayTipoIdentificacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoIdentificacion')" class="text-danger small mt-1">
+              Escoga un tipo de identificación
+            </div>
+          </div>
+
+          <!-- identificacionEmisor -->
+          <div class="col-md-6">
+            <label for="identificacionEmisor" class="form-label">Identificación del emisor</label>
+            <select 
+              id="identificacionEmisor" 
+              class="form-select"
+              formControlName="identificacionEmisor">
+              <option [ngValue]="null" disabled selected>Seleccione una identificación</option>
+              <option *ngFor="let item of arrayIdentificacionEmisor" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('identificacionEmisor')" class="text-danger small mt-1">
+              La identificación es obligatoria
+            </div>
+          </div>
+
+          <!-- numeroTitulo -->
+          <div class="col-md-6">
+            <label for="numeroTitulo" class="form-label">Número de título</label>
+            <input type="text" id="numeroTitulo" class="form-control" formControlName="numeroTitulo" />
+            <div *ngIf="isInvalid('numeroTitulo')" class="text-danger small mt-1">
+              El número de título es obligatorio
+            </div>
+          </div>
+
+          <!-- Fecha de Emisión -->
+          <div class="col-md-6">
+            <label for="fechaEmision" class="form-label">Fecha de Emisión</label>
+            <input type="date" id="fechaEmision" class="form-control" formControlName="fechaEmision" />
+            <div *ngIf="isInvalid('fechaEmision')" class="text-danger small mt-1">
+              La fecha de emisión es obligatoria
+            </div>
+          </div>
+
+          <!-- Fecha de Compra -->
+          <div class="col-md-6">
+            <label for="fechaCompra" class="form-label">Fecha de Compra</label>
+            <input type="date" id="fechaCompra" class="form-control" formControlName="fechaCompra" />
+            <div *ngIf="isInvalid('fechaCompra')" class="text-danger small mt-1">
+              La fecha de compra es obligatoria
+            </div>
+          </div>
+
+          <!-- Fecha de vencimiento -->
+          <div class="col-md-6">
+            <label for="fechaVencimiento" class="form-label">Fecha de Vencimiento</label>
+            <input type="date" id="fechaVencimiento" class="form-control" formControlName="fechaVencimiento" />
+            <div *ngIf="isInvalid('fechaVencimiento')" class="text-danger small mt-1">
+              La fecha de vencimiento es obligatoria
+            </div>
+          </div>
+
+          <!-- Edad -->
+          <!-- <div class="col-md-6">
+            <label for="edad" class="form-label">Edad</label>
+            <input type="number" id="edad" class="form-control" formControlName="edad" />
+            <div *ngIf="isInvalid('edad')" class="text-danger small mt-1">
+              Ingrese una edad válida (mayor a 0)
+            </div>
+          </div> -->
+        </div>
+
+        <!-- Sección: Instrumento -->
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Instrumento</h5>
+        <div class="row g-3">
+
+          <!-- Código del instrumento -->
+          <div class="col-md-6">
+            <label for="codigoInstrumento" class="form-label">Código del Instrumento</label>
+            <select 
+              id="codigoInstrumento" 
+              class="form-select"
+              formControlName="codigoInstrumento">
+              <option [ngValue]="null" disabled selected>Seleccione un código</option>
+              <option *ngFor="let item of arrayCodigoIdentifadorInstrumento" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('codigoInstrumento')" class="text-danger small mt-1">
+              El código de instrumento es obligatorio
+            </div>
+          </div>
+
+          <!-- Identificacion del instrumento -->
+          <div class="col-md-6">
+            <label for="identificacionInstrumento" class="form-label">Identificación del Instrumento</label>
+            <input type="text" id="identificacionInstrumento" class="form-control" formControlName="identificacionInstrumento" />
+            <div *ngIf="isInvalid('identificacionInstrumento')" class="text-danger small mt-1">
+              La identificación del instrumento es obligatorio
+            </div>
+          </div>
+
+          <!-- Categoria del instrumento -->
+          <div class="col-md-6">
+            <label for="categoriaInstrumento" class="form-label">Categoría del Instrumento</label>
+            <select 
+              id="categoriaInstrumento" 
+              class="form-select"
+              formControlName="categoriaInstrumento">
+              <option [ngValue]="null" disabled selected>Seleccione una categoría</option>
+              <option *ngFor="let item of arrayCategoriaInstrumento" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('categoriaInstrumento')" class="text-danger small mt-1">
+              La categoría del instrumento es obligatorio
+            </div>
+          </div>
+
+          <!-- Tipo del instrumento -->
+          <div class="col-md-6">
+            <label for="tipoInstrumento" class="form-label">Tipo de Instrumento</label>
+            <select 
+              id="tipoInstrumento" 
+              class="form-select"
+              formControlName="tipoInstrumento">
+              <option [ngValue]="null" disabled selected>Seleccione una tipo</option>
+              <option *ngFor="let item of arrayTipoInstrumento" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoInstrumento')" class="text-danger small mt-1">
+              El tipo de instrumento es obligatorio
+            </div>
+          </div>
+
+          <!-- Opcionalidad -->
+          <div class="col-md-6">
+            <label for="opcionalidad" class="form-label">Opcionalidad</label>
+            <select 
+              id="opcionalidad" 
+              class="form-select"
+              formControlName="opcionalidad">
+              <option [ngValue]="null" disabled selected>Seleccione una opcionalidad</option>
+              <option *ngFor="let item of arrayOpcionalidad" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('opcionalidad')" class="text-danger small mt-1">
+              La opcionalidad es obligatorio
+            </div>
+          </div>
+        </div>
+
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Tasa</h5>
+        <div class="row g-3">
+
+          <!-- Tasa Base -->
+          <div class="col-md-6">
+            <label for="tasaBase" class="form-label">Tasa base</label>
+            <select 
+              id="tasaBase" 
+              class="form-select"
+              formControlName="tasaBase">
+              <option [ngValue]="null" disabled selected>Seleccione una tasa base</option>
+              <option *ngFor="let item of arrayTasaBase" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tasaBase')" class="text-danger small mt-1">
+              La tasa base es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="diferencial" class="form-label">Diferencial de revisión</label>
+            <input type="number" id="diferencial" class="form-control" formControlName="diferencial" />
+            <div *ngIf="isInvalid('diferencial')" class="text-danger small mt-1">
+              Ingrese un diferencial válida (mayor a 0)
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="tipoTasa" class="form-label">Tipo de tasa</label>
+            <select 
+              id="tipoTasa" 
+              class="form-select"
+              formControlName="tipoTasa">
+              <option [ngValue]="null" disabled selected>Seleccione un tipo de tasa</option>
+              <option *ngFor="let item of arrayTipoTasa" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoTasa')" class="text-danger small mt-1">
+              El tipo de tasa es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="moneda" class="form-label">Moneda de denominación</label>
+            <select 
+              id="moneda" 
+              class="form-select"
+              formControlName="moneda">
+              <option [ngValue]="null" disabled selected>Seleccione una moneda</option>
+              <option *ngFor="let item of arrayMonedaDenominacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('moneda')" class="text-danger small mt-1">
+              La moneda es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="unidadesAdquiridas" class="form-label">Unidades adquiridas</label>
+            <input type="number" id="unidadesAdquiridas" class="form-control" formControlName="unidadesAdquiridas" />
+            <div *ngIf="isInvalid('unidadesAdquiridas')" class="text-danger small mt-1">
+              Ingrese una unidad válida (mayor a 0)
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorNominalDenominacion" class="form-label">Valor Nominal en moneda de denominación</label>
+            <input type="number" id="valorNominalDenominacion" class="form-control" formControlName="valorNominalDenominacion" />
+            <div *ngIf="isInvalid('valorNominalDenominacion')" class="text-danger small mt-1">
+              Ingrese un valor válido (mayor a 0)
+            </div>
+          </div>
+
+        </div>
+
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Valores</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="valorNominalDolares" class="form-label">Valor Nominal en dólares</label>
+            <input type="number" id="valorNominalDolares" class="form-control" formControlName="valorNominalDolares" />
+            <div *ngIf="isInvalid('valorNominalDolares')" class="text-danger small mt-1">
+              Ingrese un valor válido (mayor a 0)
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="precioCompra" class="form-label">Precio de compra</label>
+            <input type="number" id="precioCompra" class="form-control" formControlName="precioCompra" />
+            <div *ngIf="isInvalid('precioCompra')" class="text-danger small mt-1">
+              Ingrese un valor válido (mayor a 0)
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorCompraDenominacion" class="form-label">Valor de compra en moneda de denominación</label>
+            <input type="number" id="valorCompraDenominacion" class="form-control" formControlName="valorCompraDenominacion" />
+            <div *ngIf="isInvalid('valorCompraDenominacion')" class="text-danger small mt-1">
+              Ingrese un valor válido (mayor a 0)
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorCompraDolares" class="form-label">Valor de compra en dólares</label>
+            <input type="number" id="valorCompraDolares" class="form-control" formControlName="valorCompraDolares" />
+            <div *ngIf="isInvalid('valorCompraDolares')" class="text-danger small mt-1">
+              Ingrese un valor válido (mayor a 0)
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="frecuenciaRevision" class="form-label">Frecuencia de revisión</label>
+            <input type="number" id="frecuenciaRevision" class="form-control" formControlName="frecuenciaRevision" />
+            <div *ngIf="isInvalid('frecuenciaRevision')" class="text-danger small mt-1">
+              Ingrese un valor válido (mayor a 0)
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="periodicidadPago" class="form-label">Periodicidad de pago de cupón</label>
+            <input type="number" id="periodicidadPago" class="form-control" formControlName="periodicidadPago" />
+            <div *ngIf="isInvalid('periodicidadPago')" class="text-danger small mt-1">
+              Ingrese un valor válido (mayor a 0)
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="l02Form.invalid" (click)="onSubmit()">
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+
+  </div>
+</div>
