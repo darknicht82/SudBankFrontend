@@ -40,15 +40,18 @@ export interface R02Resume {
   codigoDestinoGeograficaParroquia: R02Catalog;
   totalIngreso: R02Catalog;
   totalEgreso: R02Catalog;
-  codigoNivEstudiosEsperado: R02Catalog;
+  codigoNivEstudioEsperado: R02Catalog;
   numEmpleadosMant: R02Catalog;
   numEmpleadosIncrement: R02Catalog;
   produccionActual: R02Catalog;
   incrementActualEspe: R02Catalog;
-  contribucionFbk: R02Catalog;
+  mantenerProduccionExportable: R02Catalog;
+  incrementoProduccionExportable: R02Catalog;
+  contribucFbk: R02Catalog;
+  incremnetoInvFbk: R02Catalog;
   contribucionIntCancer: R02Catalog;
   destiCredInmuebles: R02Catalog;
-  valorComercial: R02Catalog;
+  valorComercialInm: R02Catalog;
   metrosCuadrados: R02Catalog;
   numeroTotalPersonaAportan: R02Catalog;
 
@@ -109,15 +112,18 @@ export class R02CatalogService {
       codigoDestinoGeograficaParroquia: formValue.codigoDestinoGeograficaParroquia?.id, // Integer
       totalIngreso: Number(formValue.totalIngreso), // BigDecimal
       totalEgreso: Number(formValue.totalEgreso), // BigDecimal
-      codigoNivEstudiosEsperado: formValue.codigoNivEstudiosEsperado?.id, // Integer
+      codigoNivEstudioEsperado: formValue.codigoNivEstudioEsperado?.id, // Integer
       numEmpleadosMant: Number(formValue.numEmpleadosMant), // Integer
       numEmpleadosIncrement: Number(formValue.numEmpleadosIncrement), // Integer
       produccionActual: Number(formValue.produccionActual), // BigDecimal
       incrementActualEspe: Number(formValue.incrementActualEspe), // BigDecimal
-      contribucionFbk: Number(formValue.contribucionFbk), // BigDecimal
+      mantenerProduccionExportable: Number(formValue.mantenerProduccionExportable), // BigDecimal
+      incrementoProduccionExportable: Number(formValue.incrementoProduccionExportable), // BigDecimal
+      contribucFbk: Number(formValue.contribucFbk), // BigDecimal
+      incremnetoInvFbk: Number(formValue.incremnetoInvFbk), // BigDecimal
       contribucionIntCancer: Number(formValue.contribucionIntCancer), // BigDecimal
-      destiCredInmuebles: formValue.destiCredInmuebles, // String
-      valorComercial: Number(formValue.valorComercial), // BigDecimal
+      destiCredInmuebles: formValue.destiCredInmuebles?.id, // String
+      valorComercialInm: Number(formValue.valorComercialInm), // BigDecimal
       metrosCuadrados: Number(formValue.metrosCuadrados), // BigDecimal
       numeroTotalPersonaAportan: Number(formValue.numeroTotalPersonaAportan) // Integer
     };
