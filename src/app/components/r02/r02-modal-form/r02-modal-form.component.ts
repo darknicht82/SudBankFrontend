@@ -107,7 +107,7 @@ export class R02ModalFormComponent implements OnInit{
 
       contribucionIntCancer: [null, Validators.required],
       destiCredInmuebles: [null, Validators.required],
-      valorComercial: [null, Validators.required],
+      valorComercialInm: [null, Validators.required],
       metrosCuadrados: [null, Validators.required],
       numeroTotalPersonaAportan: [null, Validators.required]
     });
