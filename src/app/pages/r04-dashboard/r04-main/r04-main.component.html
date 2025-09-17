@@ -19,7 +19,6 @@
                 <p><strong>Código Banco:</strong> 1038</p>
                 <p><strong>Formato archivo:</strong> r04Exxxxddmmaaaa.txt</p>
                 <p><strong>Fuente:</strong> Manual Técnico de Estructuras de Datos de Operaciones Activas y Contingentes - Versión 13.0 - 27/09/2023</p>
-
                 <div class="requirements">
                     <strong>Requisitos:</strong>
                     <ul>
@@ -91,7 +90,7 @@
                 <tbody>
                     <tr *ngFor="let item of arrayResume">
                         <td class="data-cell">
-                            <span class="cell-value">{{ item.tipoIdentificacion?.description }}</span>
+                            <span class="cell-value">{{ item.tipoIdentificacion.description }}</span>   
                         </td>
                         <td class="data-cell">
                             <span class="cell-value">{{ item.identificacionSujeto }}</span>
@@ -103,7 +102,7 @@
                             <span class="cell-value">{{ item.diasMorosidad }}</span>
                         </td>
                         <td class="data-cell">
-                            <span class="cell-value">{{ item.calificacionPropia?.description }}</span>
+                            <span class="cell-value">{{ item.calificacionPropia.description }}</span>
                         </td>
                         <td class="data-cell">
                             <span class="cell-value">{{ item.tasaInteres | percent:'1.2-2' }}</span>
@@ -118,13 +117,13 @@
                             <span class="cell-value">{{ item.provisionConstituida | currency:'USD':'symbol':'1.2-2' }}</span>
                         </td>
                         <td class="data-cell">
-                            <span class="cell-value">{{ item.tipoOperacion?.description }}</span>
+                            <span class="cell-value">{{ item.tipoOperacion.description }}</span>
                         </td>
                         <td class="data-cell">
                             <span class="cell-value">{{ item.fechaExigibilidadCuota | date:'dd/MM/yyyy' }}</span>
                         </td>
                         <td class="data-cell">
-                            <span class="cell-value">{{ item.tipoSistemaAmortizacion?.description }}</span>
+                            <span class="cell-value">{{ item.tipoSistemaAmortizacion.description }}</span>
                         </td>
                     </tr>
                 </tbody>
