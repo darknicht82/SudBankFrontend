@@ -1,0 +1,408 @@
+<!-- Modal del Formulario R04 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+
+        <!-- Header -->
+        <div class="modal-header">
+            <div class="header-content">
+                <span class="operation-icon">📝</span>
+                <h3 class="modal-title">Crear Nuevo Registro R04 - Todos los Campos (50)</h3>
+            </div>
+            <button class="close-button" (click)="closeModal()" type="button">
+                <span>&times;</span>
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+            <form [formGroup]="r04Form" (ngSubmit)="onSubmit()" class="w-100">
+
+                <!-- Sección: Título -->
+                <h5 class="mt-3 mb-2 border-bottom pb-1">Título</h5>
+                <div class="row g-2">
+                    <!-- Tipo Identificación -->
+                    <div class="col-md-6">
+                        <label for="tipoIdentificacion" class="form-label">Tipo de Identificación</label>
+                        <select id="tipoIdentificacion" class="form-select" formControlName="tipoIdentificacion">
+                            <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+                            <option *ngFor="let item of arrayTipoIdentificacion" [ngValue]="item">
+                                {{ item.descripcion }}
+                            </option>
+                        </select>
+                        <div *ngIf="isInvalid('tipoIdentificacion')" class="text-danger small mt-1">
+                            Escoga un tipo de identificación
+                        </div>
+                    </div>
+                    <!-- Identificación del sujeto -->
+                    <div class="col-md-6">
+                        <label for="identificacionSujeto" class="form-label">Identificación del sujeto</label>
+                        <input id="identificacionSujeto" class="form-control" formControlName="identificacionSujeto"
+                            type="text" />
+                        <div *ngIf="isInvalid('identificacionSujeto')" class="text-danger small mt-1">
+                            La identificación es obligatoria
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-2">
+                    <!-- Número de operación -->
+                    <div class="col-md-6">
+                        <label for="numeroOperacion" class="form-label">Número de operación</label>
+                        <input id="numeroOperacion" class="form-control" formControlName="numeroOperacion"
+                            type="text" />
+                        <div *ngIf="isInvalid('numeroOperacion')" class="text-danger small mt-1">
+                            El número de operación es obligatorio
+                        </div>
+                    </div>
+                    <!-- Días de morosidad -->
+                    <div class="col-md-6">
+                        <label for="diasMorosidad" class="form-label">Días de morosidad</label>
+                        <input id="diasMorosidad" class="form-control" formControlName="diasMorosidad" type="number" />
+                        <div *ngIf="isInvalid('diasMorosidad')" class="text-danger small mt-1">
+                            Los días de morosidad son obligatorios
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Calificación (5-7) -->
+                <h5 class="mt-3 mb-2 border-bottom pb-1">Calificación</h5>
+                <div class="row g-2">
+                    <!-- Metodología de calificación -->
+                    <div class="col-md-4">
+                        <label for="metodologiaCalificacion" class="form-label">Metodología de calificación</label>
+                        <select id="metodologiaCalificacion" class="form-select" formControlName="metodologiaCalificacion">
+                            <option [ngValue]="null" disabled selected>Seleccione metodología</option>
+                            <option *ngFor="let item of arrayMetodologiaCalificacion" [ngValue]="item">
+                                {{ item.descripcion }}
+                            </option>
+                        </select>
+                        <div *ngIf="isInvalid('metodologiaCalificacion')" class="text-danger small mt-1">
+                            Seleccione una metodología
+                        </div>
+                    </div>
+                    <!-- Calificación propia -->
+                    <div class="col-md-4">
+                        <label for="calificacionPropia" class="form-label">Calificación propia</label>
+                        <select id="calificacionPropia" class="form-select" formControlName="calificacionPropia">
+                            <option [ngValue]="null" disabled selected>Seleccione calificación</option>
+                            <option *ngFor="let item of arrayCalificacionPropia" [ngValue]="item">
+                                {{ item.descripcion }}
+                            </option>
+                        </select>
+                        <div *ngIf="isInvalid('calificacionPropia')" class="text-danger small mt-1">
+                            Seleccione una calificación
+                        </div>
+                    </div>
+                    <!-- Calificación homologada -->
+                    <div class="col-md-4">
+                        <label for="calificacionHomologada" class="form-label">Calificación homologada</label>
+                        <select id="calificacionHomologada" class="form-select" formControlName="calificacionHomologada">
+                            <option [ngValue]="null" disabled selected>Seleccione calificación</option>
+                            <option *ngFor="let item of arrayCalificacionHomologada" [ngValue]="item">
+                                {{ item.descripcion }}
+                            </option>
+                        </select>
+                        <div *ngIf="isInvalid('calificacionHomologada')" class="text-danger small mt-1">
+                            Seleccione una calificación
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Información Financiera (8) -->
+                <h5 class="mt-3 mb-2 border-bottom pb-1">Información Financiera</h5>
+                <div class="row g-2">
+                    <!-- Tasa de interés -->
+                    <div class="col-md-6">
+                        <label for="tasaInteres" class="form-label">Tasa de interés (%)</label>
+                        <input id="tasaInteres" class="form-control" formControlName="tasaInteres" type="number" step="0.01" />
+                        <div *ngIf="isInvalid('tasaInteres')" class="text-danger small mt-1">
+                            La tasa de interés es obligatoria
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Valores por Vencer (9-13) -->
+                <h5 class="mt-3 mb-2 border-bottom pb-1">Valores por Vencer</h5>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorPorVencer1a30" class="form-label">Valor por vencer de 1 a 30 días</label>
+                        <input id="valorPorVencer1a30" class="form-control" formControlName="valorPorVencer1a30" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorPorVencer31a90" class="form-label">Valor por vencer de 31 a 90 días</label>
+                        <input id="valorPorVencer31a90" class="form-control" formControlName="valorPorVencer31a90" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorPorVencer91a180" class="form-label">Valor por vencer de 91 a 180 días</label>
+                        <input id="valorPorVencer91a180" class="form-control" formControlName="valorPorVencer91a180" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorPorVencer181a360" class="form-label">Valor por vencer de 181 a 360 días</label>
+                        <input id="valorPorVencer181a360" class="form-control" formControlName="valorPorVencer181a360" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorPorVencerMas360" class="form-label">Valor por vencer de más de 360 días</label>
+                        <input id="valorPorVencerMas360" class="form-control" formControlName="valorPorVencerMas360" type="number" step="0.01" />
+                    </div>
+                </div>
+
+                <!-- Sección: Valores que no Devengan Intereses (14-18) -->
+                <h5 class="mt-3 mb-2 border-bottom pb-1">Valores que no Devengan Intereses</h5>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorNoDevenga1a30" class="form-label">Valor que no devenga intereses de 1 a 30 días</label>
+                        <input id="valorNoDevenga1a30" class="form-control" formControlName="valorNoDevenga1a30" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorNoDevenga31a90" class="form-label">Valor que no devenga intereses de 31 a 90 días</label>
+                        <input id="valorNoDevenga31a90" class="form-control" formControlName="valorNoDevenga31a90" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorNoDevenga91a180" class="form-label">Valor que no devenga intereses de 91 a 180 días</label>
+                        <input id="valorNoDevenga91a180" class="form-control" formControlName="valorNoDevenga91a180" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorNoDevenga181a360" class="form-label">Valor que no devenga intereses de 181 a 360 días</label>
+                        <input id="valorNoDevenga181a360" class="form-control" formControlName="valorNoDevenga181a360" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorNoDevengaMas360" class="form-label">Valor que no devenga intereses de más de 360 días</label>
+                        <input id="valorNoDevengaMas360" class="form-control" formControlName="valorNoDevengaMas360" type="number" step="0.01" />
+                    </div>
+                </div>
+
+                <!-- Sección: Valores Vencidos (19-29) -->
+                <h5 class="mt-3 mb-2 border-bottom pb-1">Valores Vencidos</h5>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorVencido1a30" class="form-label">Valor vencido de 1 a 30 días</label>
+                        <input id="valorVencido1a30" class="form-control" formControlName="valorVencido1a30" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorVencido31a90" class="form-label">Valor vencido de 31 a 90 días</label>
+                        <input id="valorVencido31a90" class="form-control" formControlName="valorVencido31a90" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorVencido91a180" class="form-label">Valor vencido de 91 a 180 días</label>
+                        <input id="valorVencido91a180" class="form-control" formControlName="valorVencido91a180" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorVencido181a360" class="form-label">Valor vencido de 181 a 360 días</label>
+                        <input id="valorVencido181a360" class="form-control" formControlName="valorVencido181a360" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorVencidoMas360" class="form-label">Valor vencido de más de 360 días</label>
+                        <input id="valorVencidoMas360" class="form-control" formControlName="valorVencidoMas360" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorVencido181a270" class="form-label">Valor vencido de 181 a 270 días</label>
+                        <input id="valorVencido181a270" class="form-control" formControlName="valorVencido181a270" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorVencidoMas270" class="form-label">Valor vencido de más de 270 días</label>
+                        <input id="valorVencidoMas270" class="form-control" formControlName="valorVencidoMas270" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorVencido91a270" class="form-label">Valor vencido De 91 a 270 días</label>
+                        <input id="valorVencido91a270" class="form-control" formControlName="valorVencido91a270" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorVencido271a360" class="form-label">Valor vencido de 271 a 360 días</label>
+                        <input id="valorVencido271a360" class="form-control" formControlName="valorVencido271a360" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorVencido361a720" class="form-label">Valor vencido de 361 a 720 días</label>
+                        <input id="valorVencido361a720" class="form-control" formControlName="valorVencido361a720" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorVencidoMas720" class="form-label">Valor vencido de más de 720 días</label>
+                        <input id="valorVencidoMas720" class="form-control" formControlName="valorVencidoMas720" type="number" step="0.01" />
+                    </div>
+                </div>
+
+                <!-- Sección: Campos Adicionales (30-37) -->
+                <h5 class="mt-3 mb-2 border-bottom pb-1">Campos Adicionales</h5>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="gastosRecuperacion" class="form-label">Gastos de recuperación de cartera vencida</label>
+                        <input id="gastosRecuperacion" class="form-control" formControlName="gastosRecuperacion" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="interesOrdinario" class="form-label">Interés ordinario</label>
+                        <input id="interesOrdinario" class="form-control" formControlName="interesOrdinario" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="interesSobreMora" class="form-label">Interés sobre mora</label>
+                        <input id="interesSobreMora" class="form-control" formControlName="interesSobreMora" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorDemandaJudicial" class="form-label">Valor en demanda judicial</label>
+                        <input id="valorDemandaJudicial" class="form-control" formControlName="valorDemandaJudicial" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="carteraCastigada" class="form-label">Cartera castigada</label>
+                        <input id="carteraCastigada" class="form-control" formControlName="carteraCastigada" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="provisionRequeridaOriginal" class="form-label">Provisión requerida original</label>
+                        <input id="provisionRequeridaOriginal" class="form-control" formControlName="provisionRequeridaOriginal" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="provisionRequeridaReducida" class="form-label">Provisión requerida reducida</label>
+                        <input id="provisionRequeridaReducida" class="form-control" formControlName="provisionRequeridaReducida" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="provisionConstituida" class="form-label">Provisión constituida</label>
+                        <input id="provisionConstituida" class="form-control" formControlName="provisionConstituida" type="number" step="0.01" />
+                    </div>
+                </div>
+
+                <!-- Sección: Campos Financieros (40-45) -->
+                <h5 class="mt-3 mb-2 border-bottom pb-1">Campos Financieros</h5>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="primaDescuento" class="form-label">Prima o descuento</label>
+                        <input id="primaDescuento" class="form-control" formControlName="primaDescuento" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="cuotaCredito" class="form-label">Cuota del crédito</label>
+                        <input id="cuotaCredito" class="form-control" formControlName="cuotaCredito" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="valorInteresesCuota" class="form-label">Valor de Intereses de la Cuota del Crédito</label>
+                        <input id="valorInteresesCuota" class="form-control" formControlName="valorInteresesCuota" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorSeguro" class="form-label">Valor del Seguro</label>
+                        <input id="valorSeguro" class="form-control" formControlName="valorSeguro" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="saldoCuotaCapitalDiferida" class="form-label">Saldo de la cuota de capital diferida</label>
+                        <input id="saldoCuotaCapitalDiferida" class="form-control" formControlName="saldoCuotaCapitalDiferida" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="valorInteresCapitalDiferido" class="form-label">Valor del interés de capital diferido</label>
+                        <input id="valorInteresCapitalDiferido" class="form-control" formControlName="valorInteresCapitalDiferido" type="number" step="0.01" />
+                    </div>
+                </div>
+
+                <!-- Sección: Campos de Fecha e Intereses (46-48) -->
+                <h5 class="mt-3 mb-2 border-bottom pb-1">Campos de Fecha e Intereses</h5>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="fechaTransferenciaCuentasVencidas" class="form-label">Fecha de transferencia a cuentas vencidas</label>
+                        <input id="fechaTransferenciaCuentasVencidas" class="form-control" formControlName="fechaTransferenciaCuentasVencidas" type="date" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="interesesAcumuladosPorCobrar" class="form-label">Intereses acumulados por cobrar</label>
+                        <input id="interesesAcumuladosPorCobrar" class="form-control" formControlName="interesesAcumuladosPorCobrar" type="number" step="0.01" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label for="interesesReversados" class="form-label">Intereses reversados</label>
+                        <input id="interesesReversados" class="form-control" formControlName="interesesReversados" type="number" step="0.01" />
+                    </div>
+                </div>
+
+                <!-- Sección: Operación (38-39) -->
+                <h5 class="mt-3 mb-2 border-bottom pb-1">Operación</h5>
+                <div class="row g-2">
+                    <!-- Tipo de operación -->
+                    <div class="col-md-6">
+                        <label for="tipoOperacion" class="form-label">Tipo de operación</label>
+                        <select id="tipoOperacion" class="form-select" formControlName="tipoOperacion">
+                            <option [ngValue]="null" disabled selected>Seleccione tipo</option>
+                            <option *ngFor="let item of arrayTipoOperacion" [ngValue]="item">
+                                {{ item.descripcion }}
+                            </option>
+                        </select>
+                        <div *ngIf="isInvalid('tipoOperacion')" class="text-danger small mt-1">
+                            Seleccione un tipo de operación
+                        </div>
+                    </div>
+                    <!-- Objeto del fideicomiso -->
+                    <div class="col-md-6">
+                        <label for="objetoFideicomiso" class="form-label">Objeto del fideicomiso</label>
+                        <select id="objetoFideicomiso" class="form-select" formControlName="objetoFideicomiso">
+                            <option [ngValue]="null" disabled selected>Seleccione objeto</option>
+                            <option *ngFor="let item of arrayObjetoFideicomiso" [ngValue]="item">
+                                {{ item.descripcion }}
+                            </option>
+                        </select>
+                        <div *ngIf="isInvalid('objetoFideicomiso')" class="text-danger small mt-1">
+                            Seleccione un objeto de fideicomiso
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección: Campos Adicionales (49-50) -->
+                <h5 class="mt-3 mb-2 border-bottom pb-1">Información Adicional</h5>
+                <div class="row g-2">
+                    <!-- Fecha de exigibilidad de la cuota -->
+                    <div class="col-md-6">
+                        <label for="fechaExigibilidadCuota" class="form-label">Fecha de exigibilidad de la cuota</label>
+                        <input id="fechaExigibilidadCuota" class="form-control" formControlName="fechaExigibilidadCuota"
+                            type="date" />
+                        <div *ngIf="isInvalid('fechaExigibilidadCuota')" class="text-danger small mt-1">
+                            La fecha de exigibilidad es obligatoria
+                        </div>
+                    </div>
+                    <!-- Tipo de sistema de amortización -->
+                    <div class="col-md-6">
+                        <label for="tipoSistemaAmortizacion" class="form-label">Tipo de sistema de amortización</label>
+                        <select id="tipoSistemaAmortizacion" class="form-select" formControlName="tipoSistemaAmortizacion">
+                            <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+                            <option *ngFor="let item of arrayTipoSistemaAmortizacion" [ngValue]="item">
+                                {{ item.descripcion }}
+                            </option>
+                        </select>
+                        <div *ngIf="isInvalid('tipoSistemaAmortizacion')" class="text-danger small mt-1">
+                            Seleccione un tipo de sistema de amortización
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" [disabled]="r04Form.invalid" (click)="onSubmit()">
+                <i class="bi bi-check"></i> Guardar Registro
+            </button>
+            <button type="button" (click)="closeModal()" class="btn btn-secondary">
+                <i class="bi bi-x"></i> Cancelar
+            </button>
+        </div>
+
+    </div>
+</div>

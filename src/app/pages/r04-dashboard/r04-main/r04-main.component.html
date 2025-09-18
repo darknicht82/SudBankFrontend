@@ -1,0 +1,159 @@
+<div class="r04-main-container">
+    <!-- CABECERA -->
+    <div class="header">
+        <h1>R04 - Saldos de Operaciones</h1>
+        <p class="subtitle">Se deberá reportar únicamente los nuevos títulos que se hayan instrumentado cada mes. Cada
+            título debe reportarse una única vez en esta estructura, hasta que se lo venda o liquide.</p>
+    </div>
+
+    <!-- INFORMACIÓN DE ESTRUCTURA -->
+    <div class="structure-info">
+        <div class="card">
+            <div class="card-header">
+                <h3>📋 Información de la Estructura R04</h3>
+            </div>
+            <div class="card-content">
+                <p><strong>Descripción:</strong> Contiene los saldos de todas las operaciones crediticias activas y contingentes que se encuentren registradas en el balance de la entidad financiera a la fecha de corte. Incluye el detalle de operaciones por vencer, vencidas, y en diferentes rangos de morosidad.</p>
+                <p><strong>Periodicidad:</strong> Mensual (M)</p>
+                <p><strong>Plazo entrega:</strong> Según requerimientos de la Superintendencia de Bancos</p>
+                <p><strong>Código Banco:</strong> 1038</p>
+                <p><strong>Formato archivo:</strong> r04Exxxxddmmaaaa.txt</p>
+                <p><strong>Fuente:</strong> Manual Técnico de Estructuras de Datos de Operaciones Activas y Contingentes - Versión 13.0 - 27/09/2023</p>
+                <div class="requirements">
+                    <strong>Requisitos:</strong>
+                    <ul>
+                        <li>Estructura mensual obligatoria</li>
+                        <li>50 campos oficiales (12 obligatorios, 38 opcionales)</li>
+                        <li>Formato TXT con separador tabulador</li>
+                        <li>Validaciones según manual SB</li>
+                        <li>Reporte de saldos por vencer y vencidos</li>
+                        <li>Clasificación por rangos de morosidad</li>
+                    </ul>
+                </div>
+
+                <strong>Campos Oficiales:</strong>
+                <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
+                    <app-r04-table></app-r04-table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESUMEN -->
+    <div class="summary-section">
+        <div class="card">
+            <div class="card-header">
+                <h3>📊 Resumen del Reporte</h3>
+            </div>
+            <div class="card-content">
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <label>Total Registros:</label>
+                        <span>{{ getTotalRegistros() }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <label>Fecha Generación:</label>
+                        <span>{{ getFechaGeneracion() }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <label>Emisores Únicos:</label>
+                        <span>{{ getTotalEmisores() }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <label>Operaciones Activas:</label>
+                        <span>{{ getTotalRegistros() }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="data-section">
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Tipo Identificación</th>
+                        <th>Identificación Sujeto</th>
+                        <th>Número Operación</th>
+                        <th>Días Morosidad</th>
+                        <th>Calificación Propia</th>
+                        <th>Tasa Interés</th>
+                        <th>Valor Vencido 1-30</th>
+                        <th>Valor Vencido 31-90</th>
+                        <th>Provisión Constituida</th>
+                        <th>Tipo Operación</th>
+                        <th>Fecha Exigibilidad Cuota</th>
+                        <th>Tipo Sistema Amortización</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of arrayResume">
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.tipoIdentificacion.description }}</span>   
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.identificacionSujeto }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.numeroOperacion }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.diasMorosidad }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.calificacionPropia.description }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.tasaInteres | percent:'1.2-2' }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.valorVencido1a30 | currency:'USD':'symbol':'1.2-2' }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.valorVencido31a90 | currency:'USD':'symbol':'1.2-2' }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.provisionConstituida | currency:'USD':'symbol':'1.2-2' }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.tipoOperacion.description }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.fechaExigibilidadCuota | date:'dd/MM/yyyy' }}</span>
+                        </td>
+                        <td class="data-cell">
+                            <span class="cell-value">{{ item.tipoSistemaAmortizacion.description }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button (click)="validateAndGenerateReport()" [disabled]="loading" class="btn btn-primary">
+            <i class="pi pi-check-circle"></i>
+            {{ loading ? 'Validando...' : 'Validar y Generar Reporte R04' }}
+        </button>
+
+        <button (click)="exportToTxt()" class="btn btn-success">
+            <i class="pi pi-download"></i>
+            Exportar TXT
+        </button>
+
+        <button (click)="openModal()" class="btn btn-info">
+            <i class="pi pi-plus"></i>
+            Crear Nuevo Registro
+        </button>
+    </div>
+
+    <app-r04-modal-form [isVisible]="showModalForm" (modalClosed)="onModalClosed()"></app-r04-modal-form>
+
+    <div *ngIf="loading" class="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Generando reporte R04...</p>
+        </div>
+    </div>
+</div>
