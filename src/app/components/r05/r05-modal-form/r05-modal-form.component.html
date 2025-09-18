@@ -1,0 +1,130 @@
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+<!-- Header --> 
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro R05</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+<!-- Body -->
+ <div class="modal-body">
+        <form [formGroup]="r05Form" (ngSubmit)="onSubmit()" class="w-100">
+            <!-- Sección: Título -->
+            <h5 class="mt-3 mb-2 border-bottom pb-1">Título</h5>
+            <div class="row g-2">
+               <!-- Tipo Identificación -->
+          <div class="col-md-6">
+            <label for="tipoIdentificacion" class="form-label">Tipo de Identificación</label>
+            <select 
+              id="tipoIdentificacion" 
+              class="form-select"
+              formControlName="tipoIdentificacion">
+              <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+              <option *ngFor="let item of arrayTipoIdentificacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoIdentificacion')" class="text-danger small mt-1">
+              Escoga un tipo de identificación
+            </div>
+          </div>
+           <!--Identificación Sujeto-->
+            <div class="col-md-6">
+                <label for="identificacionSujeto" class="form-label">Identificación del Sujeto</label>
+                <input type="text" id="identificacionSujeto" class="form-control" formControlName="identificacionSujeto" />
+                <div *ngIf="isInvalid('identificacionSujeto')" class="text-danger small mt-1">
+                    La identificación del Sujeto es obligatorio
+                </div>
+          </div>
+
+          <!--Numero Operacion-->
+            <div class="col-md-6">
+                <label for="numeroOperacion" class="form-label">Número de Operación</label>
+                <input type="text" id="numeroOperacion" class="form-control" formControlName="numeroOperacion" />
+                <div *ngIf="isInvalid('numeroOperacion')" class="text-danger small mt-1">
+                    El número de Operación es obligatorio
+                </div>
+            </div>
+
+            <!--Tipo de Transaccion-->
+            <div class="col-md-6">
+                <label for="codigoTipoTransaccion" class="form-label">Tipo de Transaccion</label>
+                <select 
+                  id="codigoTipoTransaccion" 
+                  class="form-select"
+                  formControlName="codigoTipoTransaccion">
+                  <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+                  <option *ngFor="let item of arrayTipoTransaccion" [ngValue]="item">
+                    {{ item.descripcion }}
+                  </option>
+                </select>
+                <div *ngIf="isInvalid('codigoTipoTransaccion')" class="text-danger small mt-1">
+                  Escoga un tipo de transaccion
+                </div>
+            </div>
+
+            <!--Fecha de Cancelacion-->
+            <div class="col-md-6">
+                <label for="fechaCancelacion" class="form-label">Fecha de Cancelacion</label>
+                <input type="date" id="fechaCancelacion" class="form-control" formControlName="fechaCancelacion" />
+                <div *ngIf="isInvalid('fechaCancelacion')" class="text-danger small mt-1">
+                    La fecha de cancelacion es obligatorio
+                </div>
+            </div>
+
+            <!--Forma de Cancelacion-->
+            <div class="col-md-6">
+                <label for="codigoFormaCancelacion" class="form-label">Forma de Cancelacion</label>
+                <select 
+                  id="codigoFormaCancelacion" 
+                  class="form-select"
+                  formControlName="codigoFormaCancelacion">
+                  <option [ngValue]="null" disabled selected>Seleccione una forma</option>
+                  <option *ngFor="let item of arrayFormaCancelacion" [ngValue]="item">
+                    {{ item.descripcion }}
+                  </option>
+                </select>
+                <div *ngIf="isInvalid('codigoFormaCancelacion')" class="text-danger small mt-1">
+                  Escoga una forma de cancelacion
+                </div>
+            </div>
+
+            <!--Calificacion-->
+            <div class="col-md-6">
+                <label for="codigoCalificacion" class="form-label">Calificacion Riesgo</label>
+                <select 
+                  id="codigoCalificacion" 
+                  class="form-select"
+                  formControlName="codigoCalificacion">
+                  <option [ngValue]="null" disabled selected>Seleccione una calificacion</option>
+                  <option *ngFor="let item of arrayCodigoCalificacion" [ngValue]="item">
+                    {{ item.descripcion }}
+                  </option>
+                </select>
+                <div *ngIf="isInvalid('codigoCalificacion')" class="text-danger small mt-1">
+                  La calificacion es obligatorio
+                </div>
+            </div>
+          </div>
+        </form>
+    </div>
+
+<!-- Footer -->
+ <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="r05Form.invalid" (click)="onSubmit()">
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+
+
+      </div>
+</div>
