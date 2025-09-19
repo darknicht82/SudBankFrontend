@@ -34,7 +34,7 @@ export class R05CatalogService {
   constructor(private http: HttpClient) {}
 
   getResume(): Observable<R05Resume[]>{
-    return this.http.get<R05Resume[]>(`${this.baseUrl}/structures/R05/resumen`)
+    return this.http.get<R05Resume[]>(`${this.baseUrl}/structures/R05/resume`)
       .pipe(
         catchError(error => {
           console.error('Error al obtener Tabla 4 desde API real:', error);
