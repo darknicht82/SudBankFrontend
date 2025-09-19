@@ -93,7 +93,7 @@ export class R05ModalFormComponent {
         this.arrayTipoTransaccion = data;
       },
       error: (error) => {
-        console.error('Error al cargar Tipos de Identificación:', error);
+        console.error('Error al cargar Tipos de Transacción:', error);
       }
     });
   }
@@ -104,7 +104,7 @@ export class R05ModalFormComponent {
         this.arrayFormaCancelacion = data;
       },
       error: (error) => {
-        console.error('Error al cargar Tipos de Identificación:', error);
+        console.error('Error al cargar las Formas de Cancelación:', error);
       }
     });
   }
@@ -115,7 +115,7 @@ export class R05ModalFormComponent {
         this.arrayCodigoCalificacion = data;
       },
       error: (error) => {
-        console.error('Error al cargar Tipos de Identificación:', error);
+        console.error('Error al cargar las Calificaciones:', error);
       }
     });
   }
