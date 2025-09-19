@@ -88,7 +88,7 @@ export class R05ModalFormComponent {
   }
 
   private loadTipoTransaccion(): void {
-    this.GenericService.getAllByCatalog('t39').subscribe({
+    this.GenericService.getAllByCatalog('t208').subscribe({
       next: (data) => {
         this.arrayTipoTransaccion = data;
       },
@@ -99,7 +99,7 @@ export class R05ModalFormComponent {
   }
 
   private loadFormaCancelacion(): void {
-    this.GenericService.getAllByCatalog('t208').subscribe({
+    this.GenericService.getAllByCatalog('t39').subscribe({
       next: (data) => {
         this.arrayFormaCancelacion = data;
       },

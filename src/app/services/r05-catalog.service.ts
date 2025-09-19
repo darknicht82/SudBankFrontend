@@ -19,7 +19,6 @@ export interface R05Resume {
   fechaCancelacion: R05Catalog;
   codigoFormaCancelacion: R05Catalog;
   codigoCalificacion: R05Catalog;
-
 }
 
 
@@ -51,7 +50,7 @@ export class R05CatalogService {
     const payload = {
       codigoTipoIdentificacion: formValue.tipoIdentificacion?.id,
       identificacionSujeto: formValue.identificacionSujeto,
-      numeroOperacion: Number(formValue.numeroOperacion),
+      numeroOperacion: formValue.numeroOperacion,
       codigoTipoTransaccion: formValue.codigoTipoTransaccion?.id,
       fechaCancelacion: formValue.fechaCancelacion,
       codigoFormaCancelacion: formValue.codigoFormaCancelacion?.id,
