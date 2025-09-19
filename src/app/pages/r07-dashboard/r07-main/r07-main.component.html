@@ -1,0 +1,235 @@
+<div class="r07-main-container">
+  <!-- CABECERA -->
+  <div class="header">
+    <h1>R07 - Garantías Reales</h1>
+    <p class="subtitle">Se deberá reportar únicamente las garantías reales que se hayan constituido cada mes. Cada garantía debe reportarse una única vez en esta estructura, hasta que se la cancele o liquide.</p>
+  </div>
+
+  <!-- INFORMACIÓN DE ESTRUCTURA -->
+  <div class="structure-info">
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Información de la Estructura R07</h3>
+      </div>
+      <div class="card-content">
+        <p><strong>Descripción:</strong> Si una garantía que salió del portafolio de la entidad es constituida o reingresada nuevamente en otro mes, debe volverse a reportar con la nueva fecha de constitución. Si una garantía es constituida y cancelada dentro de un mismo mes y a la fecha de corte de la estructura la misma ya no se encuentra en el portafolio de la entidad, dicha garantía sí debe reportarse en esta estructura, así como también debe ser reportada en la estructura R08 como liquidación total.</p>
+        <p><strong>Periodicidad:</strong> Mensual </p>
+        <p><strong>Plazo entrega:</strong> Según requerimientos de la SB</p>
+        <p><strong>Código Banco:</strong> 1038</p>
+        <p><strong>Formato archivo:</strong> r07Exxxxddmmaaaa.txt</p>
+        <p><strong>Fuente:</strong> Manual de Operaciones Activas y Contingentes - SB Septiembre 2023</p>
+        
+        <div class="requirements">
+          <strong>Requisitos:</strong>
+          <ul>
+            <li>Estructura eventual (no mensual)</li>
+            <li>15 campos oficiales obligatorios</li>
+            <li>Formato TXT con separador tabulador</li>
+            <li>Validaciones según manual SB</li>
+          </ul>
+        </div>
+
+        <strong>Campos Oficiales:</strong>
+          <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
+            <!-- Tabla de campos R07 -->
+            <table class="fields-table">
+              <thead>
+                <tr>
+                  <th>Campo</th>
+                  <th>Descripción</th>
+                  <th>Tipo</th>
+                  <th>Obligatorio</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>tipoIdentificacionSujeto</td><td>Tipo de Identificación del Sujeto</td><td>String</td><td>Sí</td></tr>
+                <tr><td>identificacionSujeto</td><td>Identificación del Sujeto</td><td>String</td><td>Sí</td></tr>
+                <tr><td>numeroOperacion</td><td>Número de Operación</td><td>String</td><td>Sí</td></tr>
+                <tr><td>numeroGarantia</td><td>Número de Garantía</td><td>String</td><td>Sí</td></tr>
+                <tr><td>tipoGarantia</td><td>Tipo de Garantía</td><td>String</td><td>Sí</td></tr>
+                <tr><td>descripcionGarantia</td><td>Descripción de Garantía</td><td>String</td><td>Sí</td></tr>
+                <tr><td>ubicacionGarantiaPais</td><td>Ubicación Garantía País</td><td>String</td><td>Sí</td></tr>
+                <tr><td>ubicacionGarantiaProvincia</td><td>Ubicación Garantía Provincia</td><td>String</td><td>No</td></tr>
+                <tr><td>ubicacionGarantiaCanton</td><td>Ubicación Garantía Cantón</td><td>String</td><td>No</td></tr>
+                <tr><td>valorAvaluoTitulo</td><td>Valor Avalúo Título</td><td>Number</td><td>Sí</td></tr>
+                <tr><td>fechaAvaluo</td><td>Fecha Avalúo</td><td>String</td><td>Sí</td></tr>
+                <tr><td>numeroRegistroGarantia</td><td>Número Registro Garantía</td><td>String</td><td>No</td></tr>
+                <tr><td>fechaContabilizacionGarantia</td><td>Fecha Contabilización Garantía</td><td>String</td><td>Sí</td></tr>
+                <tr><td>porcentajeCubreGarantia</td><td>Porcentaje Cubre Garantía</td><td>Number</td><td>Sí</td></tr>
+                <tr><td>estadoRegistro</td><td>Estado Registro</td><td>String</td><td>Sí</td></tr>
+              </tbody>
+            </table>
+          </div>  
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="summary-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>📊 Resumen del Reporte</h3>
+      </div>
+      <div class="card-content">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <label>Total Registros:</label>
+            <span>{{ arrayResume.length }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Fecha Generación:</label>
+            <span> 2025/01/20 </span>
+          </div>
+          <div class="summary-item">
+            <label>Garantías Activas:</label>
+            <span>{{ getGarantiasActivas() }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Tipos de Garantía:</label>
+            <span>{{ getUniqueTipoGarantias() }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Valor Total:</label>
+            <span>${{ getValorTotalAvaluo().toLocaleString() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-section">
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>
+              Tipo de Identificación
+            </th>
+            <th>
+              Identificación Sujeto
+            </th>
+            <th>
+              Número de Operación
+            </th>
+            <th>
+              Número de Garantía
+            </th>
+            <th>
+              Tipo de Garantía
+            </th>
+            <th>
+              Descripción de Garantía
+            </th>
+            <th>
+              Ubicación País
+            </th>
+            <th>
+              Ubicación Provincia
+            </th>
+            <th>
+              Ubicación Cantón
+            </th>
+            <th>
+              Valor Avalúo
+            </th>
+            <th>
+              Fecha Avalúo
+            </th>
+            <th>
+              Número Registro
+            </th>
+            <th>
+              Fecha Contabilización
+            </th>
+            <th>
+              % Cubre Garantía
+            </th>
+            <th>
+              Estado Registro
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of arrayResume">
+            <td class="data-cell">
+              <span class="cell-value">{{ item.tipoIdentificacionSujeto?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.identificacionSujeto }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.numeroOperacion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.numeroGarantia }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.tipoGarantia?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.descripcionGarantia }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.ubicacionGarantiaPais?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.ubicacionGarantiaProvincia?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.ubicacionGarantiaCanton?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">${{ item.valorAvaluoTitulo?.toLocaleString() }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.fechaAvaluo }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.numeroRegistroGarantia }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.fechaContabilizacionGarantia }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.porcentajeCubreGarantia }}%</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.estadoRegistro?.descripcion }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <button (click)="validateAndGenerateReport()" [disabled]="loading" class="btn btn-primary">
+      <i class="pi pi-check-circle"></i>
+      {{ loading ? 'Validando...' : 'Validar y Generar Reporte R07' }}
+    </button>
+
+    <button (click)="exportToTxt()" class="btn btn-success">
+      <i class="pi pi-download"></i>
+      Exportar TXT
+    </button>
+
+    <button (click)="openModal()" class="btn btn-info">
+      <i class="pi pi-plus"></i>
+      Crear Nuevo Registro
+    </button>
+  </div>
+
+
+
+  <app-r07-modal-form
+    [isVisible]="showModalForm"
+    (modalClosed)="onModalClosed()"
+    (saveData)="onSaveSuccess($event)"></app-r07-modal-form>
+
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Generando reporte R07...</p>
+    </div>
+  </div>
+</div>

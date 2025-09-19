@@ -1,0 +1,187 @@
+<div class="modal fade show" [class.show]="isVisible" tabindex="-1" role="dialog" style="display: block;" *ngIf="isVisible">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEdit ? 'Editar' : 'Nuevo' }} Registro R07 - Garantías Reales</h5>
+        <button type="button" class="btn-close" (click)="onCancel()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="r07Form" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <!-- Tipo de Identificación del Sujeto -->
+            <div class="col-md-4 mb-3">
+              <label for="tipoIdentificacionSujeto" class="form-label">
+                Tipo Identificación del Sujeto
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('tipoIdentificacionSujeto')"></i>
+              </label>
+              <select class="form-select" id="tipoIdentificacionSujeto" formControlName="tipoIdentificacionSujeto">
+                <option value="">Seleccionar...</option>
+                <option *ngFor="let option of tipoIdentificacionOptions" [value]="option.codigo">
+                  {{ option.codigo }} - {{ option.descripcion }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Identificación del Sujeto -->
+            <div class="col-md-4 mb-3">
+              <label for="identificacionSujeto" class="form-label">
+                Identificación del Sujeto
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('identificacionSujeto')"></i>
+              </label>
+              <input type="text" class="form-control" id="identificacionSujeto" formControlName="identificacionSujeto" maxlength="13">
+            </div>
+
+            <!-- Número de Operación -->
+            <div class="col-md-4 mb-3">
+              <label for="numeroOperacion" class="form-label">
+                Número de Operación
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('numeroOperacion')"></i>
+              </label>
+              <input type="text" class="form-control" id="numeroOperacion" formControlName="numeroOperacion" maxlength="32">
+            </div>
+
+            <!-- Número de Garantía -->
+            <div class="col-md-4 mb-3">
+              <label for="numeroGarantia" class="form-label">
+                Número de Garantía
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('numeroGarantia')"></i>
+              </label>
+              <input type="text" class="form-control" id="numeroGarantia" formControlName="numeroGarantia" maxlength="32">
+            </div>
+
+            <!-- Tipo de Garantía -->
+            <div class="col-md-4 mb-3">
+              <label for="tipoGarantia" class="form-label">
+                Tipo de Garantía
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('tipoGarantia')"></i>
+              </label>
+              <select class="form-select" id="tipoGarantia" formControlName="tipoGarantia">
+                <option value="">Seleccionar...</option>
+                <option *ngFor="let option of tipoGarantiaOptions" [value]="option.codigo">
+                  {{ option.codigo }} - {{ option.descripcion }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Descripción de la Garantía -->
+            <div class="col-md-4 mb-3">
+              <label for="descripcionGarantia" class="form-label">
+                Descripción de la Garantía
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('descripcionGarantia')"></i>
+              </label>
+              <input type="text" class="form-control" id="descripcionGarantia" formControlName="descripcionGarantia" maxlength="120">
+            </div>
+
+            <!-- Ubicación de la Garantía (País) -->
+            <div class="col-md-4 mb-3">
+              <label for="ubicacionGarantiaPais" class="form-label">
+                Ubicación de la Garantía (País)
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('ubicacionGarantiaPais')"></i>
+              </label>
+              <select class="form-select" id="ubicacionGarantiaPais" formControlName="ubicacionGarantiaPais" (change)="onPaisChange()">
+                <option value="">Seleccionar...</option>
+                <option *ngFor="let option of ubicacionPaisOptions" [value]="option.codigo">
+                  {{ option.codigo }} - {{ option.descripcion }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Ubicación de la Garantía (Provincia) -->
+            <div class="col-md-4 mb-3">
+              <label for="ubicacionGarantiaProvincia" class="form-label">
+                Ubicación de la Garantía (Provincia)
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('ubicacionGarantiaProvincia')"></i>
+              </label>
+              <select class="form-select" id="ubicacionGarantiaProvincia" formControlName="ubicacionGarantiaProvincia">
+                <option value="">Seleccionar...</option>
+                <option *ngFor="let option of ubicacionProvinciaOptions" [value]="option.codigo">
+                  {{ option.codigo }} - {{ option.descripcion }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Ubicación de la Garantía (Cantón) -->
+            <div class="col-md-4 mb-3">
+              <label for="ubicacionGarantiaCanton" class="form-label">
+                Ubicación de la Garantía (Cantón)
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('ubicacionGarantiaCanton')"></i>
+              </label>
+              <select class="form-select" id="ubicacionGarantiaCanton" formControlName="ubicacionGarantiaCanton">
+                <option value="">Seleccionar...</option>
+                <option *ngFor="let option of ubicacionCantonOptions" [value]="option.codigo">
+                  {{ option.codigo }} - {{ option.descripcion }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Valor del Avalúo / Título -->
+            <div class="col-md-4 mb-3">
+              <label for="valorAvaluoTitulo" class="form-label">
+                Valor del Avalúo / Título
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('valorAvaluoTitulo')"></i>
+              </label>
+              <input type="number" class="form-control" id="valorAvaluoTitulo" formControlName="valorAvaluoTitulo" step="0.01" min="0">
+            </div>
+
+            <!-- Fecha del Avalúo -->
+            <div class="col-md-4 mb-3">
+              <label for="fechaAvaluo" class="form-label">
+                Fecha del Avalúo
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('fechaAvaluo')"></i>
+              </label>
+              <input type="date" class="form-control" id="fechaAvaluo" formControlName="fechaAvaluo">
+            </div>
+
+            <!-- Número de Registro de la Garantía -->
+            <div class="col-md-4 mb-3">
+              <label for="numeroRegistroGarantia" class="form-label">
+                Número de Registro de la Garantía
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('numeroRegistroGarantia')"></i>
+              </label>
+              <input type="text" class="form-control" id="numeroRegistroGarantia" formControlName="numeroRegistroGarantia" maxlength="20">
+            </div>
+
+            <!-- Fecha de Contabilización de la Garantía -->
+            <div class="col-md-4 mb-3">
+              <label for="fechaContabilizacionGarantia" class="form-label">
+                Fecha de Contabilización de la Garantía
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('fechaContabilizacionGarantia')"></i>
+              </label>
+              <input type="date" class="form-control" id="fechaContabilizacionGarantia" formControlName="fechaContabilizacionGarantia">
+            </div>
+
+            <!-- Porcentaje que Cubre la Garantía -->
+            <div class="col-md-4 mb-3">
+              <label for="porcentajeCubreGarantia" class="form-label">
+                Porcentaje que Cubre la Garantía
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('porcentajeCubreGarantia')"></i>
+              </label>
+              <input type="number" class="form-control" id="porcentajeCubreGarantia" formControlName="porcentajeCubreGarantia" step="0.01" min="0" max="100">
+            </div>
+
+            <!-- Estado del Registro -->
+            <div class="col-md-4 mb-3">
+              <label for="estadoRegistro" class="form-label">
+                Estado del Registro
+                <i class="fas fa-info-circle text-info ms-1" [title]="getFieldTooltip('estadoRegistro')"></i>
+              </label>
+              <select class="form-select" id="estadoRegistro" formControlName="estadoRegistro">
+                <option value="">Seleccionar...</option>
+                <option *ngFor="let option of estadoRegistroOptions" [value]="option.codigo">
+                  {{ option.codigo }} - {{ option.descripcion }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="!r07Form.valid">
+          {{ isEdit ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="isVisible"></div>
