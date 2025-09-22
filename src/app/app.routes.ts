@@ -17,6 +17,7 @@ import { R02MainComponent } from './pages/r02-dashboard/r02-main/r02-main.compon
 import { L04MainComponent } from './pages/l04-dashboard/l04-main/l04-main.component';
 import { R04MainComponent } from './pages/r04-dashboard/r04-main/r04-main.component';
 import { R05MainComponent } from './pages/r05-dashboard/r05-main/r05-main.component';
+import { R08MainComponent } from './pages/r08-dashboard/r08-main/r08-main.component';
 
 // Componentes L01 eliminados - Solo se mantiene L01MainComponent
 
@@ -37,6 +38,7 @@ export const routes: Routes = [
   { path: 'l04', component: L04MainComponent },
   { path: 'r04', component: R04MainComponent },
   { path: 'r05', component: R05MainComponent },
+  { path: 'r08', component: R08MainComponent },
   { path: 'l08', children: [
     { path: '', component: L08MainComponent },
     { path: 'historico', component: L08HistoricoComponent },
@@ -56,6 +58,7 @@ export const routes: Routes = [
     { path: 'l03', component: L03MainComponent },
     { path: 'r04', component: R04MainComponent },
     { path: 'r05', component: R05MainComponent },
+    { path: 'r08', component: R08MainComponent },
     { path: 'l08', children: [
       { path: '', component: L08MainComponent },
       { path: 'historico', component: L08HistoricoComponent },

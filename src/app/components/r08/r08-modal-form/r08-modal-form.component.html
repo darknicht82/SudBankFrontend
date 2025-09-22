@@ -1,0 +1,427 @@
+<!-- Modal del Formulario r08 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro R08</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <form [formGroup]="r08Form" (ngSubmit)="onSubmit()" class="w-100">
+        <!-- Sección: Título -->
+        <h5 class="mt-3 mb-2 border-bottom pb-1">Título</h5>
+        <div class="row g-2">
+          <!-- Tipo Identificación -->
+          <div class="col-md-6">
+            <label for="tipoIdentificacion" class="form-label"
+              >Tipo de Identificación</label
+            >
+            <select
+              id="tipoIdentificacion"
+              class="form-select"
+              formControlName="tipoIdentificacion"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo
+              </option>
+              <option
+                *ngFor="let item of arrayTipoIdentificacion"
+                [ngValue]="item"
+              >
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="isInvalid('tipoIdentificacion')"
+              class="text-danger small mt-1"
+            >
+              Escoga un tipo de identificación
+            </div>
+          </div>
+
+          <!-- identificacionSujeto -->
+          <div class="col-md-6">
+            <label for="identificacionSujeto" class="form-label"
+              >Identificación del sujeto</label
+            >
+            <input
+              type="text"
+              id="identificacionSujeto"
+              class="form-control"
+              formControlName="identificacionSujeto"
+            />
+            <div
+              *ngIf="isInvalid('identificacionSujeto')"
+              class="text-danger small mt-1"
+            >
+              La identificación es obligatoria
+            </div>
+          </div>
+
+          <!-- numeroOperacion -->
+          <div class="col-md-6">
+            <label for="numeroOperacion" class="form-label"
+              >Número de operacion</label
+            >
+            <input
+              type="text"
+              id="numeroOperacion"
+              class="form-control"
+              formControlName="numeroOperacion"
+            />
+            <div
+              *ngIf="isInvalid('numeroOperacion')"
+              class="text-danger small mt-1"
+            >
+              El número de operacion es obligatorio
+            </div>
+          </div>
+
+          <!-- codigoBien -->
+          <div class="col-md-6">
+            <label for="codigoBien" class="form-label">COdigo del bien</label>
+            <input
+              type="text"
+              id="codigoBien"
+              class="form-control"
+              formControlName="codigoBien"
+            />
+            <div *ngIf="isInvalid('codigoBien')" class="text-danger small mt-1">
+              El codigo del bien es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="tipoBien" class="form-label">Tipo del bien</label>
+            <select
+              id="tipoBien"
+              class="form-select"
+              formControlName="tipoBien"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo
+              </option>
+              <option *ngFor="let item of arrayTipoBien" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoBien')" class="text-danger small mt-1">
+              El tipo de bien es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="descripcionBien" class="form-label"
+              >Descripcion del bien</label
+            >
+            <input
+              type="text"
+              id="descripcionBien"
+              class="form-control"
+              formControlName="descripcionBien"
+            />
+            <div
+              *ngIf="isInvalid('descripcionBien')"
+              class="text-danger small mt-1"
+            >
+              La descripcion del bien es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="pais" class="form-label">Pais</label>
+            <select id="pais" class="form-select" formControlName="pais">
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo
+              </option>
+              <option *ngFor="let item of arrayDestinoPais" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('pais')" class="text-danger small mt-1">
+              El pais es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="provincia" class="form-label">Provincia</label>
+            <select
+              id="provincia"
+              class="form-select"
+              formControlName="provincia"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo
+              </option>
+              <option
+                *ngFor="let item of arrayDestinoProvincia"
+                [ngValue]="item"
+              >
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('provincia')" class="text-danger small mt-1">
+              La provincia es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="canton" class="form-label">Canton</label>
+            <select id="canton" class="form-select" formControlName="canton">
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo
+              </option>
+              <option *ngFor="let item of arrayDestinoCanton" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('canton')" class="text-danger small mt-1">
+              El canton es obligatorio
+            </div>
+          </div>
+
+          <!-- Fecha de contabilizacion -->
+          <div class="col-md-6">
+            <label for="fechaContabilizacion" class="form-label"
+              >Fecha de Contabilización</label
+            >
+            <input
+              type="date"
+              id="fechaContabilizacion"
+              class="form-control"
+              formControlName="fechaContabilizacion"
+            />
+            <div
+              *ngIf="isInvalid('fechaContabilizacion')"
+              class="text-danger small mt-1"
+            >
+              La fecha de contabilización es obligatoria
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorLibros" class="form-label">Valor en libros</label>
+            <input
+              type="number"
+              id="valorLibros"
+              class="form-control"
+              formControlName="valorLibros"
+            />
+            <div
+              *ngIf="isInvalid('valorLibros')"
+              class="text-danger small mt-1"
+            >
+              El valor en libros es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorUltimoAvaluo" class="form-label"
+              >Valor de ultimo avaluo</label
+            >
+            <input
+              type="number"
+              id="valorUltimoAvaluo"
+              class="form-control"
+              formControlName="valorUltimoAvaluo"
+            />
+            <div
+              *ngIf="isInvalid('valorUltimoAvaluo')"
+              class="text-danger small mt-1"
+            >
+              El valor de ultimo avaluo es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="fechaUltimoAvaluo" class="form-label"
+              >Fecha de Ultimo Avaluo</label
+            >
+            <input
+              type="date"
+              id="fechaUltimoAvaluo"
+              class="form-control"
+              formControlName="fechaUltimoAvaluo"
+            />
+            <div
+              *ngIf="isInvalid('fechaUltimoAvaluo')"
+              class="text-danger small mt-1"
+            >
+              La fecha de ultimo avaluo es obligatoria
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorProvisionConstituida" class="form-label"
+              >Valor de provision constituida</label
+            >
+            <input
+              type="number"
+              id="valorProvisionConstituida"
+              class="form-control"
+              formControlName="valorProvisionConstituida"
+            />
+            <div
+              *ngIf="isInvalid('valorProvisionConstituida')"
+              class="text-danger small mt-1"
+            >
+              El valor de provision es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="fechaRealizacionBien" class="form-label"
+              >Fecha de Realizacion bien</label
+            >
+            <input
+              type="date"
+              id="fechaRealizacionBien"
+              class="form-control"
+              formControlName="fechaRealizacionBien"
+            />
+            <div
+              *ngIf="isInvalid('fechaRealizacionBien')"
+              class="text-danger small mt-1"
+            >
+              La fecha de realizacion bien es obligatoria
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorRealizacionBien" class="form-label"
+              >Valor de realizacion bien constituida</label
+            >
+            <input
+              type="number"
+              id="valorRealizacionBien"
+              class="form-control"
+              formControlName="valorRealizacionBien"
+            />
+            <div
+              *ngIf="isInvalid('valorRealizacionBien')"
+              class="text-danger small mt-1"
+            >
+              El valor de realizacion bien es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="estadoRegistro" class="form-label">Estado</label>
+            <select
+              id="estadoRegistro"
+              class="form-select"
+              formControlName="estadoRegistro"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo
+              </option>
+              <option *ngFor="let item of arrayEstado" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="isInvalid('estadoRegistro')"
+              class="text-danger small mt-1"
+            >
+              El Estado es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="custodioExterno" class="form-label"
+              >Custodio Externo</label
+            >
+            <input
+              type="text"
+              id="custodioExterno"
+              class="form-control"
+              formControlName="custodioExterno"
+            />
+            <div
+              *ngIf="isInvalid('custodioExterno')"
+              class="text-danger small mt-1"
+            >
+              El custodio externo es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="numeroProcesosSubasta" class="form-label"
+              >Numero Proceso Subasta</label
+            >
+            <input
+              type="text"
+              id="numeroProcesosSubasta"
+              class="form-control"
+              formControlName="numeroProcesosSubasta"
+            />
+            <div
+              *ngIf="isInvalid('numeroProcesosSubasta')"
+              class="text-danger small mt-1"
+            >
+              El numeroProcesosSubasta es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="fechaPrimeraSubasta" class="form-label"
+              >Fecha primera subasta</label
+            >
+            <input
+              type="date"
+              id="fechaPrimeraSubasta"
+              class="form-control"
+              formControlName="fechaPrimeraSubasta"
+            />
+            <div
+              *ngIf="isInvalid('fechaPrimeraSubasta')"
+              class="text-danger small mt-1"
+            >
+              La fecha primera subasta es obligatoria
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="fechaSegundaSubasta" class="form-label"
+              >Fecha segunda subasta</label
+            >
+            <input
+              type="date"
+              id="fechaSegundaSubasta"
+              class="form-control"
+              formControlName="fechaSegundaSubasta"
+            />
+            <div
+              *ngIf="isInvalid('fechaSegundaSubasta')"
+              class="text-danger small mt-1"
+            >
+              La fecha segunda subasta es obligatoria
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="r08Form.invalid"
+        (click)="onSubmit()"
+      >
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</div>
