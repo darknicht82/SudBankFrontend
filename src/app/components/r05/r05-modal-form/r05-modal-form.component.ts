@@ -13,7 +13,7 @@ import { R05CatalogService } from '../../../services/r05-catalog.service';
   templateUrl: './r05-modal-form.component.html',
   styleUrl: './r05-modal-form.component.scss' 
 })
-export class R05ModalFormComponent {
+export class R05ModalFormComponent implements OnInit{
 
   @Input() isVisible: boolean = false;
   @Output() modalClosed = new EventEmitter<void>();

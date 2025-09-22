@@ -12,7 +12,7 @@ import { R05CatalogService } from '../../../services/r05-catalog.service';
    standalone: true,
    imports: [FormsModule, CommonModule, R05FieldsTableComponent, R05ModalFormComponent]
 })
-export class R05MainComponent {
+export class R05MainComponent implements OnInit{
 
   showModalForm = false;
     loading = false;
