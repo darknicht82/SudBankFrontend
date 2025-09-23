@@ -1,0 +1,167 @@
+<!-- Modal del Formulario r13 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro R13</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <form [formGroup]="r13Form" (ngSubmit)="onSubmit()" class="w-100">
+        <!-- Sección: Título -->
+        <h5 class="mt-3 mb-2 border-bottom pb-1">Título</h5>
+        <div class="row g-2">
+          <!-- Tipo Identificación -->
+          <div class="col-md-6">
+            <label for="tipoIdentificacion" class="form-label"
+              >Tipo de Identificación</label
+            >
+            <select
+              id="tipoIdentificacion"
+              class="form-select"
+              formControlName="tipoIdentificacion"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo
+              </option>
+              <option
+                *ngFor="let item of arrayTipoIdentificacion"
+                [ngValue]="item"
+              >
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="isInvalid('tipoIdentificacion')"
+              class="text-danger small mt-1"
+            >
+              Escoga un tipo de identificación
+            </div>
+          </div>
+
+          <!-- identificacionSujeto -->
+          <div class="col-md-6">
+            <label for="identificacionIntegrante" class="form-label"
+              >Identificación del integrante</label
+            >
+            <input
+              type="text"
+              id="identificacionIntegrante"
+              class="form-control"
+              formControlName="identificacionIntegrante"
+            />
+            <div
+              *ngIf="isInvalid('identificacionIntegrante')"
+              class="text-danger small mt-1"
+            >
+              La identificación es obligatoria
+            </div>
+          </div>
+
+          <!-- numeroOperacion -->
+          <div class="col-md-6">
+            <label for="codigoGrupoEconomico" class="form-label"
+              >Código del grupo económico</label
+            >
+            <input
+              type="text"
+              id="codigoGrupoEconomico"
+              class="form-control"
+              formControlName="codigoGrupoEconomico"
+            />
+            <div
+              *ngIf="isInvalid('codigoGrupoEconomico')"
+              class="text-danger small mt-1"
+            >
+              El codigo del grupo economico es obligatorio
+            </div>
+          </div>
+
+          
+
+          <div class="col-md-6">
+            <label for="estadoIntegrante" class="form-label">Código del estado del integrante </label>
+            <select
+              id="estadoIntegrante"
+              class="form-select"
+              formControlName="estadoIntegrante"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo
+              </option>
+              <option *ngFor="let item of arrayEstado" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('estadoIntegrante')" class="text-danger small mt-1">
+              El estado es obligatorio
+            </div>
+          </div>
+
+
+          <!-- Fecha de contabilizacion -->
+          <div class="col-md-6">
+            <label for="fechaEstadoIntegrante" class="form-label"
+              >Fecha de Estado</label
+            >
+            <input
+              type="date"
+              id="fechaEstadoIntegrante"
+              class="form-control"
+              formControlName="fechaEstadoIntegrante"
+            />
+            <div
+              *ngIf="isInvalid('fechaEstadoIntegrante')"
+              class="text-danger small mt-1"
+            >
+              La fecha es obligatoria
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="factorIntegracion" class="form-label">Factor de integracion </label>
+            <select
+              id="factorIntegracion"
+              class="form-select"
+              formControlName="factorIntegracion"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un factor
+              </option>
+              <option *ngFor="let item of arrayEstado" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('factorIntegracion')" class="text-danger small mt-1">
+              El factor es obligatorio
+            </div>
+          </div>
+
+          
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="r13Form.invalid"
+        (click)="onSubmit()"
+      >
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</div>

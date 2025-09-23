@@ -1,29 +1,29 @@
-<div class="r09-main-container">
+<div class="r13-main-container">
   <!-- CABECERA -->
   <div class="header">
-    <h1>R09 - Titulos adjudicados o recibidos en dación en pago</h1>
-    <p class="subtitle">Tiene periodicidad mensual y comprende información sobre los titulos adjudicados a la institución financiera o recibidos en dación en pago.</p>
+    <h1>R13 - Reportes de Cancelaciones</h1>
+    <p class="subtitle">Se deberá reportar únicamente los nuevos títulos que se hayan instrumentado cada mes. Cada título debe reportarse una única vez en esta estructura, hasta que se lo venda o liquide.</p>
   </div>
 
-  <!-- INFORMACIÓN DE ESTRUCTURA -->
+   <!-- INFORMACIÓN DE ESTRUCTURA -->
   <div class="structure-info">
     <div class="card">
       <div class="card-header">
-        <h3>📋 Información de la Estructura R09</h3>
+        <h3>📋 Información de la Estructura R13</h3>
       </div>
       <div class="card-content">
-        <p><strong>Descripción:</strong> Tiene periodicidad mensual y comprende información sobre los bienes muebles e inmuebles adjudicados a la institución financiera o recibidos en dación en pago.</p>
+        <p><strong>Descripción:</strong> Esta estructura tiene periodicidad eventual y comprende el detalle de las operaciones de crédito y contingentes que han sido canceladas o cedidas, así como también la cancelación definitiva de las tarjetas de crédito. Adicionalmente comprende información de cambios de calificaciones de las operaciones que aún se encuentran activas (de manera excepcional, cuando se requiere reportar el cambio de calificación antes el proceso mensual).</p>
         <p><strong>Periodicidad:</strong> Mensual </p>
         <p><strong>Plazo entrega:</strong> Según requerimientos de la SB</p>
         <p><strong>Código Banco:</strong> 1038</p>
-        <p><strong>Formato archivo:</strong> r09Exxxxddmmaaaa.txt</p>
+        <p><strong>Formato archivo:</strong> R13Exxxxddmmaaaa.txt</p>
         <p><strong>Fuente:</strong> Manual de Control de Inversiones - SB Marzo 2017</p>
         
         <div class="requirements">
           <strong>Requisitos:</strong>
           <ul>
             <li>Estructura eventual (no mensual)</li>
-            <li>4 campos oficiales obligatorios</li>
+            <li>5 campos oficiales obligatorios</li>
             <li>Formato TXT con separador tabulador</li>
             <li>Validaciones según manual SB</li>
           </ul>
@@ -31,7 +31,7 @@
 
         <strong>Campos Oficiales:</strong>
           <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
-            <app-r09-fields-table></app-r09-fields-table>
+            <app-r13-fields-table></app-r13-fields-table>
           </div>  
       </div>
     </div>
@@ -51,7 +51,7 @@
           </div>
           <div class="summary-item">
             <label>Fecha Generación:</label>
-            <span> 2095/09/20 </span>
+            <span> 2025/08/20 </span>
           </div>
           <div class="summary-item">
             <label>Emisores:</label>
@@ -70,7 +70,7 @@
     </div>
   </div>
 
-  <div class="data-section">
+   <div class="data-section">
     <div class="table-container">
       <table class="data-table">
         <thead>
@@ -85,20 +85,17 @@
               Número de Operación
             </th>
             <th>
-              Codigo de titulo valor
+              Entidad Participante
             </th>
             <th>
-              Tipo de titulo
-            </th>
-            <th>
-              Descripcion de titulo
+              Porcentaje de la Particapacion
             </th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of arrayResume">
             <td class="data-cell">
-              <span class="cell-value">{{ item.tipoIdentificacion?.descripcion }}</span>
+              <span class="cell-value">{{ item.tipoIdentificacion?.descripcion  }}</span>
             </td>
             <td class="data-cell">
               <span class="cell-value">{{ item.identificacionSujeto }}</span>
@@ -107,14 +104,12 @@
               <span class="cell-value">{{ item.numeroOperacion }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">{{ item.codigoTitulo }}</span>
+              <span class="cell-value">{{ item.codigoEntidadParticipe?.descripcion }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">{{ item.tipoTitulo.descripcion }}</span>
+              <span class="cell-value">{{ item.porcentajeParticipacion }}</span>
             </td>
-            <td class="data-cell">
-              <span class="cell-value">{{ item.descripcionTitulo }}</span>
-            </td>
+            
           </tr>
         </tbody>
       </table>
@@ -124,7 +119,7 @@
   <div class="d-flex gap-2">
     <button (click)="validateAndGenerateReport()" [disabled]="loading" class="btn btn-primary">
       <i class="pi pi-check-circle"></i>
-      {{ loading ? 'Validando...' : 'Validar y Generar Reporte R09' }}
+      {{ loading ? 'Validando...' : 'Validar y Generar Reporte R13' }}
     </button>
 
     <button (click)="exportToTxt()" class="btn btn-success">
@@ -138,14 +133,14 @@
     </button>
   </div>
 
-  <app-r09-modal-form
+  <app-r13-modal-form
     [isVisible]="showModalForm"
-    (modalClosed)="onModalClosed()"></app-r09-modal-form>
+    (modalClosed)="onModalClosed()"></app-r13-modal-form>
 
   <div *ngIf="loading" class="loading-overlay">
     <div class="loading-spinner">
       <div class="spinner"></div>
-      <p>Generando reporte R09...</p>
+      <p>Generando reporte R13...</p>
     </div>
   </div>
 
