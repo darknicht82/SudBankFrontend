@@ -18,7 +18,7 @@ export interface CatalogItem {
 }
 
 export interface R07Resume {
-  tipoIdentificacionSujeto: R07Catalog;
+  tipoIdentificacion: R07Catalog;
   ubicacionGarantiaPais: R07Catalog;
   ubicacionGarantiaProvincia: R07Catalog;
   ubicacionGarantiaCanton: R07Catalog;
@@ -37,7 +37,7 @@ export interface R07Resume {
 
 export interface R07Data {
   id: number;
-  tipoIdentificacionSujeto: string;
+  tipoIdentificacion: string;
   identificacionSujeto: string;
   numeroOperacion: string;
   numeroGarantia: string;
@@ -196,7 +196,7 @@ export class R07CatalogService {
 
     // Transform form into expected payload
     const payload = {
-      codigoTipoIdentificacion: formValue.tipoIdentificacionSujeto?.id,
+      codigoTipoIdentificacion: formValue.tipoIdentificacion?.id,
       identificacionSujeto: formValue.identificacionSujeto,
       numeroOperacion: formValue.numeroOperacion,
       numeroGarantia: formValue.numeroGarantia,
