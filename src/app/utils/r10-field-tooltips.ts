@@ -1,10 +1,10 @@
 /**
  * TOOLTIPS Y GLOSARIO DE CAMPOS R04 - SALDOS DE OPERACIONES
  * Manual Técnico de Estructuras de Datos de Operaciones Activas y Contingentes
- * Superintendencia de Bancos del Ecuador - Versión 13.0 - 27/09/2023
+ * Superintendencia de Bancos del Ecuador - Versión 13.0 - 27/10/2023
  */
 
-export interface R11FieldTooltip {
+export interface R10FieldTooltip {
   no: number;
   campo: string;
   tipoDeDato: string;
@@ -13,7 +13,7 @@ export interface R11FieldTooltip {
   descripcion: string;
 }
 
-export const R11_FIELD_TOOLTIPS: R11FieldTooltip[] = [
+export const R10_FIELD_TOOLTIPS: R10FieldTooltip[] = [
   {
     "no": 1,
     "campo": "Tipo de identificación",
@@ -40,19 +40,43 @@ export const R11_FIELD_TOOLTIPS: R11FieldTooltip[] = [
   },
   {
     "no": 4,
-    "campo": "Entidad participante",
-    "tipoDeDato": "Numérico (4)",
+    "campo": "Clase de bien o título",
+    "tipoDeDato": "Caracter (1)",
     "obligatoriedad": "X",
-    "tabla": "2",
-    "descripcion": "Código de la institución financiera que es partícipe del crédito participado. Debe incluirse también a la institución financiera que es considerada como “agente”."
+    "tabla": "214",
+    "descripcion": "Código que indica si lo adjudicado o recibido en dación en pago corresponde a un bien mueble o inmueble, o a un título valor."
   },
   {
     "no": 5,
-    "campo": "Porcentaje de participación",
-    "tipoDeDato": "Numérico (4,2)",
+    "campo": "Código del bien o titulo",
+    "tipoDeDato": "Caracter (20)",
     "obligatoriedad": "X",
     "tabla": "",
-    "descripcion": "Valor expresado en porcentaje con el que la entidad partícipe contribuye en el valor de la operación concedida (R02). Debe ser expresado en formato numérico, por ejemplo 14.5, 25.12, etc."
+    "descripcion": "Código único con el que la institución financiera identifica al bien o título adjudicado o recibido en dación en pago."
+  },
+  {
+    "no": 6,
+    "campo": "Tipo de bien o titulo",
+    "tipoDeDato": "Caracter (3)",
+    "obligatoriedad": "X",
+    "tabla": "41, 41-A",
+    "descripcion": "Código que clasifica a los bienes muebles e inmuebles o títulos valores. Si corresponde a un bien mueble o inmueble adjudicado o recibido enación en pago, entonces este campo deberá hacer referencia a la tabla 41. Si corresponde a un título valor adjudicado o recibido en dación en pago, entonces este campo deberá hacer referencia a la tabla 41-A."
+  },
+  {
+    "no": 7,
+    "campo": "Provisión constituida",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor de la provisión que la institución ha constituido para dicho bien."
+  },
+  {
+    "no": 8,
+    "campo": "Costos generados",
+    "tipoDeDato": "Numérico (15,2)",
+    "obligatoriedad": "X",
+    "tabla": "",
+    "descripcion": "Valor de los costos generados por mantenimiento, administración y realización del bien. El reporte de estos costos será con información mensual, es decir al final del mes se reportarán los costos incurridos en ese período. En el primer envío, el reporte debe contener los costos acumulados hasta esa fecha."
   },
   
 ];
@@ -60,12 +84,12 @@ export const R11_FIELD_TOOLTIPS: R11FieldTooltip[] = [
 /**
  * Información estructural de R04 - SALDOS DE OPERACIONES
  */
-export const R11_STRUCTURE_INFO = {
+export const R10_STRUCTURE_INFO = {
   title: 'Estructura R04 - Saldos de Operaciones',
   description: 'Contiene los saldos de todas las operaciones crediticias activas y contingentes que se encuentren registradas en el balance de la entidad financiera a la fecha de corte. Incluye el detalle de operaciones por vencer, vencidas, y en diferentes rangos de morosidad.',
   periodicity: 'Mensual (M)',
   deadline: 'Según requerimientos de la Superintendencia de Bancos',
-  source: 'Manual Técnico de Estructuras de Datos de Operaciones Activas y Contingentes - Versión 13.0 - 27/09/2023',
+  source: 'Manual Técnico de Estructuras de Datos de Operaciones Activas y Contingentes - Versión 13.0 - 27/10/2023',
   bankCode: '1038 - Banco Sudamericano',
   fileFormat: 'r04Exxxxddmmaaaa.txt',
   requirements: {
@@ -394,13 +418,13 @@ export const R11_STRUCTURE_INFO = {
 /**
  * Obtener tooltip para un campo específico de R04
  */
-export function getR04FieldTooltip(fieldName: string): R11FieldTooltip | null {
-  return R11_FIELD_TOOLTIPS.find(tooltip => tooltip.campo === fieldName) || null;
+export function getR04FieldTooltip(fieldName: string): R10FieldTooltip | null {
+  return R10_FIELD_TOOLTIPS.find(tooltip => tooltip.campo === fieldName) || null;
 }
 
 /**
  * Obtener todos los tooltips de R04
  */
-export function getAllR04FieldTooltips(): R11FieldTooltip[] {
-  return R11_FIELD_TOOLTIPS;
+export function getAllR04FieldTooltips(): R10FieldTooltip[] {
+  return R10_FIELD_TOOLTIPS;
 }
