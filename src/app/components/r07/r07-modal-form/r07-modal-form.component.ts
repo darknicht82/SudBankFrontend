@@ -1,139 +1,146 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { R07CatalogService, R07Data, CatalogItem } from '../../../services/r07-catalog.service';
-import { R07_FIELD_TOOLTIPS } from '../../../utils/r07-field-tooltips';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { T4Service } from '../../../services/t4.service';
+import { T5Service } from '../../../services/t5.service';
+import { T6Service } from '../../../services/t6.service';
+import { T7Service } from '../../../services/t7.service';
+import { T42Service } from '../../../services/t42.service';
+import { T47Service } from '../../../services/t47.service';
+import { R07CatalogService } from '../../../services/r07-catalog.service';
 
 @Component({
   selector: 'app-r07-modal-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './r07-modal-form.component.html',
-  styleUrls: ['./r07-modal-form.component.scss']
+  styleUrl: './r07-modal-form.component.scss'
 })
 export class R07ModalFormComponent implements OnInit {
   @Input() isVisible: boolean = false;
-  @Input() r07Data: R07Data | null = null;
-  @Input() isEdit: boolean = false;
   @Output() modalClosed = new EventEmitter<void>();
-  @Output() saveData = new EventEmitter<R07Data>();
 
+  arrayTipoIdentificacion: any[] = [];
+  arrayTipoGarantia: any[] = [];
+  arrayUbicacionPais: any[] = [];
+  arrayUbicacionProvincia: any[] = [];
+  arrayUbicacionCanton: any[] = [];
+  arrayEstadoRegistro: any[] = [];
   r07Form: FormGroup;
-  fieldTooltips = R07_FIELD_TOOLTIPS;
+  formSubmitted = false;
 
-  // Catalog data
-  tipoIdentificacionOptions: CatalogItem[] = [];
-  tipoGarantiaOptions: CatalogItem[] = [];
-  ubicacionPaisOptions: CatalogItem[] = [];
-  ubicacionProvinciaOptions: CatalogItem[] = [];
-  ubicacionCantonOptions: CatalogItem[] = [];
-  estadoRegistroOptions: CatalogItem[] = [];
-
-  constructor(
-    private fb: FormBuilder,
-    private r07Service: R07CatalogService
+  constructor(private fb: FormBuilder, 
+    private t4service: T4Service,
+    private t5service: T5Service,
+    private t6service: T6Service,
+    private t7service: T7Service,
+    private t42service: T42Service,
+    private t47service: T47Service,
+    private r07catalogService: R07CatalogService
   ) {
-    this.r07Form = this.createForm();
-  }
-
-  ngOnInit(): void {
-    this.loadCatalogs();
-    if (this.r07Data && this.isEdit) {
-      this.loadFormData();
-    }
-  }
-
-  private createForm(): FormGroup {
-    return this.fb.group({
-      tipoIdentificacionSujeto: ['', Validators.required],
-      identificacionSujeto: ['', [Validators.required, Validators.maxLength(13)]],
-      numeroOperacion: ['', [Validators.required, Validators.maxLength(32)]],
-      numeroGarantia: ['', [Validators.required, Validators.maxLength(32)]],
-      tipoGarantia: ['', Validators.required],
-      descripcionGarantia: ['', [Validators.required, Validators.maxLength(120)]],
-      ubicacionGarantiaPais: ['', Validators.required],
-      ubicacionGarantiaProvincia: [''],
-      ubicacionGarantiaCanton: [''],
-      valorAvaluoTitulo: ['', [Validators.required, Validators.min(0)]],
-      fechaAvaluo: ['', Validators.required],
-      numeroRegistroGarantia: ['', Validators.maxLength(20)],
-      fechaContabilizacionGarantia: ['', Validators.required],
-      porcentajeCubreGarantia: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
-      estadoRegistro: ['', Validators.required]
+    this.r07Form = this.fb.group({
+      tipoIdentificacionSujeto: [null, Validators.required],
+      identificacionSujeto: [null, Validators.required],
+      numeroOperacion: [null, Validators.required],
+      numeroGarantia: [null, Validators.required],
+      tipoGarantia: [null, Validators.required],
+      descripcionGarantia: [null, Validators.required],
+      ubicacionGarantiaPais: [null, Validators.required],
+      ubicacionGarantiaProvincia: [null],
+      ubicacionGarantiaCanton: [null],
+      valorAvaluoTitulo: [null, [Validators.required, Validators.min(1)]],
+      fechaAvaluo: [null, Validators.required],
+      numeroRegistroGarantia: [null],
+      fechaContabilizacionGarantia: [null, Validators.required],
+      porcentajeCubreGarantia: [null, [Validators.required, Validators.min(1), Validators.max(100)]],
+      estadoRegistro: [null, Validators.required]
     });
   }
 
-  private loadFormData(): void {
-    if (this.r07Data) {
-      this.r07Form.patchValue({
-        tipoIdentificacionSujeto: this.r07Data.tipoIdentificacionSujeto,
-        identificacionSujeto: this.r07Data.identificacionSujeto,
-        numeroOperacion: this.r07Data.numeroOperacion,
-        numeroGarantia: this.r07Data.numeroGarantia,
-        tipoGarantia: this.r07Data.tipoGarantia,
-        descripcionGarantia: this.r07Data.descripcionGarantia,
-        ubicacionGarantiaPais: this.r07Data.ubicacionGarantiaPais,
-        ubicacionGarantiaProvincia: this.r07Data.ubicacionGarantiaProvincia,
-        ubicacionGarantiaCanton: this.r07Data.ubicacionGarantiaCanton,
-        valorAvaluoTitulo: this.r07Data.valorAvaluoTitulo,
-        fechaAvaluo: this.r07Data.fechaAvaluo,
-        numeroRegistroGarantia: this.r07Data.numeroRegistroGarantia,
-        fechaContabilizacionGarantia: this.r07Data.fechaContabilizacionGarantia,
-        porcentajeCubreGarantia: this.r07Data.porcentajeCubreGarantia,
-        estadoRegistro: this.r07Data.estadoRegistro
-      });
-    }
-  }
-
-  private loadCatalogs(): void {
+  ngOnInit(): void {
     this.loadTipoIdentificacion();
     this.loadTipoGarantia();
     this.loadUbicacionPais();
     this.loadEstadoRegistro();
   }
 
+  closeModal(): void {
+    this.isVisible = false;
+    this.modalClosed.emit();
+  }
+
+  onSubmit(): void {
+    this.formSubmitted = true;
+
+    if (this.r07Form.valid) {
+      const formData = this.r07Form.value;
+      console.log('📌 R07 - Form Data:', formData);
+      
+      this.r07catalogService.saveR07(formData).subscribe({
+        next: (response) => {
+          console.log('✅ R07 - Registro guardado exitosamente:', response);
+          this.r07Form.reset();
+          this.formSubmitted = false;
+          this.isVisible = false;
+          this.modalClosed.emit();
+        },
+        error: (error) => {
+          console.error('❌ R07 - Error al guardar registro:', error);
+          // No cerrar el modal si hay error, para que el usuario pueda corregir
+        }
+      });
+    } else {
+      console.log('❌ R07 - Formulario inválido:', this.r07Form.errors);
+    }
+  }
+
+  isInvalid(controlName: string) {
+    const control = this.r07Form.get(controlName);
+    return control?.invalid && (control.touched || this.formSubmitted);
+  }
+
   private loadTipoIdentificacion(): void {
-    this.r07Service.getCatalogT4().subscribe({
-      next: (response) => {
-        this.tipoIdentificacionOptions = response;
+    this.t4service.getAll().subscribe({
+      next: (data) => {
+        this.arrayTipoIdentificacion = data;
       },
       error: (error) => {
-        console.error('Error loading T4 catalog:', error);
+        console.error('Error al cargar Tipos de Identificación:', error);
       }
     });
   }
 
   private loadTipoGarantia(): void {
-    this.r07Service.getCatalogT42().subscribe({
-      next: (response) => {
-        this.tipoGarantiaOptions = response;
+    this.t42service.getAll().subscribe({
+      next: (data) => {
+        this.arrayTipoGarantia = data;
       },
       error: (error) => {
-        console.error('Error loading T42 catalog:', error);
+        console.error('Error al cargar Tipos de Garantía:', error);
       }
     });
   }
 
   private loadUbicacionPais(): void {
-    this.r07Service.getCatalogT5().subscribe({
-      next: (response) => {
-        this.ubicacionPaisOptions = response;
+    this.t5service.getAll().subscribe({
+      next: (data) => {
+        this.arrayUbicacionPais = data;
       },
       error: (error) => {
-        console.error('Error loading T5 catalog:', error);
+        console.error('Error al cargar Países:', error);
       }
     });
   }
 
   private loadUbicacionProvincia(): void {
     const pais = this.r07Form.get('ubicacionGarantiaPais')?.value;
-    if (pais === 'EC') {
-      this.r07Service.getCatalogT6().subscribe({
-        next: (response) => {
-          this.ubicacionProvinciaOptions = response;
+    if (pais && pais.codigo === 'EC') {
+      this.t6service.getAll().subscribe({
+        next: (data) => {
+          this.arrayUbicacionProvincia = data;
         },
         error: (error) => {
-          console.error('Error loading T6 catalog:', error);
+          console.error('Error al cargar Provincias:', error);
         }
       });
     }
@@ -141,25 +148,25 @@ export class R07ModalFormComponent implements OnInit {
 
   private loadUbicacionCanton(): void {
     const pais = this.r07Form.get('ubicacionGarantiaPais')?.value;
-    if (pais === 'EC') {
-      this.r07Service.getCatalogT7().subscribe({
-        next: (response) => {
-          this.ubicacionCantonOptions = response;
+    if (pais && pais.codigo === 'EC') {
+      this.t7service.getAll().subscribe({
+        next: (data) => {
+          this.arrayUbicacionCanton = data;
         },
         error: (error) => {
-          console.error('Error loading T7 catalog:', error);
+          console.error('Error al cargar Cantones:', error);
         }
       });
     }
   }
 
   private loadEstadoRegistro(): void {
-    this.r07Service.getCatalogT47().subscribe({
-      next: (response) => {
-        this.estadoRegistroOptions = response;
+    this.t47service.getAll().subscribe({
+      next: (data) => {
+        this.arrayEstadoRegistro = data;
       },
       error: (error) => {
-        console.error('Error loading T47 catalog:', error);
+        console.error('Error al cargar Estados de Registro:', error);
       }
     });
   }
@@ -169,30 +176,8 @@ export class R07ModalFormComponent implements OnInit {
     this.loadUbicacionCanton();
     // Clear province and canton when country changes
     this.r07Form.patchValue({
-      ubicacionGarantiaProvincia: '',
-      ubicacionGarantiaCanton: ''
+      ubicacionGarantiaProvincia: null,
+      ubicacionGarantiaCanton: null
     });
-  }
-
-  onSubmit(): void {
-    if (this.r07Form.valid) {
-      const formData = this.r07Form.value;
-      const r07Data: R07Data = {
-        id: this.isEdit ? this.r07Data?.id || 0 : 0,
-        ...formData
-      };
-      this.saveData.emit(r07Data);
-      this.modalClosed.emit();
-    } else {
-      console.error('Form is invalid');
-    }
-  }
-
-  onCancel(): void {
-    this.modalClosed.emit();
-  }
-
-  getFieldTooltip(fieldName: string): string {
-    return this.fieldTooltips[fieldName as keyof typeof this.fieldTooltips] || '';
   }
 }

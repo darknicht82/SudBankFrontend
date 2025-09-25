@@ -80,18 +80,6 @@
             <label>Fecha Generación:</label>
             <span> 2025/01/20 </span>
           </div>
-          <div class="summary-item">
-            <label>Garantías Activas:</label>
-            <span>{{ getGarantiasActivas() }}</span>
-          </div>
-          <div class="summary-item">
-            <label>Tipos de Garantía:</label>
-            <span>{{ getUniqueTipoGarantias() }}</span>
-          </div>
-          <div class="summary-item">
-            <label>Valor Total:</label>
-            <span>${{ getValorTotalAvaluo().toLocaleString() }}</span>
-          </div>
         </div>
       </div>
     </div>
@@ -223,8 +211,7 @@
 
   <app-r07-modal-form
     [isVisible]="showModalForm"
-    (modalClosed)="onModalClosed()"
-    (saveData)="onSaveSuccess($event)"></app-r07-modal-form>
+    (modalClosed)="onModalClosed()"></app-r07-modal-form>
 
   <div *ngIf="loading" class="loading-overlay">
     <div class="loading-spinner">

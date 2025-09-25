@@ -1430,43 +1430,43 @@
   }
 }
 
-       .filter-description {
-         color: #6c757d;
-         font-size: 14px;
-         margin: 10px 0 0 0;
-         font-style: italic;
-         text-align: center;
-         padding: 10px;
-         background-color: #f8f9fa;
-         border-radius: 6px;
-         border-left: 4px solid #17a2b8;
-       }
+.filter-description {
+  color: #6c757d;
+  font-size: 14px;
+  margin: 10px 0 0 0;
+  font-style: italic;
+  text-align: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #17a2b8;
+}
 
-       // Estilos para la tabla de campos
-       .fields-table {
-         width: 100%;
-         border-collapse: collapse;
-         font-size: 12px;
+// Estilos para la tabla de campos
+.fields-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
 
-         th {
-           background: #f8f9fa;
-           padding: 8px;
-           border: 1px solid #dee2e6;
-           font-weight: 600;
-           text-align: left;
-         }
+  th {
+    background: #f8f9fa;
+    padding: 8px;
+    border: 1px solid #dee2e6;
+    font-weight: 600;
+    text-align: left;
+  }
 
-         td {
-           padding: 6px 8px;
-           border: 1px solid #dee2e6;
-           vertical-align: top;
-         }
+  td {
+    padding: 6px 8px;
+    border: 1px solid #dee2e6;
+    vertical-align: top;
+  }
 
-         tr:nth-child(even) {
-           background-color: #f8f9fa;
-         }
+  tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
 
-         tr:hover {
-           background-color: #e9ecef;
-         }
-       }
+  tr:hover {
+    background-color: #e9ecef;
+  }
+}

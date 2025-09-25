@@ -189,4 +189,44 @@ export class R07CatalogService {
         })
       );
   }
+
+  saveR07(form: any): Observable<any> {
+    const formValue = form;
+    console.log('📝 R07 - Formulario recibido:', formValue);
+
+    // Transform form into expected payload
+    const payload = {
+      codigoTipoIdentificacion: formValue.tipoIdentificacionSujeto?.id,
+      identificacionSujeto: formValue.identificacionSujeto,
+      numeroOperacion: formValue.numeroOperacion,
+      numeroGarantia: formValue.numeroGarantia,
+      codigoTipoGarantia: formValue.tipoGarantia?.id,
+      descripcionGarantia: formValue.descripcionGarantia,
+      codigoPais: formValue.ubicacionGarantiaPais?.id,
+      codigoProvincia: formValue.ubicacionGarantiaProvincia?.id,
+      codigoCanton: formValue.ubicacionGarantiaCanton?.id,
+      valorAvaluo: formValue.valorAvaluoTitulo,
+      fechaAvaluo: formValue.fechaAvaluo,
+      numeroRegistroGarantia: formValue.numeroRegistroGarantia,
+      fechaContabilizacionGarantia: formValue.fechaContabilizacionGarantia,
+      porcentajeGarantia: formValue.porcentajeCubreGarantia,
+      codigoEstadoRegistro: formValue.estadoRegistro?.id
+    };
+
+    console.log('📤 R07 - Payload a enviar:', payload);
+    console.log('🌐 R07 - URL:', `${this.baseUrl}/structures/R07`);
+
+    return this.http.post(`${this.baseUrl}/structures/R07`, payload).pipe(
+      map(response => {
+        console.log('✅ R07 - Guardado exitoso:', response);
+        return response;
+      }),
+      catchError(error => {
+        console.error('❌ R07 - Error al guardar:', error);
+        console.error('❌ R07 - Status:', error.status);
+        console.error('❌ R07 - Message:', error.message);
+        throw error;
+      })
+    );
+  }
 }

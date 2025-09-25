@@ -1,5 +1,5 @@
 /**
- * COMPONENTE r07 MAIN - DASHBOARD PRINCIPAL
+ * COMPONENTE R07 MAIN - DASHBOARD PRINCIPAL
  * Manual de Operaciones Activas y Contingentes - Septiembre 2023
  * Superintendencia de Bancos del Ecuador
  */
@@ -22,11 +22,6 @@ export class R07MainComponent implements OnInit {
   showModalForm = false;
   loading = false;
   arrayResume: any[] = [];
-  
-  // Properties for template calculations
-  Math = Math;
-  sum = (arr: any[], field: string) => arr.reduce((acc, item) => acc + (item[field] || 0), 0);
-  
   constructor(private r07CatalogService: R07CatalogService ) { 
     }
 
@@ -52,68 +47,32 @@ export class R07MainComponent implements OnInit {
         console.log('✅ R07 - Respuesta recibida del servidor:', data);
         console.log('📊 R07 - Tipo de datos:', typeof data);
         console.log('📊 R07 - Es array:', Array.isArray(data));
-        console.log('📊 R07 - Longitud:', data?.length);
+        console.log('📊 R07 - Cantidad de registros:', data?.length || 0);
+        
+        if (data && Array.isArray(data) && data.length > 0) {
+          console.log('🔍 R07 - Primer registro:', data[0]);
+          console.log('🔍 R07 - Estructura del primer registro:', Object.keys(data[0]));
+        }
         
         this.arrayResume = data || [];
-        this.loading = false;
-        
-        console.log('✅ R07 - Datos procesados y asignados:', this.arrayResume);
+        console.log('✅ R07 - Datos asignados al arrayResume:', this.arrayResume.length);
       },
       error: (error) => {
-        console.error('❌ R07 - Error al cargar datos:', error);
-        this.loading = false;
+        console.error('❌ R07 - Error completo:', error);
+        console.error('❌ R07 - Status:', error.status);
+        console.error('❌ R07 - Message:', error.message);
+        console.error('❌ R07 - URL:', error.url);
         this.arrayResume = [];
       }
     });
   }
 
-  onSaveSuccess(data: any): void {
-    console.log('Datos guardados:', data);
-    if (data.id && data.id > 0) {
-      // Actualizar registro existente
-      this.r07CatalogService.updateR07(data.id, data).subscribe({
-        next: (response) => {
-          console.log('Registro actualizado:', response);
-          this.loadResume();
-        },
-        error: (error) => {
-          console.error('Error al actualizar registro:', error);
-        }
-      });
-    } else {
-      // Crear nuevo registro
-      this.r07CatalogService.createR07(data).subscribe({
-        next: (response) => {
-          console.log('Registro creado:', response);
-          this.loadResume();
-        },
-        error: (error) => {
-          console.error('Error al crear registro:', error);
-        }
-      });
-    }
+  validateAndGenerateReport(): void{
+    this.loading = true;
+    setTimeout(() => {
+        this.loading = false;
+      }, 2000);
   }
 
-  validateAndGenerateReport(): void {
-    console.log('Validando y generando reporte R07...');
-    // Lógica para validar y generar el reporte
-  }
-
-  exportToTxt(): void {
-    console.log('Exportando a TXT...');
-    // Lógica para exportar a TXT
-  }
-
-  // Helper methods for template calculations
-  getUniqueTipoGarantias(): number {
-    return new Set(this.arrayResume.map(item => item.tipoGarantia?.descripcion)).size;
-  }
-
-  getGarantiasActivas(): number {
-    return this.arrayResume.filter(item => item.estadoRegistro?.descripcion === 'Activo').length;
-  }
-
-  getValorTotalAvaluo(): number {
-    return this.arrayResume.reduce((sum, item) => sum + (item.valorAvaluoTitulo || 0), 0);
-  }
+  exportToTxt(): void{}
 }
