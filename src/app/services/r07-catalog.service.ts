@@ -11,47 +11,22 @@ export interface R07Catalog {
   descripcion: string;
 }
 
-export interface CatalogItem {
-  id: number;
-  codigo: string;
-  descripcion: string;
-}
-
 export interface R07Resume {
   tipoIdentificacion: R07Catalog;
-  ubicacionGarantiaPais: R07Catalog;
-  ubicacionGarantiaProvincia: R07Catalog;
-  ubicacionGarantiaCanton: R07Catalog;
-  tipoGarantia: R07Catalog;
+  codigoPais: R07Catalog;
+  codigoProvincia: R07Catalog;
+  codigoCanton: R07Catalog;
+  codigoTipoGarantia: R07Catalog;
   estadoRegistro: R07Catalog;
   identificacionSujeto: string;
   numeroOperacion: string;
   numeroGarantia: string;
   descripcionGarantia: string;
-  valorAvaluoTitulo: number;
+  valorAvaluo: number;
   fechaAvaluo: string;
   numeroRegistroGarantia: string;
   fechaContabilizacionGarantia: string;
-  porcentajeCubreGarantia: number;
-}
-
-export interface R07Data {
-  id: number;
-  tipoIdentificacion: string;
-  identificacionSujeto: string;
-  numeroOperacion: string;
-  numeroGarantia: string;
-  tipoGarantia: string;
-  descripcionGarantia: string;
-  ubicacionGarantiaPais: string;
-  ubicacionGarantiaProvincia: string;
-  ubicacionGarantiaCanton: string;
-  valorAvaluoTitulo: number;
-  fechaAvaluo: string;
-  numeroRegistroGarantia: string;
-  fechaContabilizacionGarantia: string;
-  porcentajeCubreGarantia: number;
-  estadoRegistro: string;
+  porcentajeGarantia: number;
 }
 
 @Injectable({
@@ -79,124 +54,15 @@ export class R07CatalogService {
       );
   }
 
-  getAllR07(): Observable<R07Data[]> {
-    return this.http.get<R07Data[]>(`${this.baseUrl}/structures/R07`)
-      .pipe(
-        catchError(error => {
-          console.error('Error al obtener R07 desde API real:', error);
-          throw error;
-        })
-      );
-  }
 
-  getR07ById(id: number): Observable<R07Data> {
-    return this.http.get<R07Data>(`${this.baseUrl}/structures/R07/${id}`)
-      .pipe(
-        catchError(error => {
-          console.error('Error al obtener R07 por ID desde API real:', error);
-          throw error;
-        })
-      );
-  }
-
-  createR07(data: R07Data): Observable<R07Data> {
-    return this.http.post<R07Data>(`${this.baseUrl}/structures/R07`, data)
-      .pipe(
-        catchError(error => {
-          console.error('Error al crear R07 desde API real:', error);
-          throw error;
-        })
-      );
-  }
-
-  updateR07(id: number, data: R07Data): Observable<R07Data> {
-    return this.http.put<R07Data>(`${this.baseUrl}/structures/R07/${id}`, data)
-      .pipe(
-        catchError(error => {
-          console.error('Error al actualizar R07 desde API real:', error);
-          throw error;
-        })
-      );
-  }
-
-  deleteR07(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/structures/R07/${id}`)
-      .pipe(
-        catchError(error => {
-          console.error('Error al eliminar R07 desde API real:', error);
-          throw error;
-        })
-      );
-  }
-
-  // Catalog services
-  getCatalogT4(): Observable<R07Catalog[]> {
-    return this.http.get<R07Catalog[]>(`${this.baseUrl}/catalogs/t4`)
-      .pipe(
-        catchError(error => {
-          console.error('Error al obtener catálogo T4 desde API real:', error);
-          throw error;
-        })
-      );
-  }
-
-  getCatalogT5(): Observable<R07Catalog[]> {
-    return this.http.get<R07Catalog[]>(`${this.baseUrl}/catalogs/t5`)
-      .pipe(
-        catchError(error => {
-          console.error('Error al obtener catálogo T5 desde API real:', error);
-          throw error;
-        })
-      );
-  }
-
-  getCatalogT6(): Observable<R07Catalog[]> {
-    return this.http.get<R07Catalog[]>(`${this.baseUrl}/catalogs/t6`)
-      .pipe(
-        catchError(error => {
-          console.error('Error al obtener catálogo T6 desde API real:', error);
-          throw error;
-        })
-      );
-  }
-
-  getCatalogT7(): Observable<R07Catalog[]> {
-    return this.http.get<R07Catalog[]>(`${this.baseUrl}/catalogs/t7`)
-      .pipe(
-        catchError(error => {
-          console.error('Error al obtener catálogo T7 desde API real:', error);
-          throw error;
-        })
-      );
-  }
-
-  getCatalogT42(): Observable<R07Catalog[]> {
-    return this.http.get<R07Catalog[]>(`${this.baseUrl}/catalogs/t42`)
-      .pipe(
-        catchError(error => {
-          console.error('Error al obtener catálogo T42 desde API real:', error);
-          throw error;
-        })
-      );
-  }
-
-  getCatalogT47(): Observable<R07Catalog[]> {
-    return this.http.get<R07Catalog[]>(`${this.baseUrl}/catalogs/t47`)
-      .pipe(
-        catchError(error => {
-          console.error('Error al obtener catálogo T47 desde API real:', error);
-          throw error;
-        })
-      );
-  }
 
   saveR07(form: any): Observable<any> {
     const formValue = form;
     console.log('📝 R07 - Formulario recibido:', formValue);
 
-    // Transform form into expected payload
+    // Transform form into expected payload - SIGUIENDO PATRÓN L02
     const payload = {
-      codigoTipoIdentificacion: formValue.tipoIdentificacion?.id,
+      codigoTipoIdentificacion: formValue.tipoIdentificacionSujeto?.id,
       identificacionSujeto: formValue.identificacionSujeto,
       numeroOperacion: formValue.numeroOperacion,
       numeroGarantia: formValue.numeroGarantia,
@@ -210,7 +76,7 @@ export class R07CatalogService {
       numeroRegistroGarantia: formValue.numeroRegistroGarantia,
       fechaContabilizacionGarantia: formValue.fechaContabilizacionGarantia,
       porcentajeGarantia: formValue.porcentajeCubreGarantia,
-      codigoEstadoRegistro: formValue.estadoRegistro?.id
+      estadoRegistro: formValue.estadoRegistro?.id
     };
 
     console.log('📤 R07 - Payload a enviar:', payload);

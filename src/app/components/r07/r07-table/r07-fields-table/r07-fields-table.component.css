@@ -1,0 +1,85 @@
+.fields-table-container {
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 20px 0;
+}
+
+.fields-table-container h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.fields-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.fields-table th,
+.fields-table td {
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.fields-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fields-table td {
+  font-size: 0.9em;
+  color: #6c757d;
+}
+
+.fields-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.required {
+  color: #dc3545;
+  font-weight: 600;
+  background-color: #f8d7da;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8em;
+}
+
+.optional {
+  color: #6c757d;
+  font-weight: 500;
+  background-color: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8em;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .fields-table-container {
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  .fields-table th,
+  .fields-table td {
+    padding: 8px 4px;
+    font-size: 0.8em;
+  }
+  
+  .fields-table-container h3 {
+    font-size: 1.2em;
+  }
+}

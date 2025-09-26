@@ -61,6 +61,8 @@ export class R07ModalFormComponent implements OnInit {
     this.loadTipoIdentificacion();
     this.loadTipoGarantia();
     this.loadUbicacionPais();
+    this.loadUbicacionProvincia();
+    this.loadUbicacionCanton();
     this.loadEstadoRegistro();
   }
 
