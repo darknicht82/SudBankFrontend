@@ -40,7 +40,7 @@ export class R07MainComponent implements OnInit {
 
   private loadResume(): void{
     console.log('🔄 R07 - Iniciando carga de datos...');
-    console.log('🌐 R07 - Endpoint configurado:', environment.backendEndpoint);
+    console.log('🌐 R07 - Endpoint configurado:', environment.localEndpoint);
     
     this.r07CatalogService.getResume().subscribe({
       next: (data) => {

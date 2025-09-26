@@ -140,7 +140,7 @@
         <tbody>
           <tr *ngFor="let item of arrayResume">
             <td class="data-cell">
-              <span class="cell-value">{{ item.tipoIdentificacionSujeto?.descripcion }}</span>
+              <span class="cell-value">{{ item.tipoIdentificacion?.descripcion }}</span>
             </td>
             <td class="data-cell">
               <span class="cell-value">{{ item.identificacionSujeto }}</span>
@@ -152,22 +152,22 @@
               <span class="cell-value">{{ item.numeroGarantia }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">{{ item.tipoGarantia?.descripcion }}</span>
+              <span class="cell-value">{{ item.codigoTipoGarantia?.descripcion }}</span>
             </td>
             <td class="data-cell">
               <span class="cell-value">{{ item.descripcionGarantia }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">{{ item.ubicacionGarantiaPais?.descripcion }}</span>
+              <span class="cell-value">{{ item.codigoPais?.descripcion }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">{{ item.ubicacionGarantiaProvincia?.descripcion }}</span>
+              <span class="cell-value">{{ item.codigoProvincia?.descripcion }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">{{ item.ubicacionGarantiaCanton?.descripcion }}</span>
+              <span class="cell-value">{{ item.codigoCanton?.descripcion }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">${{ item.valorAvaluoTitulo?.toLocaleString() }}</span>
+              <span class="cell-value">${{ item.valorAvaluo?.toLocaleString() }}</span>
             </td>
             <td class="data-cell">
               <span class="cell-value">{{ item.fechaAvaluo }}</span>
@@ -179,7 +179,7 @@
               <span class="cell-value">{{ item.fechaContabilizacionGarantia }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">{{ item.porcentajeCubreGarantia }}%</span>
+              <span class="cell-value">{{ item.porcentajeGarantia }}%</span>
             </td>
             <td class="data-cell">
               <span class="cell-value">{{ item.estadoRegistro?.descripcion }}</span>
