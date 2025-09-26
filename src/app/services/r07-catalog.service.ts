@@ -33,8 +33,8 @@ export interface R07Resume {
   providedIn: 'root'
 })
 export class R07CatalogService {
-  //private baseUrl = environment.backendEndpoint; // 
-  private baseUrl = environment.localEndpoint; // ✅ CONECTAR DIRECTAMENTE A APIS REALES LOCALES
+  private baseUrl = environment.backendEndpoint; // 
+  //private baseUrl = environment.localEndpoint; // ✅ CONECTAR DIRECTAMENTE A APIS REALES LOCALES
 
   constructor(private http: HttpClient) {}
 
