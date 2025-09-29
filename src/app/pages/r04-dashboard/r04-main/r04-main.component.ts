@@ -45,13 +45,12 @@ export class R04MainComponent implements OnInit {
   onModalClosed(): void {
     console.log('🔍 R04 - Cerrando modal...');
     this.showModalForm = false;
-    // Remover loadResume() para evitar recargas innecesarias
-    // this.loadResume();
+    this.loadResume();
   }
 
   private loadResume(): void {
     console.log('🔄 R04 - Iniciando carga de datos...');
-    console.log('🌐 R04 - Endpoint configurado:', environment.localEndpoint);
+    console.log('🌐 R04 - Endpoint configurado:', environment.backendEndpoint);
 
     this.r04CatalogService.getResume().subscribe({
       next: (data) => {
