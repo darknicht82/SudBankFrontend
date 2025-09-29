@@ -1,0 +1,159 @@
+<div class="r20-main-container">
+  <!-- CABECERA -->
+  <div class="header">
+    <h1>R20 - Reportes de Cancelaciones</h1>
+    <p class="subtitle">Se deberá reportar únicamente los nuevos títulos que se hayan instrumentado cada mes. Cada título debe reportarse una única vez en esta estructura, hasta que se lo venda o liquide.</p>
+  </div>
+
+   <!-- INFORMACIÓN DE ESTRUCTURA -->
+  <div class="structure-info">
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Información de la Estructura R20</h3>
+      </div>
+      <div class="card-content">
+        <p><strong>Descripción:</strong> Estructura con periodicidad mensual en la cual se reporta información de las tarjetas de crédito emitidas por la institución financiera</p>
+        <p><strong>Periodicidad:</strong> Mensual </p>
+        <p><strong>Plazo entrega:</strong> Según requerimientos de la SB</p>
+        <p><strong>Código Banco:</strong> 1038</p>
+        <p><strong>Formato archivo:</strong> R20Mxxxxddmmaaaa.txt</p>
+        <p><strong>Fuente:</strong> Manual de Control de Inversiones - SB Marzo 2017</p>
+        
+        <div class="requirements">
+          <strong>Requisitos:</strong>
+          <ul>
+            <li>Estructura eventual (no mensual)</li>
+            <li>5 campos oficiales obligatorios</li>
+            <li>Formato TXT con separador tabulador</li>
+            <li>Validaciones según manual SB</li>
+          </ul>
+        </div>
+
+        <strong>Campos Oficiales:</strong>
+          <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
+            <app-r20-fields-table></app-r20-fields-table>
+          </div>  
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="summary-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>📊 Resumen del Reporte</h3>
+      </div>
+      <div class="card-content">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <label>Total Registros:</label>
+            <span>{{ 20 }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Fecha Generación:</label>
+            <span> 2025/08/20 </span>
+          </div>
+          <div class="summary-item">
+            <label>Emisores:</label>
+            <span>{{ 20 }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Custodios:</label>
+            <span>{{ 20 }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Depositarios:</label>
+            <span>{{ 20 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <div class="data-section">
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>
+              Tipo de Identificación
+            </th>
+            <th>
+              Identificación
+            </th>
+            <th>
+              Marca de Tarjeta
+            </th>
+            <th>
+              Numero de Tarjeta
+            </th>
+            <th>
+              Clase de Tarjeta
+            </th>
+            <th>
+              Fecha de Emisión
+            </th>
+            <th>
+              Fecha de Vencimiento
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of arrayResume">
+            <td class="data-cell">
+              <span class="cell-value">{{ item.codigoTipoIdentificacion?.descripcion  }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.identificacionSujeto }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.numeroTarjeta }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.marcaTarjeta?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.claseTarjeta?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.fechaEmision }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.fechaVencimiento }}</span>
+            </td>
+            
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <button (click)="validateAndGenerateReport()" [disabled]="loading" class="btn btn-primary">
+      <i class="pi pi-check-circle"></i>
+      {{ loading ? 'Validando...' : 'Validar y Generar Reporte R20' }}
+    </button>
+
+    <button (click)="exportToTxt()" class="btn btn-success">
+      <i class="pi pi-download"></i>
+      Exportar TXT
+    </button>
+
+    <button (click)="openModal()" class="btn btn-info">
+      <i class="pi pi-plus"></i>
+      Crear Nuevo Registro
+    </button>
+  </div>
+
+  <app-r20-modal-form
+    [isVisible]="showModalForm"
+    (modalClosed)="onModalClosed()"></app-r20-modal-form>
+
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Generando reporte R20...</p>
+    </div>
+  </div>
+
+</div>  
