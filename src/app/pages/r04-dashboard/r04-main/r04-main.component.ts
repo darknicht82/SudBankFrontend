@@ -51,7 +51,7 @@ export class R04MainComponent implements OnInit {
 
   private loadResume(): void {
     console.log('🔄 R04 - Iniciando carga de datos...');
-    console.log('🌐 R04 - Endpoint configurado:', environment.backendEndpoint);
+    console.log('🌐 R04 - Endpoint configurado:', environment.localEndpoint);
 
     this.r04CatalogService.getResume().subscribe({
       next: (data) => {

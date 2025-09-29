@@ -91,7 +91,8 @@ export interface R04Resume {
   providedIn: 'root'
 })
 export class R04CatalogService {
-  private baseUrl = environment.backendEndpoint; // ✅ CONECTAR DIRECTAMENTE A APIS REALES
+  //private baseUrl = environment.backendEndpoint; // 🔧 PROD
+  private baseUrl = environment.localEndpoint; // 🔧 LOCAL
 
 
   constructor(private http: HttpClient) {}
@@ -134,34 +135,34 @@ export class R04CatalogService {
       tasaInteres: formValue.tasaInteres,
 
       // Valores por vencer (9-13)
-      valorPorVencer1a30: formValue.valorPorVencer1a30,
-      valorPorVencer31a90: formValue.valorPorVencer31a90,
-      valorPorVencer91a180: formValue.valorPorVencer91a180,
-      valorPorVencer181a360: formValue.valorPorVencer181a360,
-      valorPorVencerMas360: formValue.valorPorVencerMas360,
+      valorSaldoVencer1a30d: formValue.valorPorVencer1a30,
+      valorSaldoVencer31a90d: formValue.valorPorVencer31a90,
+      valorSaldoVencer91a180d: formValue.valorPorVencer91a180,
+      valorSaldoVencer181a360d: formValue.valorPorVencer181a360,
+      valorSaldoVencerMasde360d: formValue.valorPorVencerMas360,
 
       // Valores que no devengan intereses (14-18)
-      valorNoDevenga1a30: formValue.valorNoDevenga1a30,
-      valorNoDevenga31a90: formValue.valorNoDevenga31a90,
-      valorNoDevenga91a180: formValue.valorNoDevenga91a180,
-      valorNoDevenga181a360: formValue.valorNoDevenga181a360,
-      valorNoDevengaMas360: formValue.valorNoDevengaMas360,
+      valorNoDevInteres1a30d: formValue.valorNoDevenga1a30,
+      valorNoDevInteres31a90d: formValue.valorNoDevenga31a90,
+      valorNoDevInteres91a180d: formValue.valorNoDevenga91a180,
+      valorNoDevInteres181a360d: formValue.valorNoDevenga181a360,
+      valorNoDevInteresMasde360d: formValue.valorNoDevengaMas360,
 
       // Valores vencidos (19-29)
-      valorVencido1a30: formValue.valorVencido1a30,
-      valorVencido31a90: formValue.valorVencido31a90,
-      valorVencido91a180: formValue.valorVencido91a180,
-      valorVencido181a360: formValue.valorVencido181a360,
-      valorVencidoMas360: formValue.valorVencidoMas360,
-      valorVencido181a270: formValue.valorVencido181a270,
-      valorVencidoMas270: formValue.valorVencidoMas270,
-      valorVencido91a270: formValue.valorVencido91a270,
-      valorVencido271a360: formValue.valorVencido271a360,
-      valorVencido361a720: formValue.valorVencido361a720,
-      valorVencidoMas720: formValue.valorVencidoMas720,
+      valorVencido1a30d: formValue.valorVencido1a30,
+      valorVencido31a90d: formValue.valorVencido31a90,
+      valorVencido91a180d: formValue.valorVencido91a180,
+      valorVencido181a360d: formValue.valorVencido181a360,
+      valorVencidoMasde360d: formValue.valorVencidoMas360,
+      valorVencido181a270d: formValue.valorVencido181a270,
+      valorVencidoMasde270d: formValue.valorVencidoMas270,
+      valorVencido91a270d: formValue.valorVencido91a270,
+      valorVencido271a360d: formValue.valorVencido271a360,
+      valorVencido361a720d: formValue.valorVencido361a720,
+      valorVencidoMasde720d: formValue.valorVencidoMas720,
 
       // Campos adicionales (30-37)
-      gastosRecuperacion: formValue.gastosRecuperacion,
+      gastosRecuperaCarteraVencida: formValue.gastosRecuperacion,
       interesOrdinario: formValue.interesOrdinario,
       interesSobreMora: formValue.interesSobreMora,
       valorDemandaJudicial: formValue.valorDemandaJudicial,
@@ -177,15 +178,15 @@ export class R04CatalogService {
       // Campos financieros (40-45)
       primaDescuento: formValue.primaDescuento,
       cuotaCredito: formValue.cuotaCredito,
-      valorInteresesCuota: formValue.valorInteresesCuota,
+      valorInteresCuotaCredito: formValue.valorInteresesCuota,
       valorSeguro: formValue.valorSeguro,
       saldoCuotaCapitalDiferida: formValue.saldoCuotaCapitalDiferida,
       valorInteresCapitalDiferido: formValue.valorInteresCapitalDiferido,
 
       // Campos de fecha e intereses (46-48)
-      fechaTransferenciaCuentasVencidas: formValue.fechaTransferenciaCuentasVencidas,
-      interesesAcumuladosPorCobrar: formValue.interesesAcumuladosPorCobrar,
-      interesesReversados: formValue.interesesReversados,
+      fechaTransferCuentasVencidas: formValue.fechaTransferenciaCuentasVencidas,
+      interesesAcumuladosCobrar: formValue.interesesAcumuladosPorCobrar,
+      interesesReservados: formValue.interesesReversados,
 
       // Campos adicionales (49-50)
       fechaExigibilidadCuota: formValue.fechaExigibilidadCuota,

@@ -90,7 +90,7 @@
                 <tbody>
                     <tr *ngFor="let item of arrayResume">
                         <td class="data-cell">
-                            <span class="cell-value">{{ item.tipoIdentificacion.description }}</span>   
+                            <span class="cell-value">{{ item.tipoIdentificacion?.descripcion }}</span>   
                         </td>
                         <td class="data-cell">
                             <span class="cell-value">{{ item.identificacionSujeto }}</span>
@@ -102,10 +102,10 @@
                             <span class="cell-value">{{ item.diasMorosidad }}</span>
                         </td>
                         <td class="data-cell">
-                            <span class="cell-value">{{ item.calificacionPropia.description }}</span>
+                            <span class="cell-value">{{ item.calificacionPropia?.descripcion }}</span>
                         </td>
                         <td class="data-cell">
-                            <span class="cell-value">{{ item.tasaInteres | percent:'1.2-2' }}</span>
+                            <span class="cell-value">{{ item.tasaInteres | number:'1.2-2' }}%</span>
                         </td>
                         <td class="data-cell">
                             <span class="cell-value">{{ item.valorVencido1a30 | currency:'USD':'symbol':'1.2-2' }}</span>
@@ -117,13 +117,13 @@
                             <span class="cell-value">{{ item.provisionConstituida | currency:'USD':'symbol':'1.2-2' }}</span>
                         </td>
                         <td class="data-cell">
-                            <span class="cell-value">{{ item.tipoOperacion.description }}</span>
+                            <span class="cell-value">{{ item.tipoOperacion?.descripcion }}</span>
                         </td>
                         <td class="data-cell">
                             <span class="cell-value">{{ item.fechaExigibilidadCuota | date:'dd/MM/yyyy' }}</span>
                         </td>
                         <td class="data-cell">
-                            <span class="cell-value">{{ item.tipoSistemaAmortizacion.description }}</span>
+                            <span class="cell-value">{{ item.tipoSistemaAmortizacion?.descripcion }}</span>
                         </td>
                     </tr>
                 </tbody>
