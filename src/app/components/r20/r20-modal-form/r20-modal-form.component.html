@@ -1,0 +1,199 @@
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+<!-- Header --> 
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro R05</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+<!-- Body -->
+ <div class="modal-body">
+        <form [formGroup]="r20Form" (ngSubmit)="onSubmit()" class="w-100">
+            <!-- Sección: Título -->
+            <h5 class="mt-3 mb-2 border-bottom pb-1">Título</h5>
+            <div class="row g-2">
+               <!-- Tipo Identificación -->
+                <div class="col-md-6">
+                    <label for="tipoIdentificacion" class="form-label">Tipo de Identificación</label>
+                    <select 
+                    id="tipoIdentificacion" 
+                    class="form-select"
+                    formControlName="tipoIdentificacion">
+                    <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+                    <option *ngFor="let item of arrayTipoIdentificacion" [ngValue]="item">
+                        {{ item.descripcion }}
+                    </option>
+                    </select>
+                    <div *ngIf="isInvalid('tipoIdentificacion')" class="text-danger small mt-1">
+                    Escoga un tipo de identificación
+                    </div>
+                </div>
+                <!--Identificación Sujeto-->
+                <div class="col-md-6">
+                    <label for="identificacionSujeto" class="form-label">Identificación del Sujeto</label>
+                    <input type="text" id="identificacionSujeto" class="form-control" formControlName="identificacionSujeto" />
+                    <div *ngIf="isInvalid('identificacionSujeto')" class="text-danger small mt-1">
+                            La identificación del Sujeto es obligatorio
+                    </div>
+                </div>
+
+                <!--Numero Tarjeta-->
+                <div class="col-md-6">
+                    <label for="numeroTarjeta" class="form-label">Número de Tarjeta</label>
+                    <input type="text" id="numeroTarjeta" class="form-control" formControlName="numeroTarjeta" />
+                    <div *ngIf="isInvalid('numeroTarjeta')" class="text-danger small mt-1">
+                            El número de tarjeta es obligatorio
+                    </div>
+                </div>
+
+                <!--Marca Tarjeta-->
+                <div class="col-md-6">
+                    <label for="marcaTarjeta" class="form-label">Marca de Tarjeta</label>
+                    <select 
+                    id="marcaTarjeta" 
+                    class="form-select"
+                    formControlName="marcaTarjeta">
+                    <option [ngValue]="null" disabled selected>Seleccione una marca</option>
+                    <option *ngFor="let item of arrayMarcaTarjeta" [ngValue]="item">
+                        {{ item.descripcion }}
+                    </option>
+                    </select>
+                    <div *ngIf="isInvalid('marcaTarjeta')" class="text-danger small mt-1">
+                    Escoga una marca de tarjeta
+                    </div>
+                </div>
+
+                <!--Clase Tarjeta-->
+                <div class="col-md-6">
+                    <label for="claseTarjeta" class="form-label">Clase de Tarjeta</label>
+                    <select 
+                    id="claseTarjeta" 
+                    class="form-select"
+                    formControlName="claseTarjeta">
+                    <option [ngValue]="null" disabled selected>Seleccione una clase</option>
+                    <option *ngFor="let item of arrayClaseTarjeta" [ngValue]="item">
+                        {{ item.descripcion }}
+                    </option>
+                    </select>
+                    <div *ngIf="isInvalid('claseTarjeta')" class="text-danger small mt-1">
+                    Escoga una clase de tarjeta
+                    </div>
+                </div>
+
+                <!--Fecha emision-->
+                <div class="col-md-6">
+                    <label for="fechaEmision" class="form-label">Fecha de Emisión</label>
+                    <input type="date" id="fechaEmision" class="form-control" formControlName="fechaEmision" />
+                    <div *ngIf="isInvalid('fechaEmision')" class="text-danger small mt-1">
+                            La fecha de emisión es obligatorio
+                    </div>
+                </div>
+
+                <!--Fecha vencimiento-->
+                <div class="col-md-6">
+                    <label for="fechaVencimiento" class="form-label">Fecha de Vencimiento</label>
+                    <input type="date" id="fechaVencimiento" class="form-control" formControlName="fechaVencimiento" />
+                    <div *ngIf="isInvalid('fechaVencimiento')" class="text-danger small mt-1">
+                            La fecha de vencimiento es obligatorio
+                    </div>
+                </div>
+
+                <!--Numero de Tarjetas Adicionales-->
+                <div class="col-md-6">
+                    <label for="numeroTarjetasAdicionales" class="form-label">Numero de Tarjetas Adicionales</label>
+                    <input type="number" id="numeroTarjetasAdicionales" class="form-control" formControlName="numeroTarjetasAdicionales" />
+                    <div *ngIf="isInvalid('numeroTarjetasAdicionales')" class="text-danger small mt-1">
+                            El numero de tarjetas adicionales es obligatorio
+                    </div>
+                </div>
+
+                <!--Oficinas-->
+                <div class="col-md-6">
+                    <label for="oficina" class="form-label">Oficinas</label>
+                    <select 
+                    id="oficina" 
+                    class="form-select"
+                    formControlName="oficina">
+                    <option [ngValue]="null" disabled selected>Seleccione una oficina</option>
+                    <option *ngFor="let item of arrayOficina" [ngValue]="item">
+                        {{ item.descripcion }}
+                    </option>
+                    </select>
+                    <div *ngIf="isInvalid('oficina')" class="text-danger small mt-1">
+                    Escoga una oficina
+                    </div>
+                </div>
+
+                <!--Tipo Credito-->
+                <div class="col-md-6">
+                    <label for="tipoCredito" class="form-label">Tipo de Crédito</label>
+                    <select 
+                    id="tipoCredito" 
+                    class="form-select"
+                    formControlName="tipoCredito">
+                    <option [ngValue]="null" disabled selected>Seleccione un tipo de crédito</option>
+                    <option *ngFor="let item of arrayTipoCredito" [ngValue]="item">
+                        {{ item.descripcion }}
+                    </option>
+                    </select>
+                    <div *ngIf="isInvalid('tipoCredito')" class="text-danger small mt-1">
+                    Escoga un tipo de crédito
+                    </div>
+                </div>
+
+                <!--Estado Registro-->
+                <div class="col-md-6">
+                    <label for="estadoRegistro" class="form-label">Estado del Registro</label>
+                    <select 
+                    id="estadoRegistro" 
+                    class="form-select"
+                    formControlName="estadoRegistro">
+                    <option [ngValue]="null" disabled selected>Seleccione un estado</option>
+                    <option *ngFor="let item of arrayEstadoRegistro" [ngValue]="item">
+                        {{ item.descripcion }}
+                    </option>
+                    </select>
+                    <div *ngIf="isInvalid('estadoRegistro')" class="text-danger small mt-1">
+                    Escoga un estado de registro
+                    </div>
+                </div>
+
+                <!-- Total Ingresos Sujueto -->
+
+                <div class="col-md-6">
+                    <label for="totalIngresosSujeto" class="form-label">Total de Ingresos del Sujeto</label>
+                    <input type="number" id="totalIngresosSujeto" class="form-control" formControlName="totalIngresosSujeto" />
+                    <div *ngIf="isInvalid('totalIngresosSujeto')" class="text-danger small mt-1">
+                            El total de ingresos del sujeto es obligatorio
+                    </div>
+                </div>
+
+                <!-- Total Egresos Sujeto -->
+                <div class="col-md-6">
+                    <label for="totalEgresosSujeto" class="form-label">Total de Egresos del Sujeto</label>
+                    <input type="number" id="totalEgresosSujeto" class="form-control" formControlName="totalEgresosSujeto" />
+                    <div *ngIf="isInvalid('totalEgresosSujeto')" class="text-danger small mt-1">
+                            El total de egresos del sujeto es obligatorio
+                    </div>
+                </div>
+            </div>
+        </form>
+  </div>
+<!-- Footer -->
+ <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="r20Form.invalid" (click)="onSubmit()">
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+    </div>
+</div>
+
