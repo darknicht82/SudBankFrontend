@@ -69,7 +69,8 @@ export class HeaderComponent {
             { label: 'R03 - Reporte de Capital', icon: 'pi pi-coins', routerLink: '/regulatory/r03' },
             { label: 'R04 - Reporte de Operaciones', icon: 'pi pi-calculator', routerLink: '/regulatory/r04' },
             { label: 'R05 - Reporte de Concentración', icon: 'pi pi-chart-pie', routerLink: '/regulatory/r05' },
-            { label: 'R06 - Reporte de Calificaciones', icon: 'pi pi-star', routerLink: '/regulatory/r06' }
+            { label: 'R06 - Reporte de Calificaciones', icon: 'pi pi-star', routerLink: '/regulatory/r06' },
+            { label: 'R21 - Consumos de Tarjetas de Crédito', icon: 'pi pi-credit-card', routerLink: '/regulatory/r21' }
           ]
         }
       ]

@@ -1,0 +1,371 @@
+<!-- Modal del Formulario R21 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">💳</span>
+        <h3 class="modal-title">Crear Nuevo Registro R21</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <form [formGroup]="r21Form" (ngSubmit)="onSubmit()" class="w-100">
+
+        <!-- Sección: Información Básica -->
+        <h5 class="mt-3 mb-2 border-bottom pb-1">Información Básica</h5>
+        <div class="row g-2">
+          <!-- Tipo Identificación -->
+          <div class="col-md-6">
+            <label for="tipoIdentificacion" class="form-label">Tipo de Identificación</label>
+            <select id="tipoIdentificacion" class="form-select" formControlName="tipoIdentificacion">
+              <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+              <option *ngFor="let item of arrayTipoIdentificacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoIdentificacion')" class="text-danger small mt-1">
+              Escoga un tipo de identificación
+            </div>
+          </div>
+
+          <!-- Identificación del Sujeto -->
+          <div class="col-md-6">
+            <label for="identificacionSujeto" class="form-label">Identificación del Sujeto</label>
+            <input type="text" id="identificacionSujeto" class="form-control" formControlName="identificacionSujeto" />
+            <div *ngIf="isInvalid('identificacionSujeto')" class="text-danger small mt-1">
+              La identificación es obligatoria (máximo 13 caracteres)
+            </div>
+          </div>
+
+          <!-- Número de Tarjeta -->
+          <div class="col-md-6">
+            <label for="numeroTarjeta" class="form-label">Número de Tarjeta</label>
+            <input type="text" id="numeroTarjeta" class="form-control" formControlName="numeroTarjeta" />
+            <div *ngIf="isInvalid('numeroTarjeta')" class="text-danger small mt-1">
+              El número de tarjeta es obligatorio (máximo 22 caracteres)
+            </div>
+          </div>
+
+          <!-- Cupo de Tarjeta -->
+          <div class="col-md-6">
+            <label for="cupoTarjeta" class="form-label">Cupo de Tarjeta</label>
+            <input type="number" id="cupoTarjeta" class="form-control" formControlName="cupoTarjeta" />
+            <div *ngIf="isInvalid('cupoTarjeta')" class="text-danger small mt-1">
+              Ingrese un cupo válido (mayor a 0)
+            </div>
+          </div>
+
+          <!-- Capital de Consumo -->
+          <div class="col-md-6">
+            <label for="capitalConsumo" class="form-label">Capital de Consumo</label>
+            <input type="number" id="capitalConsumo" class="form-control" formControlName="capitalConsumo" />
+            <div *ngIf="isInvalid('capitalConsumo')" class="text-danger small mt-1">
+              Ingrese un capital válido (mayor a 0)
+            </div>
+          </div>
+
+          <!-- TEA -->
+          <div class="col-md-6">
+            <label for="tea" class="form-label">TEA</label>
+            <input type="number" step="0.01" id="tea" class="form-control" formControlName="tea" />
+            <div *ngIf="isInvalid('tea')" class="text-danger small mt-1">
+              Ingrese una TEA válida (mayor o igual a 0)
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección: Estado y Forma de Pago -->
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Estado y Forma de Pago</h5>
+        <div class="row g-3">
+          <!-- Estado de Operación -->
+          <div class="col-md-6">
+            <label for="estadoOperacion" class="form-label">Estado de Operación</label>
+            <select id="estadoOperacion" class="form-select" formControlName="estadoOperacion">
+              <option [ngValue]="null" disabled selected>Seleccione un estado</option>
+              <option *ngFor="let item of arrayEstadoOperacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('estadoOperacion')" class="text-danger small mt-1">
+              El estado de operación es obligatorio
+            </div>
+          </div>
+
+          <!-- Forma de Pago -->
+          <div class="col-md-6">
+            <label for="formaPago" class="form-label">Forma de Pago</label>
+            <select id="formaPago" class="form-select" formControlName="formaPago">
+              <option [ngValue]="null" disabled selected>Seleccione una forma de pago</option>
+              <option *ngFor="let item of arrayFormaPago" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('formaPago')" class="text-danger small mt-1">
+              La forma de pago es obligatoria
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección: Capital por Vencer -->
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Capital por Vencer</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="capitalPorVencer1a30Dias" class="form-label">Capital por Vencer 1 a 30 Días</label>
+            <input type="number" id="capitalPorVencer1a30Dias" class="form-control" formControlName="capitalPorVencer1a30Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="capitalPorVencer31a90Dias" class="form-label">Capital por Vencer 31 a 90 Días</label>
+            <input type="number" id="capitalPorVencer31a90Dias" class="form-control" formControlName="capitalPorVencer31a90Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="capitalPorVencer91a180Dias" class="form-label">Capital por Vencer 91 a 180 Días</label>
+            <input type="number" id="capitalPorVencer91a180Dias" class="form-control" formControlName="capitalPorVencer91a180Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="capitalPorVencer181a360Dias" class="form-label">Capital por Vencer 181 a 360 Días</label>
+            <input type="number" id="capitalPorVencer181a360Dias" class="form-control" formControlName="capitalPorVencer181a360Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="capitalPorVencerMas360Dias" class="form-label">Capital por Vencer Más de 360 Días</label>
+            <input type="number" id="capitalPorVencerMas360Dias" class="form-control" formControlName="capitalPorVencerMas360Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="costosOperativosPorVencer" class="form-label">Costos Operativos por Vencer</label>
+            <input type="number" id="costosOperativosPorVencer" class="form-control" formControlName="costosOperativosPorVencer" />
+          </div>
+        </div>
+
+        <!-- Sección: Valores que No Devengan Intereses -->
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Valores que No Devengan Intereses</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="valorNoDevenganIntereses1a30Dias" class="form-label">1 a 30 Días</label>
+            <input type="number" id="valorNoDevenganIntereses1a30Dias" class="form-control" formControlName="valorNoDevenganIntereses1a30Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorNoDevenganIntereses31a90Dias" class="form-label">31 a 90 Días</label>
+            <input type="number" id="valorNoDevenganIntereses31a90Dias" class="form-control" formControlName="valorNoDevenganIntereses31a90Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorNoDevenganIntereses91a180Dias" class="form-label">91 a 180 Días</label>
+            <input type="number" id="valorNoDevenganIntereses91a180Dias" class="form-control" formControlName="valorNoDevenganIntereses91a180Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorNoDevenganIntereses181a360Dias" class="form-label">181 a 360 Días</label>
+            <input type="number" id="valorNoDevenganIntereses181a360Dias" class="form-control" formControlName="valorNoDevenganIntereses181a360Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorNoDevenganInteresesMas360Dias" class="form-label">Más de 360 Días</label>
+            <input type="number" id="valorNoDevenganInteresesMas360Dias" class="form-control" formControlName="valorNoDevenganInteresesMas360Dias" />
+          </div>
+        </div>
+
+        <!-- Sección: Capital Vencido -->
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Capital Vencido</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="capitalVencido1a30Dias" class="form-label">Capital Vencido 1 a 30 Días</label>
+            <input type="number" id="capitalVencido1a30Dias" class="form-control" formControlName="capitalVencido1a30Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="capitalVencido31a90Dias" class="form-label">Capital Vencido 31 a 90 Días</label>
+            <input type="number" id="capitalVencido31a90Dias" class="form-control" formControlName="capitalVencido31a90Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="capitalVencido91a180Dias" class="form-label">Capital Vencido 91 a 180 Días</label>
+            <input type="number" id="capitalVencido91a180Dias" class="form-control" formControlName="capitalVencido91a180Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="capitalVencido181a360Dias" class="form-label">Capital Vencido 181 a 360 Días</label>
+            <input type="number" id="capitalVencido181a360Dias" class="form-control" formControlName="capitalVencido181a360Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="capitalVencidoMas360Dias" class="form-label">Capital Vencido Más de 360 Días</label>
+            <input type="number" id="capitalVencidoMas360Dias" class="form-control" formControlName="capitalVencidoMas360Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="capitalVencido181a270Dias" class="form-label">Capital Vencido 181 a 270 Días</label>
+            <input type="number" id="capitalVencido181a270Dias" class="form-control" formControlName="capitalVencido181a270Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="capitalVencidoMas270Dias" class="form-label">Capital Vencido Más de 270 Días</label>
+            <input type="number" id="capitalVencidoMas270Dias" class="form-control" formControlName="capitalVencidoMas270Dias" />
+          </div>
+        </div>
+
+        <!-- Sección: Intereses Vencidos -->
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Intereses Vencidos</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="interesVencido1a30Dias" class="form-label">Intereses Vencidos 1 a 30 Días</label>
+            <input type="number" id="interesVencido1a30Dias" class="form-control" formControlName="interesVencido1a30Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="interesVencido31a60Dias" class="form-label">Intereses Vencidos 31 a 60 Días</label>
+            <input type="number" id="interesVencido31a60Dias" class="form-control" formControlName="interesVencido31a60Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="interesVencido61a90Dias" class="form-label">Intereses Vencidos 61 a 90 Días</label>
+            <input type="number" id="interesVencido61a90Dias" class="form-control" formControlName="interesVencido61a90Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="interesVencido91a180Dias" class="form-label">Intereses Vencidos 91 a 180 Días</label>
+            <input type="number" id="interesVencido91a180Dias" class="form-control" formControlName="interesVencido91a180Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="interesVencido181a270Dias" class="form-label">Intereses Vencidos 181 a 270 Días</label>
+            <input type="number" id="interesVencido181a270Dias" class="form-control" formControlName="interesVencido181a270Dias" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="interesVencidoMas270Dias" class="form-label">Intereses Vencidos Más de 270 Días</label>
+            <input type="number" id="interesVencidoMas270Dias" class="form-control" formControlName="interesVencidoMas270Dias" />
+          </div>
+        </div>
+
+        <!-- Sección: Información Adicional -->
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Información Adicional</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="totalCostosOperativosVencidos" class="form-label">Total Costos Operativos Vencidos</label>
+            <input type="number" id="totalCostosOperativosVencidos" class="form-control" formControlName="totalCostosOperativosVencidos" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="interesSobreMora" class="form-label">Intereses sobre Mora</label>
+            <input type="number" id="interesSobreMora" class="form-control" formControlName="interesSobreMora" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorEnDemandaJudicial" class="form-label">Valor en Demanda Judicial</label>
+            <input type="number" id="valorEnDemandaJudicial" class="form-control" formControlName="valorEnDemandaJudicial" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="carteraCastigada" class="form-label">Cartera Castigada</label>
+            <input type="number" id="carteraCastigada" class="form-control" formControlName="carteraCastigada" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="contribucionAtencionCancer" class="form-label">Contribución Atención Cáncer</label>
+            <input type="number" id="contribucionAtencionCancer" class="form-control" formControlName="contribucionAtencionCancer" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="interesesAcumuladosPorCobrar" class="form-label">Intereses Acumulados por Cobrar</label>
+            <input type="number" id="interesesAcumuladosPorCobrar" class="form-control" formControlName="interesesAcumuladosPorCobrar" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="interesesReversados" class="form-label">Intereses Reversados</label>
+            <input type="number" id="interesesReversados" class="form-control" formControlName="interesesReversados" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="usuarioActualizacion" class="form-label">Usuario Actualización</label>
+            <input type="text" id="usuarioActualizacion" class="form-control" formControlName="usuarioActualizacion" />
+          </div>
+        </div>
+
+        <!-- Sección: Catálogos Opcionales -->
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Catálogos Opcionales</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="objetoFideicomiso" class="form-label">Objeto de Fideicomiso</label>
+            <select id="objetoFideicomiso" class="form-select" formControlName="objetoFideicomiso">
+              <option [ngValue]="null" disabled selected>Seleccione un objeto</option>
+              <option *ngFor="let item of arrayObjetoFideicomiso" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="situacionOperacion" class="form-label">Situación de Operación</label>
+            <select id="situacionOperacion" class="form-select" formControlName="situacionOperacion">
+              <option [ngValue]="null" disabled selected>Seleccione una situación</option>
+              <option *ngFor="let item of arraySituacionOperacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="tipoOperacion" class="form-label">Tipo de Operación</label>
+            <select id="tipoOperacion" class="form-select" formControlName="tipoOperacion">
+              <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+              <option *ngFor="let item of arrayTipoOperacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="tipoSistemaAmortizacion" class="form-label">Tipo de Sistema de Amortización</label>
+            <select id="tipoSistemaAmortizacion" class="form-select" formControlName="tipoSistemaAmortizacion">
+              <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+              <option *ngFor="let item of arrayTipoSistemaAmortizacion" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Sección: Fechas -->
+        <h5 class="mt-4 mb-2 border-bottom pb-1">Fechas</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="fechaTransferenciaCuentasVencidas" class="form-label">Fecha Transferencia Cuentas Vencidas</label>
+            <input type="date" id="fechaTransferenciaCuentasVencidas" class="form-control" formControlName="fechaTransferenciaCuentasVencidas" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="fechaExigibilidadCuota" class="form-label">Fecha Exigibilidad Cuota</label>
+            <input type="date" id="fechaExigibilidadCuota" class="form-control" formControlName="fechaExigibilidadCuota" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="fechaActualizacion" class="form-label">Fecha Actualización</label>
+            <input type="date" id="fechaActualizacion" class="form-control" formControlName="fechaActualizacion" />
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="r21Form.invalid" (click)="onSubmit()">
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+
+  </div>
+</div>
