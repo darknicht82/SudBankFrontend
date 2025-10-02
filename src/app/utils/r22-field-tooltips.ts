@@ -57,7 +57,7 @@ export const R22_FIELD_TOOLTIPS: R22FieldTooltip[] = [
   {
     "no": 6,
     "campo": "Calificación homologada",
-    "tipoDeDato": "Caracte4r (2)",
+    "tipoDeDato": "Caracter (2)",
     "obligatoriedad": "X",
     "tabla": "29",
     "descripcion": "Para los créditos productivos, representa la calificación a la categoría de riesgo, resultante de homologar las operaciones de todos los miembros de un mismo un grupo económico que esté considerado en la propia institución financiera, en base a lo que señala la normativa respectiva. Si no existen operaciones de otros miembros del grupo económico, entonces la calificación homologada será NULO. En los segmentos de consumo, inmobiliario, vivienda de interés social y público, microcrédito o educativo en la misma entidad de los sectores financieros público y privado, la calificación que se registrará en las operaciones debe corresponder a la que presente la peor categoría de riesgo, agrupando dichos segmentos, para el efecto, de la siguiente manera: Consumo; Vivienda (Vivienda de interés social y público e Inmobiliario); Microcrédito y Educativo; siempre y cuando el monto de la deuda de la operación con peor categoría de riesgo sea igual o supere el 20% del total de la deuda del segmento agrupado, para lo cual deberá constituir el monto de provisiones específicas que corresponda a la nueva categoría de riesgo homologada, de acuerdo a lo establecido en la normativa correspondiente. Si existe una única operación por tipo de crédito, entonces la calificación homologada NULO."
