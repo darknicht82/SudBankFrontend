@@ -24,6 +24,7 @@ import { R13MainComponent } from './pages/r13-dashboard/r13-main/r13-main.compon
 import { R10MainComponent } from './pages/r10-dashboard/r10-main/r10-main.component';
 import { R12MainComponent } from './pages/r12-dashboard/r12-main/r12-main.component';
 import { R20MainComponent } from './pages/r20-dashboard/r20-main/r20-main.component';
+import { R22MainComponent } from './pages/r22-dashboard/r22-main/r22-main.component';
 // Componentes L01 eliminados - Solo se mantiene L01MainComponent
 
 export const routes: Routes = [
@@ -50,6 +51,7 @@ export const routes: Routes = [
   { path: 'r12', component: R12MainComponent },
   { path: 'r13', component: R13MainComponent },
   { path: 'r20', component: R20MainComponent },
+  { path: 'r22', component: R22MainComponent },
   { path: 'l08', children: [
     { path: '', component: L08MainComponent },
     { path: 'historico', component: L08HistoricoComponent },
@@ -76,6 +78,8 @@ export const routes: Routes = [
     { path: 'r12', component: R12MainComponent },
     { path: 'r13', component: R13MainComponent },
     { path: 'r20', component: R20MainComponent },
+    { path: 'r22', component: R22MainComponent },
+
     { path: 'l08', children: [
       { path: '', component: L08MainComponent },
       { path: 'historico', component: L08HistoricoComponent },
@@ -110,6 +114,7 @@ export const routes: Routes = [
     { path: 'r12', redirectTo: 'r12' },
     { path: 'r13', redirectTo: 'r13' },
     { path: 'r20', redirectTo: 'r20' },
+    { path: 'r22', redirectTo: 'r22' },
   ]},
   
   { path: 'l08-test', component: L08MainComponent },
