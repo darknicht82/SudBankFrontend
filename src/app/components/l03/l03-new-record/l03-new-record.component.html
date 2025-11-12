@@ -16,7 +16,15 @@
 
         <div class="row g-2">
           <div class="col-md-6">
-            <label for="codigoTipoIdentificacionEmisor" class="form-label">Tipo Identificación Emisor</label>
+            <label for="codigoTipoIdentificacionEmisor" class="form-label">
+              Tipo Identificación Emisor 
+              <span class="text-danger">*</span>
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="R = Nacional, X = Extranjero">
+              </i>
+            </label>
             <select 
               id="codigoTipoIdentificacionEmisor" 
               class="form-select"
@@ -26,13 +34,25 @@
                 {{ item.descripcion }}
               </option>
             </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              R = Nacional, X = Extranjero
+            </small>
             <div *ngIf="isInvalid('codigoTipoIdentificacionEmisor')" class="text-danger small mt-1">
-              obligatorio
+              Campo obligatorio
             </div>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoIdentificacionEmisor" class="form-label">Identificación del emisor</label>
+            <label for="codigoIdentificacionEmisor" class="form-label">
+              Identificación del Emisor 
+              <span class="text-danger">*</span>
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="RUC para nacionales, código tabla 164 para extranjeros">
+              </i>
+            </label>
             <select 
               id="codigoIdentificacionEmisor" 
               class="form-select"
@@ -42,37 +62,106 @@
                 {{ item.descripcion }}
               </option>
             </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              RUC para nacionales, código tabla 164 para extranjeros
+            </small>
             <div *ngIf="isInvalid('codigoIdentificacionEmisor')" class="text-danger small mt-1">
-              obligatorio
+              Campo obligatorio
             </div>
           </div>
 
           <div class="col-md-6">
-            <label for="numeroTitulo" class="form-label">Número de título</label>
-            <input type="text" id="numeroTitulo" class="form-control" formControlName="numeroTitulo" />
+            <label for="numeroTitulo" class="form-label">
+              Número de Título 
+              <span class="text-danger">*</span>
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Numeración asignada por el emisor (máximo 20 caracteres)">
+              </i>
+            </label>
+            <input type="text" id="numeroTitulo" class="form-control" formControlName="numeroTitulo" 
+                   maxlength="20" placeholder="Ej: 154010100001121000" />
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Numeración asignada por el emisor (máximo 20 caracteres)
+            </small>
             <div *ngIf="isInvalid('numeroTitulo')" class="text-danger small mt-1">
-              obligatorio
+              Campo obligatorio
             </div>
           </div>          
 
           <div class="col-md-6">
-            <label for="fechaEmision" class="form-label">Fecha de Emisión</label>
+            <label for="fechaEmision" class="form-label">
+              Fecha de Emisión 
+              <span class="text-danger">*</span>
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Fecha de emisión del bono o contratación del derivado">
+              </i>
+            </label>
             <input type="date" id="fechaEmision" class="form-control" formControlName="fechaEmision" />
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Fecha de emisión del bono o contratación del derivado
+            </small>
             <div *ngIf="isInvalid('fechaEmision')" class="text-danger small mt-1">
-              obligatorio
+              Campo obligatorio
             </div>
           </div>
 
           <div class="col-md-6">
-            <label for="fechaCompra" class="form-label">Fecha de Compra</label>
+            <label for="fechaCompra" class="form-label">
+              Fecha de Compra 
+              <span class="text-danger">*</span>
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Fecha de negociación (fecha valor)">
+              </i>
+            </label>
             <input type="date" id="fechaCompra" class="form-control" formControlName="fechaCompra" />
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Fecha de negociación (fecha valor)
+            </small>
             <div *ngIf="isInvalid('fechaCompra')" class="text-danger small mt-1">
-              obligatorio
+              Campo obligatorio
             </div>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoEstadoTitulo" class="form-label">Estado del título</label>
+            <label for="fechaVencimiento" class="form-label">
+              Fecha de Vencimiento 
+              <span class="text-danger">*</span>
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Fecha de vencimiento del instrumento">
+              </i>
+            </label>
+            <input type="date" id="fechaVencimiento" class="form-control" formControlName="fechaVencimiento" />
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Fecha de vencimiento del instrumento
+            </small>
+            <div *ngIf="isInvalid('fechaVencimiento')" class="text-danger small mt-1">
+              Campo obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="codigoEstadoTitulo" class="form-label">
+              Estado del Título 
+              <span class="text-danger">*</span>
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Estado del instrumento según tabla 70">
+              </i>
+            </label>
             <select 
               id="codigoEstadoTitulo" 
               class="form-select"
@@ -82,13 +171,25 @@
                 {{ item.descripcion }}
               </option>
             </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Estado del instrumento según tabla 70
+            </small>
             <div *ngIf="isInvalid('codigoEstadoTitulo')" class="text-danger small mt-1">
-              obligatorio
+              Campo obligatorio
             </div>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoCategoriaInversion" class="form-label">Categoría de Inversión</label>
+            <label for="codigoCategoriaInversion" class="form-label">
+              Categoría de Inversión 
+              <span class="text-danger">*</span>
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Clasificación contable según tabla 67">
+              </i>
+            </label>
             <select 
               id="codigoCategoriaInversion" 
               class="form-select"
@@ -98,13 +199,25 @@
                 {{ item.descripcion }}
               </option>
             </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Clasificación contable según tabla 67
+            </small>
             <div *ngIf="isInvalid('codigoCategoriaInversion')" class="text-danger small mt-1">
-              obligatorio
+              Campo obligatorio
             </div>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoRangoVencimiento" class="form-label">Rango de Vencimiento</label>
+            <label for="codigoRangoVencimiento" class="form-label">
+              Rango de Vencimiento 
+              <span class="text-danger">*</span>
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Rango de vencimiento según tabla 68">
+              </i>
+            </label>
             <select 
               id="codigoRangoVencimiento" 
               class="form-select"
@@ -114,8 +227,12 @@
                 {{ item.descripcion }}
               </option>
             </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Rango de vencimiento según tabla 68
+            </small>
             <div *ngIf="isInvalid('codigoRangoVencimiento')" class="text-danger small mt-1">
-              obligatorio
+              Campo obligatorio
             </div>
           </div>
 
@@ -125,105 +242,280 @@
 
         <div class="row g-2">
           <div class="col-md-6">
-            <label for="tasaInteresNominal" class="form-label">Tasa Interés Nominal</label>
+            <label for="tasaInteresNominal" class="form-label">
+              Tasa Interés Nominal 
+              <span class="text-danger">*</span>
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Tasa actual en formato numérico (ej: 0.0255 = 2.55%). Rango: 0.0000-1.0000">
+              </i>
+            </label>
             <input id="tasaInteresNominal" class="form-control" formControlName="tasaInteresNominal" type="number"
               step="0.0001"
               min="0"
-              max="9.9999" class="form-control"/>
+              max="1"
+              placeholder="Ej: 0.0255"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Formato numérico (0.0000-1.0000). Ejemplo: 0.0255 = 2.55%
+            </small>
+            <div *ngIf="isInvalid('tasaInteresNominal')" class="text-danger small mt-1">
+              Campo obligatorio (0-1)
+            </div>
           </div>  
 
           <div class="col-md-6">
-            <label for="montoInteresesUsd" class="form-label">Monto de Intereses (USD)</label>
+            <label for="montoInteresesUsd" class="form-label">
+              Monto de Intereses (USD) 
+              <span class="text-danger">*</span>
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Intereses pendientes de cobro en USD">
+              </i>
+            </label>
             <input id="montoInteresesUsd"
                   type="number"
                   step="0.01"
                   min="0"
                   max="9999999999999.99"
-                  formControlName="montoInteresesUsd" class="form-control" />
+                  formControlName="montoInteresesUsd" class="form-control" 
+                  placeholder="Ej: 1500.50"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Intereses pendientes de cobro en USD. Rango: 0.00 - 9,999,999,999,999.99
+            </small>
+            <div *ngIf="isInvalid('montoInteresesUsd')" class="text-danger small mt-1">
+              Campo obligatorio (0-9999999999999.99)
+            </div>
           </div>
 
           <div class="col-md-6">
-            <label for="valorLibrosUsd" class="form-label">Valor en Libros (USD)</label>
+            <label for="valorLibrosUsd" class="form-label">
+              Valor en Libros (USD)
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Valor contable registrado en USD">
+              </i>
+            </label>
             <input id="valorLibrosUsd"
                   type="number"
                   step="0.01"
                   min="0"
                   max="9999999999999.99"
-                  formControlName="valorLibrosUsd" class="form-control" />
+                  formControlName="valorLibrosUsd" class="form-control" 
+                  placeholder="Ej: 100000.00"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Valor contable registrado en USD
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="precioMercado" class="form-label">Precio de Mercado</label>
+            <label for="precioMercado" class="form-label">
+              Precio de Mercado
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Cotización en formato numérico (ej: 0.9945 = 99.45%)">
+              </i>
+            </label>
             <input id="precioMercado"
                   type="number"
                   step="0.0001"
                   min="0"
-                  max="9.9999"
-                  formControlName="precioMercado" class="form-control" />
+                  max="1"
+                  formControlName="precioMercado" class="form-control" 
+                  placeholder="Ej: 0.9945"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Cotización en formato numérico (ej: 0.9945 = 99.45%)
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="valorMercadoUsd" class="form-label">Valor de Mercado (USD)</label>
+            <label for="fechaValorMercado" class="form-label">
+              Fecha Valor de Mercado
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Fecha de la cotización de mercado utilizada">
+              </i>
+            </label>
+            <input type="date" id="fechaValorMercado" class="form-control" formControlName="fechaValorMercado" />
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Fecha de la cotización de mercado utilizada
+            </small>
+          </div>
+
+          <div class="col-md-6">
+            <label for="valorMercadoUsd" class="form-label">
+              Valor de Mercado (USD)
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Valor de mercado calculado en USD">
+              </i>
+            </label>
             <input id="valorMercadoUsd"
                   type="number"
                   step="0.01"
                   min="0"
                   max="9999999999999.99"
-                  formControlName="valorMercadoUsd" class="form-control" />
+                  formControlName="valorMercadoUsd" class="form-control" 
+                  placeholder="Ej: 99500.00"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Valor de mercado calculado en USD
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="tasaRetornoTir" class="form-label">Tasa de Retorno (TIR)</label>
+            <label for="codigoFuenteInfoMercado" class="form-label">
+              Fuente de Información de Mercado
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Fuente de la información de mercado según tabla 69">
+              </i>
+            </label>
+            <select 
+              id="codigoFuenteInfoMercado" 
+              class="form-select"
+              formControlName="codigoFuenteInfoMercado">
+              <option [ngValue]="null" disabled selected>Seleccione uno(a)</option>
+              <option *ngFor="let item of arrayFuenteInfoMercado" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Fuente de la información de mercado según tabla 69
+            </small>
+          </div>
+
+          <div class="col-md-6">
+            <label for="tasaRetornoTir" class="form-label">
+              Tasa de Retorno (TIR)
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Tasa interna de retorno en formato numérico (ej: 0.0255 = 2.55%)">
+              </i>
+            </label>
             <input id="tasaRetornoTir"
                   type="number"
                   step="0.0001"
                   min="0"
-                  max="9.9999"
-                  formControlName="tasaRetornoTir" class="form-control" />
+                  max="1"
+                  formControlName="tasaRetornoTir" class="form-control" 
+                  placeholder="Ej: 0.0255"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Tasa interna de retorno en formato numérico (ej: 0.0255 = 2.55%)
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="valorPresenteUsd" class="form-label">Valor Presente (USD)</label>
+            <label for="valorPresenteUsd" class="form-label">
+              Valor Presente (USD)
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Valor presente calculado en USD">
+              </i>
+            </label>
             <input id="valorPresenteUsd"
                   type="number"
                   step="0.01"
                   min="0"
                   max="9999999999999.99"
-                  formControlName="valorPresenteUsd" class="form-control" />
+                  formControlName="valorPresenteUsd" class="form-control" 
+                  placeholder="Ej: 98000.00"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Valor presente calculado en USD
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="provisionRequerida" class="form-label">Provisión Requerida</label>
+            <label for="provisionRequerida" class="form-label">
+              Provisión Requerida
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Provisión requerida según normativa">
+              </i>
+            </label>
             <input id="provisionRequerida"
                   type="number"
                   step="0.01"
                   min="0"
                   max="9999999999999.99"
-                  formControlName="provisionRequerida" class="form-control" />
+                  formControlName="provisionRequerida" class="form-control" 
+                  placeholder="Ej: 5000.00"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Provisión requerida según normativa
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="provisionConstituida" class="form-label">Provisión Constituida</label>
+            <label for="provisionConstituida" class="form-label">
+              Provisión Constituida
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Provisión ya constituida en libros">
+              </i>
+            </label>
             <input id="provisionConstituida"
                   type="number"
                   step="0.01"
                   min="0"
                   max="9999999999999.99"
-                  formControlName="provisionConstituida" class="form-control" />
+                  formControlName="provisionConstituida" class="form-control" 
+                  placeholder="Ej: 3000.00"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Provisión ya constituida en libros
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="gananciasPerdidasPeriodo" class="form-label">Ganancias/Pérdidas del Período</label>
+            <label for="gananciasPerdidasPeriodo" class="form-label">
+              Ganancias/Pérdidas del Período
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Ganancias o pérdidas del período actual">
+              </i>
+            </label>
             <input id="gananciasPerdidasPeriodo"
                   type="number"
                   step="0.01"
                   min="0"
                   max="9999999999999.99"
-                  formControlName="gananciasPerdidasPeriodo" class="form-control" />
+                  formControlName="gananciasPerdidasPeriodo" class="form-control" 
+                  placeholder="Ej: 1500.00"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Ganancias o pérdidas del período actual
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoCalificacionRiesgo" class="form-label">Código Calificación Riesgo</label>
+            <label for="codigoCalificacionRiesgo" class="form-label">
+              Código Calificación Riesgo
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Calificación de riesgo según tabla 65">
+              </i>
+            </label>
             <select 
               id="codigoCalificacionRiesgo" 
               class="form-select"
@@ -232,11 +524,22 @@
               <option *ngFor="let item of arrayCalificacionRiesgo" [ngValue]="item">
                 {{ item.descripcion }}
               </option>
-            </select>           
+            </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Calificación de riesgo según tabla 65
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoCategoriaCalificacion" class="form-label">Código Categoría Calificación</label>
+            <label for="codigoCategoriaCalificacion" class="form-label">
+              Código Categoría Calificación
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Categoría de calificación según tabla 169">
+              </i>
+            </label>
             <select 
               id="codigoCategoriaCalificacion" 
               class="form-select"
@@ -245,11 +548,22 @@
               <option *ngFor="let item of arrayCategoriaCalificacion" [ngValue]="item">
                 {{ item.descripcion }}
               </option>
-            </select>           
+            </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Categoría de calificación según tabla 169
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoCalificadoraRiesgo" class="form-label">Código Calificadora Riesgo</label>
+            <label for="codigoCalificadoraRiesgo" class="form-label">
+              Código Calificadora Riesgo
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Calificadora de riesgo según tabla 66">
+              </i>
+            </label>
             <select 
               id="codigoCalificadoraRiesgo" 
               class="form-select"
@@ -258,7 +572,11 @@
               <option *ngFor="let item of arrayCalificadoraRiesgo" [ngValue]="item">
                 {{ item.descripcion }}
               </option>
-            </select>           
+            </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Calificadora de riesgo según tabla 66
+            </small>
           </div>
 
           <!-- <div class="col-md-6">
@@ -278,38 +596,72 @@
         <div class="row g-3">         
 
           <div class="col-md-6">
-            <label for="fechaUltimaCalificacion" class="form-label">Fecha de Última Calificación</label>
+            <label for="fechaUltimaCalificacion" class="form-label">
+              Fecha de Última Calificación
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Fecha de la última calificación de riesgo">
+              </i>
+            </label>
             <input type="date" id="fechaUltimaCalificacion" class="form-control" formControlName="fechaUltimaCalificacion" />
-            <div *ngIf="isInvalid('fechaUltimaCalificacion')" class="text-danger small mt-1">
-              obligatorio
-            </div>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Fecha de la última calificación de riesgo
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="fechaLiquidacionVenta" class="form-label">Fecha de Última Calificación</label>
+            <label for="fechaLiquidacionVenta" class="form-label">
+              Fecha de Liquidación o Venta
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Fecha de liquidación o venta del título">
+              </i>
+            </label>
             <input type="date" id="fechaLiquidacionVenta" class="form-control" formControlName="fechaLiquidacionVenta" />
-            <div *ngIf="isInvalid('fechaLiquidacionVenta')" class="text-danger small mt-1">
-              obligatorio
-            </div>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Fecha de liquidación o venta del título
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="precioLiquidacionVenta" class="form-label">Precio Liquidación de Venta</label>
-            <input type="text" id="precioLiquidacionVenta" class="form-control" formControlName="precioLiquidacionVenta" />
-            <div *ngIf="isInvalid('precioLiquidacionVenta')" class="text-danger small mt-1">
-              obligatorio
-            </div>
+            <label for="precioLiquidacionVenta" class="form-label">
+              Precio Liquidación de Venta
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Precio de liquidación o venta del título">
+              </i>
+            </label>
+            <input type="text" id="precioLiquidacionVenta" class="form-control" formControlName="precioLiquidacionVenta" 
+                   placeholder="Ej: 0.9950"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Precio de liquidación o venta del título
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="valorFondoInversionUsd" class="form-label">Valor Fondo Inversión (USD)</label>
+            <label for="valorFondoInversionUsd" class="form-label">
+              Valor Fondo Inversión (USD)
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Valor del fondo de inversión en USD">
+              </i>
+            </label>
             <input id="valorFondoInversionUsd" type="number"
                   step="0.01"
                   min="0"
-                  max="9999999999999.99" class="form-control" formControlName="valorFondoInversionUsd" />
-            <div *ngIf="isInvalid('valorFondoInversionUsd')" class="text-danger small mt-1">
-              obligatorio
-            </div>
+                  max="9999999999999.99" class="form-control" formControlName="valorFondoInversionUsd" 
+                  placeholder="Ej: 50000.00"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Valor del fondo de inversión en USD
+            </small>
           </div>
 
         </div>
@@ -319,7 +671,14 @@
         <div class="row g-3">
      
           <div class="col-md-6">
-            <label for="codigoFondoInversion" class="form-label">Código Fondo de Inversión</label>
+            <label for="codigoFondoInversion" class="form-label">
+              Código Fondo de Inversión
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Fondo de inversión según tabla 79">
+              </i>
+            </label>
             <select 
               id="codigoFondoInversion" 
               class="form-select"
@@ -329,10 +688,21 @@
                 {{ item.descripcion }}
               </option>
             </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Fondo de inversión según tabla 79
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoTipoIdentificacionCustodio" class="form-label">Código Tipo Identificación Custodio</label>
+            <label for="codigoTipoIdentificacionCustodio" class="form-label">
+              Código Tipo Identificación Custodio
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Tipo de identificación del custodio según tabla 4">
+              </i>
+            </label>
             <select 
               id="codigoTipoIdentificacionCustodio" 
               class="form-select"
@@ -342,10 +712,21 @@
                 {{ item.descripcion }}
               </option>
             </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Tipo de identificación del custodio según tabla 4
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoIdentificacionCustodio" class="form-label">Código Identificación Custodio</label>
+            <label for="codigoIdentificacionCustodio" class="form-label">
+              Código Identificación Custodio
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Identificación del custodio según tabla 164">
+              </i>
+            </label>
             <select 
               id="codigoIdentificacionCustodio" 
               class="form-select"
@@ -355,10 +736,21 @@
                 {{ item.descripcion }}
               </option>
             </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Identificación del custodio según tabla 164
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoCalificacionRiesgoCustodio" class="form-label">Código Calificación Riesgo Custodio</label>
+            <label for="codigoCalificacionRiesgoCustodio" class="form-label">
+              Código Calificación Riesgo Custodio
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Calificación de riesgo del custodio según tabla 65">
+              </i>
+            </label>
             <select 
               id="codigoCalificacionRiesgoCustodio" 
               class="form-select"
@@ -368,10 +760,21 @@
                 {{ item.descripcion }}
               </option>
             </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Calificación de riesgo del custodio según tabla 65
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoCalificadoraRiesgoCustodio" class="form-label">Código Calificadora Riesgo Custodio</label>
+            <label for="codigoCalificadoraRiesgoCustodio" class="form-label">
+              Código Calificadora Riesgo Custodio
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Calificadora de riesgo del custodio según tabla 66">
+              </i>
+            </label>
             <select 
               id="codigoCalificadoraRiesgoCustodio" 
               class="form-select"
@@ -381,11 +784,27 @@
                 {{ item.descripcion }}
               </option>
             </select>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Calificadora de riesgo del custodio según tabla 66
+            </small>
           </div>
 
           <div class="col-md-6">
-            <label for="codigoSubsidiaria" class="form-label">Código Subsidiaria</label>
-            <input type="text" id="codigoSubsidiaria" class="form-control" formControlName="codigoSubsidiaria" />
+            <label for="codigoSubsidiaria" class="form-label">
+              Código Subsidiaria
+              <i class="bi bi-info-circle text-info ms-1" 
+                 data-bs-toggle="tooltip" 
+                 data-bs-placement="top" 
+                 title="Código de la subsidiaria">
+              </i>
+            </label>
+            <input type="text" id="codigoSubsidiaria" class="form-control" formControlName="codigoSubsidiaria" 
+                   placeholder="Ej: SUB001"/>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i>
+              Código de la subsidiaria
+            </small>
           </div>
 
         </div>
@@ -394,6 +813,12 @@
     </div>
 
     <div class="modal-footer">
+      <div class="form-validation-info" *ngIf="newEditRecordForm.invalid && formSubmitted">
+        <small class="text-danger">
+          <i class="bi bi-exclamation-triangle"></i>
+          Por favor complete todos los campos obligatorios
+        </small>
+      </div>
       <button type="submit" class="btn btn-primary" [disabled]="newEditRecordForm.invalid" (click)="onSubmit()">
         <i class="bi bi-check"></i> Guardar Registro
       </button>

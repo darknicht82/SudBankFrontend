@@ -1,0 +1,247 @@
+<!-- Modal del Formulario r10 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro R10</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <form [formGroup]="r10Form" (ngSubmit)="onSubmit()" class="w-100">
+        <!-- Sección: Título -->
+        <h5 class="mt-3 mb-2 border-bottom pb-1">Título</h5>
+        <div class="row g-2">
+          <!-- Tipo Identificación -->
+          <div class="col-md-6">
+            <label for="tipoIdentificacion" class="form-label"
+              >Tipo de Identificación</label
+            >
+            <select
+              id="tipoIdentificacion"
+              class="form-select"
+              formControlName="tipoIdentificacion"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo
+              </option>
+              <option
+                *ngFor="let item of arrayTipoIdentificacion"
+                [ngValue]="item"
+              >
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="isInvalid('tipoIdentificacion')"
+              class="text-danger small mt-1"
+            >
+              Escoga un tipo de identificación
+            </div>
+          </div>
+
+          <!-- identificacionSujeto -->
+          <div class="col-md-6">
+            <label for="identificacionSujeto" class="form-label"
+              >Identificación del sujeto</label
+            >
+            <input
+              type="text"
+              id="identificacionSujeto"
+              class="form-control"
+              formControlName="identificacionSujeto"
+            />
+            <div
+              *ngIf="isInvalid('identificacionSujeto')"
+              class="text-danger small mt-1"
+            >
+              La identificación es obligatoria
+            </div>
+          </div>
+
+          <!-- numeroOperacion -->
+          <div class="col-md-6">
+            <label for="numeroOperacion" class="form-label"
+              >Número de operacion</label
+            >
+            <input
+              type="text"
+              id="numeroOperacion"
+              class="form-control"
+              formControlName="numeroOperacion"
+            />
+            <div
+              *ngIf="isInvalid('numeroOperacion')"
+              class="text-danger small mt-1"
+            >
+              El número de operacion es obligatorio
+            </div>
+          </div>
+
+          <!--Codigo clase bien titulo-->
+          <div class="col-md-6">
+            <label for="codigoClaseBienTitulo" class="form-label"
+              >Clase Bien o titulo</label
+            >
+            <select
+              id="codigoClaseBienTitulo"
+              class="form-select"
+              formControlName="codigoClaseBienTitulo"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un bien o titulo
+              </option>
+              <option
+                *ngFor="let item of arrayClaseBienTitulo"
+                [ngValue]="item"
+              >
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="isInvalid('codigoClaseBienTitulo')"
+              class="text-danger small mt-1"
+            >
+              Escoga una clase de bien o titulo
+            </div>
+          </div>
+
+          <!--Codigo del bien o titulo -->
+          <div class="col-md-6">
+            <label for="codigoBienTitulo" class="form-label"
+              >Código del bien o titulo</label
+            >
+            <input
+              type="text"
+              id="codigoBienTitulo"
+              class="form-control"
+              formControlName="codigoBienTitulo"
+            />
+            <div
+              *ngIf="isInvalid('codigoBienTitulo')"
+              class="text-danger small mt-1"
+            >
+              El codigo del bien o titulo es obligatorio
+            </div>
+          </div>
+
+          <!--Tipo bien o titulo-->
+          <div class="col-md-6">
+            <label for="tipoBienTitulo" class="form-label"
+              >Tipo de Identificación</label
+            >
+            <select
+              id="tipoBienTitulo"
+              class="form-select"
+              formControlName="tipoBienTitulo"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo 
+              </option>
+              <option
+                *ngFor="let item of arrayTipoBienTitulo"
+                [ngValue]="item"
+              >
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="isInvalid('tipoBienTitulo')"
+              class="text-danger small mt-1"
+            >
+              Escoga un tipo de bien o titulo
+            </div>
+          </div>
+
+          <!--Provision constituida-->
+          <div class="col-md-6">
+            <label for="provisionConstituida" class="form-label"
+              >Provision Constituida</label
+            >
+            <input
+              type="number"
+              id="provisionConstituida"
+              class="form-control"
+              formControlName="provisionConstituida"
+            />
+            <div
+              *ngIf="isInvalid('provisionConstituida')"
+              class="text-danger small mt-1"
+            >
+              La provision constituida es obligatoria
+            </div>
+          </div>
+
+          <!--Costos generados-->
+          <div class="col-md-6">
+            <label for="costosGenerados" class="form-label"
+              >Costos Generados</label
+            >
+            <input
+              type="number"
+              id="costosGenerados"
+              class="form-control"
+              formControlName="costosGenerados"
+            />
+            <div
+              *ngIf="isInvalid('costosGenerados')"
+              class="text-danger small mt-1"
+            >
+              Los costos generados son obligatorios
+            </div>
+          </div>
+
+          <!--Tipo bien titulo este es un campo creado para pdoer hacer la condicion despues -->
+          <div class="col-md-6">
+            <label for="tipoTitulo" class="form-label"
+              >Tipo del Titulo</label
+            >
+            <select
+              id="tipoTitulo"
+              class="form-select"
+              formControlName="tipoTitulo"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo
+              </option>
+              <option
+                *ngFor="let item of arrayTipoTitulo"
+                [ngValue]="item"
+              >
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="isInvalid('tipoTitulo')"
+              class="text-danger small mt-1"
+            >
+              Escoga un tipo de titulo
+            </div>
+          </div>
+          
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="r10Form.invalid"
+        (click)="onSubmit()"
+      >
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</div>

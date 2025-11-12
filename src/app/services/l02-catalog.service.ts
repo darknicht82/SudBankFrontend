@@ -38,15 +38,22 @@ export class L02CatalogService {
     return this.http.get<L02Resume[]>(`${this.baseUrl}/structures/L02/resume`)
       .pipe(
         catchError(error => {
-          console.error('Error al obtener Tabla 4 desde API real:', error);
-          throw error; // Propagar el error
+          console.error('Error al obtener L02 resume desde API real:', error);
+          // Fallback: intentar con endpoint alternativo
+          return this.http.get<L02Resume[]>(`${this.baseUrl}/structures/L02`)
+            .pipe(
+              catchError(fallbackError => {
+                console.error('Error en fallback L02:', fallbackError);
+                throw fallbackError;
+              })
+            );
         })
       );
   }
 
-  saveL02(form: any ): void{
+  saveL02(form: any ): Observable<any>{
     const formValue = form;
-    console.log('formValue: ', formValue);
+    console.log('📝 L02 - Formulario recibido:', formValue);
 
     // Transform form into expected payload
     const payload = {
@@ -75,12 +82,21 @@ export class L02CatalogService {
       periodicidadPago: formValue.periodicidadPago,
     };
 
-    console.log('Payload to send:', payload);
+    console.log('📤 L02 - Payload a enviar:', payload);
+    console.log('🌐 L02 - URL:', `${this.baseUrl}/structures/L02`);
 
-    this.http.post(`${this.baseUrl}/structures/L02`, payload).subscribe({
-      next: (res) => console.log('Saved successfully', res),
-      error: (err) => console.error('Error saving', err)
-    });
+    return this.http.post(`${this.baseUrl}/structures/L02`, payload).pipe(
+      map(response => {
+        console.log('✅ L02 - Guardado exitoso:', response);
+        return response;
+      }),
+      catchError(error => {
+        console.error('❌ L02 - Error al guardar:', error);
+        console.error('❌ L02 - Status:', error.status);
+        console.error('❌ L02 - Message:', error.message);
+        throw error;
+      })
+    );
   }
 
 }
