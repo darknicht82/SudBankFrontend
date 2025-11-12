@@ -100,7 +100,7 @@
         <tbody>
           <tr *ngFor="let item of arrayResume">
             <td class="data-cell">
-              <span class="cell-value">{{ item.tipoIdentificacion.description }}</span>
+              <span class="cell-value">{{ item.tipoIdentificacion?.descripcion }}</span>
             </td>
             <td class="data-cell">
               <span class="cell-value">{{ item.depositario.description }}</span>

@@ -128,7 +128,8 @@ export class L08Service {
 
   /**
    * Generar reporte L08
-   */
+ 
+  
   generateL08Report(request: L08ReportRequest): Observable<L08ReportResponse> {
     return this.http.post<L08Response>(`${this.regulatoryUrl}/l08/generate`, request)
       .pipe(
@@ -139,6 +140,7 @@ export class L08Service {
         })
       );
   }
+        */
 
   /**
    * Obtener datos históricos
