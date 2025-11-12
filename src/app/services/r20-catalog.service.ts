@@ -33,7 +33,7 @@ export interface R20Resume {
   providedIn: 'root'
 })
 export class R20CatalogService {
-  private baseUrl = environment.localEndpoint; // ✅ CONECTAR DIRECTAMENTE A APIS REALES
+  private baseUrl = environment.backendEndpoint; // ✅ CONECTAR DIRECTAMENTE A APIS REALES
 
 
   constructor(private http: HttpClient) {}
