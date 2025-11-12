@@ -1,268 +1,36 @@
-<div class="l08-table-container">
-  <div class="table-header">
-    <div class="header-content">
-      <h2><i class="pi pi-table"></i> Datos del Reporte L08</h2>
-      <p>Visualización y gestión de reportes de liquidez y gestión de riesgos</p>
-    </div>
-    
-    <div class="header-actions">
-      <button class="btn btn-secondary" (click)="onRefresh()">
-        <i class="pi pi-refresh"></i>
-        Actualizar
-      </button>
-      <button class="btn btn-primary" (click)="onExport()">
-        <i class="pi pi-download"></i>
-        Exportar
-      </button>
-    </div>
-  </div>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<!-- <table mat-table class="mat-elevation-z8"> -->
 
-  <!-- Filtros -->
-  <div class="filters-section">
-    <div class="filters-grid">
-      <div class="filter-group">
-        <label for="periodoFilter">Período</label>
-        <select id="periodoFilter" [(ngModel)]="filtros.periodo" class="form-control">
-          <option value="">Todos los períodos</option>
-          <option value="2024-01">Enero 2024</option>
-          <option value="2024-02">Febrero 2024</option>
-          <option value="2024-03">Marzo 2024</option>
-          <option value="2024-04">Abril 2024</option>
-          <option value="2024-05">Mayo 2024</option>
-          <option value="2024-06">Junio 2024</option>
-        </select>
-      </div>
+  <ng-container matColumnDef="no">
+    <th mat-header-cell *matHeaderCellDef> No. </th>
+    <td mat-cell *matCellDef="let field"> {{field.no}} </td>
+  </ng-container>
 
-      <div class="filter-group">
-        <label for="entidadFilter">Entidad</label>
-        <input 
-          type="text" 
-          id="entidadFilter" 
-          [(ngModel)]="filtros.entidad"
-          class="form-control"
-          placeholder="Filtrar por entidad"
-        >
-      </div>
+  <ng-container matColumnDef="campo">
+    <th mat-header-cell *matHeaderCellDef> Campo </th>
+    <td mat-cell *matCellDef="let field"> {{field.campo}} </td>
+  </ng-container>
 
-      <div class="filter-group">
-        <label for="ratioFilter">Ratio de Liquidez</label>
-        <select id="ratioFilter" [(ngModel)]="filtros.ratio" class="form-control">
-          <option value="">Todos</option>
-          <option value="excelente">Excelente (≥100%)</option>
-          <option value="aceptable">Aceptable (80-99%)</option>
-          <option value="bajo">Bajo (<80%)</option>
-        </select>
-      </div>
+  <ng-container matColumnDef="tipoDeDato">
+    <th mat-header-cell *matHeaderCellDef> Tipo de Dato </th>
+    <td mat-cell *matCellDef="let field"> {{field.tipoDeDato}} </td>
+  </ng-container>
 
-      <div class="filter-group">
-        <label for="searchFilter">Buscar</label>
-        <div class="search-input">
-          <i class="pi pi-search"></i>
-          <input 
-            type="text" 
-            id="searchFilter" 
-            [(ngModel)]="filtros.busqueda"
-            class="form-control"
-            placeholder="Buscar en todos los campos..."
-          >
-        </div>
-      </div>
-    </div>
+  <ng-container matColumnDef="obligatoriedad">
+    <th mat-header-cell *matHeaderCellDef> Oblig. </th>
+    <td mat-cell *matCellDef="let field"> {{field.obligatoriedad}} </td>
+  </ng-container>
 
-    <div class="filters-actions">
-      <button class="btn btn-outline" (click)="limpiarFiltros()">
-        <i class="pi pi-times"></i>
-        Limpiar Filtros
-      </button>
-      <button class="btn btn-info" (click)="aplicarFiltros()">
-        <i class="pi pi-filter"></i>
-        Aplicar Filtros
-      </button>
-    </div>
-  </div>
+  <ng-container matColumnDef="tabla">
+    <th mat-header-cell *matHeaderCellDef> Tabla </th>
+    <td mat-cell *matCellDef="let field"> {{field.tabla}} </td>
+  </ng-container>
 
-  <!-- Estadísticas -->
-  <div class="stats-section">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon">
-          <i class="pi pi-chart-line"></i>
-        </div>
-        <div class="stat-content">
-          <div class="stat-value">{{ datosFiltrados.length }}</div>
-          <div class="stat-label">Reportes</div>
-        </div>
-      </div>
+  <ng-container matColumnDef="descripcion">
+    <th mat-header-cell *matHeaderCellDef> Descripción </th>
+    <td mat-cell *matCellDef="let field"> {{field.descripcion}} </td>
+  </ng-container>
 
-      <div class="stat-card">
-        <div class="stat-icon">
-          <i class="pi pi-check-circle"></i>
-        </div>
-        <div class="stat-content">
-          <div class="stat-value">{{ promedioRatio | number:'1.1-1' }}%</div>
-          <div class="stat-label">Ratio Promedio</div>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon">
-          <i class="pi pi-dollar"></i>
-        </div>
-        <div class="stat-content">
-          <div class="stat-value">${{ totalActivos | number:'1.0-0' }}M</div>
-          <div class="stat-label">Total Activos</div>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon">
-          <i class="pi pi-exclamation-triangle"></i>
-        </div>
-        <div class="stat-content">
-          <div class="stat-value">{{ reportesConRiesgo }}</div>
-          <div class="stat-label">Con Riesgo</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tabla de datos -->
-  <div class="table-container">
-    <div class="table-wrapper">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th (click)="ordenarPor('fechaReporte')" class="sortable">
-              <div class="th-content">
-                <span>Fecha</span>
-                <i class="pi" [class]="getSortIcon('fechaReporte')"></i>
-              </div>
-            </th>
-            <th (click)="ordenarPor('entidadFinanciera')" class="sortable">
-              <div class="th-content">
-                <span>Entidad</span>
-                <i class="pi" [class]="getSortIcon('entidadFinanciera')"></i>
-              </div>
-            </th>
-            <th (click)="ordenarPor('totalActivosLiquidos')" class="sortable">
-              <div class="th-content">
-                <span>Activos Líquidos</span>
-                <i class="pi" [class]="getSortIcon('totalActivosLiquidos')"></i>
-              </div>
-            </th>
-            <th (click)="ordenarPor('totalPasivosCortoPlazo')" class="sortable">
-              <div class="th-content">
-                <span>Pasivos Corto Plazo</span>
-                <i class="pi" [class]="getSortIcon('totalPasivosCortoPlazo')"></i>
-              </div>
-            </th>
-            <th (click)="ordenarPor('ratioLiquidez')" class="sortable">
-              <div class="th-content">
-                <span>Ratio Liquidez</span>
-                <i class="pi" [class]="getSortIcon('ratioLiquidez')"></i>
-              </div>
-            </th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of datosPaginados" class="table-row">
-            <td>{{ item.fechaReporte | date:'dd/MM/yyyy' }}</td>
-            <td>
-              <div class="entity-info">
-                <div class="entity-name">{{ item.entidadFinanciera }}</div>
-                <div class="entity-code">{{ item.codigoEntidad }}</div>
-              </div>
-            </td>
-            <td class="amount-cell">
-              <div class="amount-value">${{ item.totalActivosLiquidos | number:'1.2-2' }}</div>
-              <div class="amount-breakdown">
-                <small>Efectivo: ${{ item.efectivoCaja | number:'1.0-0' }}K</small>
-              </div>
-            </td>
-            <td class="amount-cell">
-              <div class="amount-value">${{ item.totalPasivosCortoPlazo | number:'1.2-2' }}</div>
-              <div class="amount-breakdown">
-                <small>Demanda: ${{ item.depositosDemanda | number:'1.0-0' }}K</small>
-              </div>
-            </td>
-            <td>
-              <div class="ratio-cell">
-                <div class="ratio-value" [class]="getRatioClass(item.ratioLiquidez)">
-                  {{ item.ratioLiquidez | number:'1.1-1' }}%
-                </div>
-                <div class="ratio-indicator" [class]="getRatioClass(item.ratioLiquidez)"></div>
-              </div>
-            </td>
-            <td>
-              <div class="status-badge" [class]="getStatusClass(item.estado)">
-                <i class="pi" [class]="getStatusIcon(item.estado)"></i>
-                {{ item.estado }}
-              </div>
-            </td>
-            <td>
-              <div class="actions-cell">
-                <button class="action-btn" (click)="verDetalle(item)" title="Ver detalle">
-                  <i class="pi pi-eye"></i>
-                </button>
-                <button class="action-btn" (click)="editar(item)" title="Editar">
-                  <i class="pi pi-pencil"></i>
-                </button>
-                <button class="action-btn danger" (click)="eliminar(item)" title="Eliminar">
-                  <i class="pi pi-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Paginación -->
-    <div class="pagination-container">
-      <div class="pagination-info">
-        Mostrando {{ inicioPagina + 1 }} - {{ finPagina }} de {{ datosFiltrados.length }} registros
-      </div>
-      
-      <div class="pagination-controls">
-        <button 
-          class="pagination-btn" 
-          [disabled]="paginaActual === 1"
-          (click)="cambiarPagina(paginaActual - 1)"
-        >
-          <i class="pi pi-chevron-left"></i>
-        </button>
-        
-        <div class="pagination-pages">
-          <button 
-            *ngFor="let pagina of paginasVisibles" 
-            class="pagination-btn"
-            [class.active]="pagina === paginaActual"
-            (click)="cambiarPagina(pagina)"
-          >
-            {{ pagina }}
-          </button>
-        </div>
-        
-        <button 
-          class="pagination-btn" 
-          [disabled]="paginaActual === totalPaginas"
-          (click)="cambiarPagina(paginaActual + 1)"
-        >
-          <i class="pi pi-chevron-right"></i>
-        </button>
-      </div>
-      
-      <div class="pagination-size">
-        <label for="pageSize">Por página:</label>
-        <select id="pageSize" [(ngModel)]="tamanoPagina" (change)="cambiarTamanoPagina()">
-          <option value="10">10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

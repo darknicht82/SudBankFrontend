@@ -1,12 +1,8 @@
-<!-- COMPONENTE L08 MAIN - DASHBOARD PRINCIPAL -->
-<!-- Manual de Riesgos de Mercado y Liquidez - Marzo 2021 -->
-<!-- Superintendencia de Bancos de Panamá -->
-
 <div class="l08-main-container">
   <!-- CABECERA -->
   <div class="header">
-    <h1>L08 - Liquidez Estructural</h1>
-    <p class="subtitle">Reporte de liquidez estructural según especificaciones oficiales SB</p>
+    <h1>L08 - Liquidez Estructura</h1>
+    <p class="subtitle"> Esta estructura es parte de la medición estructural del riesgo de liquidez, que considera la composición de activos y pasivos líquidos en una posición estática a una fecha determinada y sobre los saldos contables, y que sirven para el cálculo y reporte semanal del indicador de liquidez.</p>
   </div>
 
   <!-- INFORMACIÓN DE ESTRUCTURA -->
@@ -16,75 +12,23 @@
         <h3>📋 Información de la Estructura L08</h3>
       </div>
       <div class="card-content">
-        <p><strong>Descripción:</strong> {{ tooltips.description }}</p>
-        <p><strong>Periodicidad:</strong> {{ tooltips.periodicity }}</p>
-        <p><strong>Fecha límite:</strong> {{ tooltips.deadline }}</p>
-        <p><strong>Fuente:</strong> {{ tooltips.source }}</p>
-        <div class="requirements">
-          <strong>Requisitos:</strong>
-          <ul>
-            <li *ngFor="let req of tooltips.requirements">{{ req }}</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+        <p><strong>Descripción:</strong> Esta estructura es parte de la medición estructural del riesgo de liquidez, que considera la composición de activos y pasivos líquidos en una posición estática a una fecha determinada y sobre los saldos contables, y que sirven para el cálculo y reporte semanal del indicador de liquidez. Por ser una estructura de reporte obligatorio, siempre deberá ser enviada, con un mínimo de 1 registro de detalle que corresponderá a la volatilidad diaria de la semana reportada. El resto de datos solicitados pueden ser omitidos si es que tuvieran un valor de cero en todos los días de la semana.</p>
+        <p><strong>Periodicidad:</strong> Semanal </p>
+        <p><strong>Plazo entrega:</strong> Según requerimientos de la SB</p>
+        <p><strong>Código Banco:</strong> 1038</p>
+        <p><strong>Formato archivo:</strong> L08Lxxxxddmmaaaa.txt</p>
+        <p><strong>Fuente:</strong> Manual de Control de Inversiones - SB Marzo 2017</p>
 
-  <!-- FILTROS -->
-  <div class="filters-section">
-    <div class="card">
-      <div class="card-header">
-        <h3>🔍 Filtros de Reporte</h3>
+        <strong>Campos Oficiales:</strong>
+          <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
+            <app-l08-table></app-l08-table>
+          </div>  
       </div>
-      <div class="card-content">
-        <div class="filters-grid">
-          <div class="form-field">
-            <label>Fecha Inicio:</label>
-            <input type="date" [(ngModel)]="fechaInicio" class="form-control">
-          </div>
-          <div class="form-field">
-            <label>Fecha Fin:</label>
-            <input type="date" [(ngModel)]="fechaFin" class="form-control">
-          </div>
-          <div class="form-field">
-            <label>Tipo Instrumento:</label>
-            <select [(ngModel)]="tipoInstrumento" class="form-control">
-              <option value="">Todos</option>
-              <option value="10">10 - Bonos del Tesoro</option>
-              <option value="20">20 - Bonos Corporativos</option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label>Calificación:</label>
-            <select [(ngModel)]="calificacion" class="form-control">
-              <option value="">Todas</option>
-              <option value="1">1 - AAA</option>
-              <option value="2">2 - AA+</option>
-              <option value="3">3 - AA</option>
-            </select>
-          </div>
-        </div>
-        <div class="actions">
-          <button (click)="generateReport()" [disabled]="loading" class="btn btn-primary">
-            {{ loading ? 'Generando...' : 'Generar Reporte' }}
-          </button>
-          <button (click)="loadHistory()" class="btn btn-secondary">
-            {{ showHistorial ? 'Ocultar Historial' : 'Ver Historial' }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ERRORES -->
-  <div *ngIf="error" class="error-message">
-    <div class="alert alert-danger">
-      <strong>Error:</strong> {{ error }}
     </div>
   </div>
 
   <!-- RESUMEN -->
-  <div *ngIf="reportData" class="summary-section">
+  <div class="summary-section">
     <div class="card">
       <div class="card-header">
         <h3>📊 Resumen del Reporte</h3>
@@ -93,180 +37,105 @@
         <div class="summary-grid">
           <div class="summary-item">
             <label>Total Registros:</label>
-            <span>{{ getTotalRegistros() }}</span>
-          </div>
-          <div class="summary-item">
-            <label>Valor Total Lunes:</label>
-            <span>{{ formatCurrency(getValorTotalLunes()) }}</span>
-          </div>
-          <div class="summary-item">
-            <label>Valor Total Viernes:</label>
-            <span>{{ formatCurrency(getValorTotalViernes()) }}</span>
-          </div>
-          <div class="summary-item">
-            <label>Variación Semanal:</label>
-            <span [class]="getVariacionSemanal() >= 0 ? 'positive' : 'negative'">
-              {{ getVariacionSemanal().toFixed(2) }}%
-            </span>
-          </div>
-          <div class="summary-item">
-            <label>Cumplimiento:</label>
-            <span [class]="getCumplimientoStatus() === 'CUMPLE' ? 'positive' : 'negative'">
-              {{ getCumplimientoStatus() }}
-            </span>
+            <span>{{ 20 }}</span>
           </div>
           <div class="summary-item">
             <label>Fecha Generación:</label>
-            <span>{{ getFechaGeneracion() }}</span>
+            <span> 2055/08/20 </span>
           </div>
-        </div>
-        <div class="export-action">
-          <button (click)="exportReport()" class="btn btn-success">
-            📄 Exportar TXT
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TABLA DE DATOS -->
-  <div *ngIf="datosL08 && datosL08.length > 0" class="data-section">
-    <div class="card">
-      <div class="card-header">
-        <h3>📋 Detalle de Datos L08</h3>
-        <p class="tooltip-info">💡 Pasa el mouse sobre los encabezados para ver información detallada de cada campo</p>
-      </div>
-      <div class="card-content">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th 
-                  *ngFor="let column of displayedColumns" 
-                  (mouseenter)="showFieldTooltip(column, $event)"
-                  (mouseleave)="hideTooltip()"
-                  class="tooltip-header">
-                  {{ getColumnTitle(column) }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of datosL08">
-                <td>{{ item.codigoLiquidez }}</td>
-                <td>{{ item.tipoIdentificacion }}</td>
-                <td>{{ item.identificacionEntidad }}</td>
-                <td>{{ item.tipoInstrumento }}</td>
-                <td>{{ item.calificacionEntidad }}</td>
-                <td>{{ item.calificadoraRiesgo }}</td>
-                <td>{{ formatCurrency(item.valorLunes) }}</td>
-                <td>{{ formatCurrency(item.valorMartes) }}</td>
-                <td>{{ formatCurrency(item.valorMiercoles) }}</td>
-                <td>{{ formatCurrency(item.valorJueves) }}</td>
-                <td>{{ formatCurrency(item.valorViernes) }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- HISTORIAL -->
-  <div *ngIf="showHistorial && historial.length > 0" class="history-section">
-    <div class="card">
-      <div class="card-header">
-        <h3>📚 Historial de Reportes</h3>
-      </div>
-      <div class="card-content">
-        <div class="history-list">
-          <div *ngFor="let report of historial" class="history-item">
-            <div class="history-date">{{ report.cabecera.fechaCorte }}</div>
-            <div class="history-records">{{ report.cabecera.numeroTotalRegistros }} registros</div>
+          <div class="summary-item">
+            <label>Emisores:</label>
+            <span>{{ 20 }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Custodios:</label>
+            <span>{{ 20 }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Depositarios:</label>
+            <span>{{ 20 }}</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TOOLTIP FLOTANTE -->
-  <div 
-    *ngIf="showTooltip && currentTooltip" 
-    class="tooltip-popup"
-    [style.left.px]="tooltipPosition.x + 10"
-    [style.top.px]="tooltipPosition.y - 10">
-    <div class="tooltip-content">
-      <h4>{{ currentTooltip.title }}</h4>
-      <p>{{ currentTooltip.description }}</p>
-      <p><strong>Fuente:</strong> {{ currentTooltip.source }}</p>
-      <p *ngIf="currentTooltip.example"><strong>Ejemplo:</strong> {{ currentTooltip.example }}</p>
+  <div class="data-section">
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>
+              Liquidez
+            </th>
+            <th>
+              Tipo de Identificación
+            </th>
+            <th>
+              Identificación de la Entidad
+            </th>
+            <th>
+              Tipo de instrumento
+            </th>
+            <th>
+              Calificación de la Entidad 
+            </th>
+            <th>
+              Calificadora de Riesgo
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of arrayResume">
+            <td class="data-cell">
+              <span class="cell-value">{{ item.codigoLiquidez?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.tipoIdentificacionEntidad?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.identificacionEntidad}}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.tipoInstrumento?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.calificacionEntidad?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.calificadoraRiesgo?.descripcion }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <button (click)="validateAndGenerateReport()" [disabled]="loading" class="btn btn-primary">
+      <i class="pi pi-check-circle"></i>
+      {{ loading ? 'Validando...' : 'Validar y Generar Reporte L08' }}
+    </button>
+
+    <button (click)="exportToTxt()" class="btn btn-success">
+      <i class="pi pi-download"></i>
+      Exportar TXT
+    </button>
+
+    <button (click)="openModal()" class="btn btn-info">
+      <i class="pi pi-plus"></i>
+      Crear Nuevo Registro
+    </button>
+  </div>
+
+  <app-l08-modal-form
+    [isVisible]="showModalForm"
+    (modalClosed)="onModalClosed()"></app-l08-modal-form>
+
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Generando reporte L08...</p>
     </div>
   </div>
 </div>
-
-<style>
-.l08-main-container {
-  padding: 2rem;
-  background: #f8fafc;
-  min-height: 100vh;
-}
-
-.header {
-  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-  color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.resumen-kpis {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 1rem;
-}
-
-.kpi {
-  background: rgba(255,255,255,0.15);
-  border-radius: 8px;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.kpi-label {
-  display: block;
-  font-size: 1rem;
-  color: #dbeafe;
-}
-
-.kpi-value {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #fff;
-}
-
-.filtros {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-
-.filtros label {
-  font-weight: 500;
-  color: #1e293b;
-}
-
-.dashboard-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-@media (max-width: 1200px) {
-  .dashboard-content {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
