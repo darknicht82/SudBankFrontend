@@ -19,6 +19,16 @@ export interface L01Resume {
   identificacion: string | null;
 }
 
+export interface FilterRow {
+  codigoEmisor: number;
+  tipoIdentificacion: string;
+  identificacion: string;
+  clasificacion: string;
+  tipoEmisor: string;
+  fechaCorte: string;
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +36,7 @@ export class L01CatalogService {
   private baseUrl = environment.backendEndpoint; // ✅ CONECTAR DIRECTAMENTE A APIS REALES
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Tabla 4 - Tipos de Identificación (✅ CONECTAR A API REAL)
   getTabla4(): Observable<L01Catalog[]> {
@@ -163,7 +173,7 @@ export class L01CatalogService {
    * Obtener tipos de emisor aplicables a L01 (excluyendo los que no aplican)
    * Según backend: excluir códigos que indican "no aplica L01"
    */
-    getTabla73ForL01(): Observable<L01Catalog[]> {
+  getTabla73ForL01(): Observable<L01Catalog[]> {
     return this.http.get<L01Catalog[]>(`${this.baseUrl}/catalog/t73`)
       .pipe(
         map(tipos => tipos.filter(t =>
@@ -236,6 +246,18 @@ export class L01CatalogService {
     );
   }
 
+  getL01ByFechaCreacion(startDate: string, endDate: string): Observable<FilterRow[]> {
+    const params = { startDate, endDate };
 
+    return this.http.get<[FilterRow]>(
+      `${this.baseUrl}/structures/l01/by-date`,
+      { params }
+    ).pipe(
+      catchError(error => {
+        console.error('Error al obtener L01 filtrado por fecha de creación:', error);
+        throw error;
+      })
+    );
+  }
 
 }

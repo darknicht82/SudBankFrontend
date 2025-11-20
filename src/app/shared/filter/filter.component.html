@@ -1,0 +1,29 @@
+<div class="filter-container">
+  <label>Desde</label>
+  <input type="date" [(ngModel)]="from" />
+
+  <label>Hasta</label>
+  <input type="date" [(ngModel)]="to" />
+
+  <button class="btn-apply" (click)="applyFilter()">Aplicar</button>
+  <button class="btn-clear" (click)="clearFilter()">Limpiar</button>
+</div>
+
+<div class="table-container" *ngIf="showTable">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th *ngFor="let col of displayedColumnsFilter">
+          {{ getColumnTitle(col) }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data">
+        <td *ngFor="let col of displayedColumnsFilter">
+          {{ $any(item)[col] }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
