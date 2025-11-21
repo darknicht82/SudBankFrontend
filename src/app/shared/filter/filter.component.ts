@@ -28,7 +28,6 @@ export class FilterComponent {
     if (this.from && this.to) {
       this.rangeChanged.emit({ from: this.from, to: this.to });
     }
-    console.log('Filtro aplicado: Desde', this.from, 'Hasta', this.to);
   }
 
   clearFilter() {
@@ -37,4 +36,9 @@ export class FilterComponent {
     this.rangeChanged.emit({ from: '', to: '' });
   }
 
+  validateDate() {
+    if (this.to && new Date(this.to) < new Date(this.from)) {
+      this.to = '';
+    }
+  }
 }

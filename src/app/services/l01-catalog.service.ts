@@ -20,13 +20,14 @@ export interface L01Resume {
 }
 
 export interface FilterRow {
+  id: number;
+  codigoTipoIdentificacion: number;
   codigoEmisor: number;
-  tipoIdentificacion: string;
-  identificacion: string;
-  clasificacion: string;
-  tipoEmisor: string;
-  fechaCorte: string;
+  codigoClasificacionEmisor: number;
+  codigoTipoEmisor: number;
+  identificacion: string | null;
 }
+
 
 
 @Injectable({

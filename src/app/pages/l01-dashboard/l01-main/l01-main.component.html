@@ -91,16 +91,15 @@
       <div class="card-header">
         <h3>📋 Datos del Reporte L01</h3>
       </div>
-
       <div class="card-filter">
         <h3>Filtro por fecha de emisión</h3>
         <app-filter [data]="filterData" [displayedColumnsFilter]="displayedColumnsfilter"
           [getColumnTitle]="getColumnTitle.bind(this)" [showTable]="seeFilterTable"
           (rangeChanged)="onRangeChanged($event)">
         </app-filter>
-
       </div>
-      <div class="card-content">
+
+      <div class="card-content" *ngIf="!seeFilterTable">
 
         <!-- MENSAJE INFORMATIVO SOBRE REGISTROS FILTRADOS -->
         <div *ngIf="registrosFiltrados > 0" class="filtered-records-message">

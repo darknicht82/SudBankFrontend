@@ -378,7 +378,7 @@ export class L01MainComponent implements OnInit {
   }
 
   onRangeChanged(range: { from: string; to: string }) {
-    console.log('Rango:', range);
+
 
     if (!range.from || !range.to) {
       this.seeFilterTable = false;
@@ -390,20 +390,14 @@ export class L01MainComponent implements OnInit {
 
     this.l01CatalogService.getL01ByFechaCreacion(range.from, range.to).subscribe({
       next: (data) => {
-        console.log('Datos filtrados del backend:', data);
-
-
         this.filteredL01 = data;
-
 
         this.filterData = data.map(item => ({
           codigoEmisor: item.codigoEmisor,
-          tipoIdentificacion: this.getTipoIdentificacionDesc(item.codigoEmisor),
-          identificacion: this.getIdentificacionDesc(item.tipoIdentificacion),
-          clasificacion: this.getClasificacionDesc(item.identificacion),
-          tipoEmisor: this.getTipoEmisorDesc(item.clasificacion),
-
-          fechaCorte: (item as any).fechaCorte
+          tipoIdentificacion: this.getTipoIdentificacionDesc(item.codigoTipoIdentificacion),
+          identificacion: this.getIdentificacionDesc(item.codigoEmisor),
+          clasificacion: this.getClasificacionDesc(item.codigoClasificacionEmisor),
+          tipoEmisor: this.getTipoEmisorDesc(item.codigoTipoEmisor),
         }));
 
         this.seeFilterTable = this.filterData.length > 0;
