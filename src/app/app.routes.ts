@@ -13,6 +13,7 @@ import { L01MainComponent } from './pages/l01-dashboard/l01-main/l01-main.compon
 import { L03MainComponent } from './pages/l03-dashboard/l03-main/l03-main.component';
 import { L02MainComponent } from './pages/l02-dashboard/l02-main/l02-main.component';
 import { L05MainComponent } from './pages/l05-dashboard/l05-main/l05-main.component';
+import { L07MainComponent } from './pages/l07-dashboard/l07-main/l07-main.component';
 import { R02MainComponent } from './pages/r02-dashboard/r02-main/r02-main.component';
 import { L04MainComponent } from './pages/l04-dashboard/l04-main/l04-main.component';
 import { R04MainComponent } from './pages/r04-dashboard/r04-main/r04-main.component';
@@ -44,6 +45,7 @@ export const routes: Routes = [
   { path: 'l03', component: L03MainComponent },
   { path: 'l04', component: L04MainComponent },
   { path: 'r04', component: R04MainComponent },
+  {path: 'l07', component: L07MainComponent },
   { path: 'r05', component: R05MainComponent },
   { path: 'r08', component: R08MainComponent },
   { path: 'r09', component: R09MainComponent },
@@ -70,6 +72,7 @@ export const routes: Routes = [
     { path: 'l05', component: L05MainComponent },
     { path: 'r02', component: R02MainComponent },
     { path: 'l04', component: L04MainComponent },
+    {path: 'l07', component: L07MainComponent },
     { path: 'l03', component: L03MainComponent },
     { path: 'r04', component: R04MainComponent },
     { path: 'r05', component: R05MainComponent },
@@ -98,7 +101,7 @@ export const routes: Routes = [
     { path: 'l04', redirectTo: 'l04' },
     { path: 'l05', redirectTo: 'l05' },
     { path: 'l06', redirectTo: 'l01' },
-    { path: 'l07', redirectTo: 'l08' },
+    { path: 'l07', redirectTo: 'l07' },
     { path: 'l09', redirectTo: 'l01' },
     { path: 'l10', redirectTo: 'l01' },
     { path: 'l11', redirectTo: 'l01' },

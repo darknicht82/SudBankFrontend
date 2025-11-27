@@ -1,0 +1,94 @@
+<!-- Modal del Formulario l07 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+     <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro L07</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form [formGroup]="l07Form" (ngSubmit)="onSumbit()" class="w-100">
+
+        <!-- Sección: Título -->
+        <h5 class="mt-3 mb-2 border-bottom pb-1">Título</h5>
+        <div class="row g-2">
+          <!-- Tipo Identificación -->
+          <div class="col-md-6">
+            <label for="tipoIdentificacionEmisor" class="form-label">Tipo de identificación del emisor o custodio</label>
+            <select 
+              id="tipoIdentificacionEmisor" 
+              class="form-select"
+              formControlName="tipoIdentificacionEmisor">
+              <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+              <option *ngFor="let item of arrayTipoIdentificacionEmisor" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoIdentificacionEmisor')" class="text-danger small mt-1">
+              Escoga un tipo de identificación
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="identificacionEmisor" class="form-label">Identificacion del emisor o custodio</label>
+            <input type="text" id="identificacionEmisor" class="form-control" formControlName="identificacionEmisor" />
+            <div *ngIf="isInvalid('identificacionEmisor')" class="text-danger small mt-1">
+              La identificación es obligatoria
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="nacionalidadEmisor" class="form-label">Nacionalidad del Emisor</label>
+            <select 
+              id="nacionalidadEmisor" 
+              class="form-select"
+              formControlName="nacionalidadEmisor">
+              <option [ngValue]="null" disabled selected>Seleccione una nacionalidad</option>
+              <option *ngFor="let item of arrayNacionalidadEmisor" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('nacionalidadEmisor')" class="text-danger small mt-1">
+              La nacionalidad es obligatoria
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="tipoEmisor" class="form-label">Tipo de emisor o custodio</label>
+            <select 
+              id="tipoEmisor" 
+              class="form-select"
+              formControlName="tipoEmisor">
+              <option [ngValue]="null" disabled selected>Seleccione una identificación</option>
+              <option *ngFor="let item of arrayTipoEmisor" [ngValue]="item">
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div *ngIf="isInvalid('tipoEmisor')" class="text-danger small mt-1">
+              El emisor es obligatorio
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+     <!-- Footer -->
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="l07Form.invalid" (click)="onSumbit()">
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+
+  </div>
+</div>
