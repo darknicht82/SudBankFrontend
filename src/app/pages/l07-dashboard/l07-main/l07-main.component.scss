@@ -1,14 +1,14 @@
-/* COMPONENTE l08 MAIN - DASHBOARD PRINCIPAL */
+/* COMPONENTE L07 MAIN - DASHBOARD PRINCIPAL */
 /* Manual de Control de Inversiones - Marzo 2017 */
 
-.l08-main-container {
+.L07-main-container {
   padding: 20px;
   max-width: 1400px;
   margin: 0 auto;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* TOOLTIP FLOTANTE l08 */
+/* TOOLTIP FLOTANTE L07 */
 .tooltip-popup {
   position: fixed;
   z-index: 1000;
@@ -724,7 +724,7 @@
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .l08-main-container {
+  .L07-main-container {
     padding: 10px;
   }
 

@@ -1,0 +1,213 @@
+<!-- Modal del Formulario r22 -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="operation-icon">📝</span>
+        <h3 class="modal-title">Crear Nuevo Registro R22</h3>
+      </div>
+      <button class="close-button" (click)="closeModal()" type="button">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <form [formGroup]="r22Form" (ngSubmit)="onSubmit()" class="w-100">
+        <!-- Sección: Título -->
+        <h5 class="mt-3 mb-2 border-bottom pb-1">Título</h5>
+        <div class="row g-2">
+          <!-- Tipo Identificación -->
+          <div class="col-md-6">
+            <label for="tipoIdentificacion" class="form-label"
+              >Tipo de Identificación</label
+            >
+            <select
+              id="tipoIdentificacion"
+              class="form-select"
+              formControlName="tipoIdentificacion"
+            >
+              <option [ngValue]="null" disabled selected>
+                Seleccione un tipo
+              </option>
+              <option
+                *ngFor="let item of arrayTipoIdentificacion"
+                [ngValue]="item"
+              >
+                {{ item.descripcion }}
+              </option>
+            </select>
+            <div
+              *ngIf="isInvalid('tipoIdentificacion')"
+              class="text-danger small mt-1"
+            >
+              Escoga un tipo de identificación
+            </div>
+          </div>
+
+          <!-- identificacionSujeto -->
+          <div class="col-md-6">
+            <label for="identificacionSujeto" class="form-label"
+              >Identificación</label
+            >
+            <input
+              type="text"
+              id="identificacionSujeto"
+              class="form-control"
+              formControlName="identificacionSujeto"
+            />
+            <div
+              *ngIf="isInvalid('identificacionSujeto')"
+              class="text-danger small mt-1"
+            >
+              La identificación es obligatoria
+            </div>
+          </div>
+
+          <!--Numero de Tarjeta-->
+            <div class="col-md-6">
+                <label for="numeroTarjeta" class="form-label">Número de Tarjeta</label>
+                <input type="text" id="numeroTarjeta" class="form-control" formControlName="numeroTarjeta"/>
+                <div *ngIf="isInvalid('numeroTarjeta')" class="text-danger small mt-1">
+                    El número de tarjeta es obligatorio
+                </div>
+            </div>
+
+          <!--Dias de morasidad-->
+            <div class="col-md-6">
+                <label for="diasMorasidad" class="form-label">Días de Morasidad</label>
+                <input type="number" id="diasMorasidad" class="form-control" formControlName="diasMorasidad"/>
+                <div *ngIf="isInvalid('diasMorasidad')" class="text-danger small mt-1">
+                    Los días de morasidad son obligatorios
+                </div>
+            </div>
+
+            <!--Calificacion Propia-->
+            <div class="col-md-6">
+                <label for="calificacionPropia" class="form-label">Calificación Propia</label>
+                <select id="calificacionPropia" class="form-select" formControlName="calificacionPropia">
+                    <option [ngValue]="null" disabled selected>Seleccione una calificación</option>
+                    <option *ngFor="let item of arrayCalificacionPropia" [ngValue]="item">
+                        {{ item.descripcion }}
+                    </option>
+                </select>
+                <div *ngIf="isInvalid('calificacionPropia')" class="text-danger small mt-1">
+                    La calificación propia es obligatoria
+                </div>
+            </div>
+
+            <!--Calificacion Homologada-->
+            <div class="col-md-6">
+                <label for="calificacionHomologada" class="form-label">Calificación Homologada</label>
+                <select id="calificacionHomologada" class="form-select" formControlName="calificacionHomologada">
+                    <option [ngValue]="null" disabled selected>Seleccione una calificación</option>
+                    <option *ngFor="let item of arrayCalificacionHomologada" [ngValue]="item">
+                        {{ item.descripcion }}
+                    </option>
+                </select>
+                <div *ngIf="isInvalid('calificacionHomologada')" class="text-danger small mt-1">
+                    La calificación homologada es obligatoria
+                </div>
+            </div>
+
+            <!--Provision Requerida-->
+            <div class="col-md-6">
+                <label for="provisionRequerida" class="form-label">Provisión Requerida</label>
+                <input type="number" id="provisionRequerida" class="form-control" formControlName="provisionRequerida"/>
+                <div *ngIf="isInvalid('provisionRequerida')" class="text-danger small mt-1">
+                    La provisión requerida es obligatoria
+                </div>
+            </div>
+
+            <!--Provision Constituida-->
+            <div class="col-md-6">
+                <label for="provisionConstituida" class="form-label">Provisión Constituida</label>
+                <input type="number" id="provisionConstituida" class="form-control" formControlName="provisionConstituida"/>
+                <div *ngIf="isInvalid('provisionConstituida')" class="text-danger small mt-1">
+                    La provisión constituida es obligatoria
+                </div>
+            </div>
+
+            <!--Valor minimo a pagar-->
+            <div class="col-md-6">
+                <label for="valorMinimoPagar" class="form-label">Valor Mínimo a Pagar</label>
+                <input type="number" id="valorMinimoPagar" class="form-control" formControlName="valorMinimoPagar"/>
+                <div *ngIf="isInvalid('valorMinimoPagar')" class="text-danger small mt-1">
+                    El valor mínimo a pagar es obligatorio
+                </div>
+            </div>  
+            
+            <!--Valor pagado-->
+            <div class="col-md-6">
+                <label for="valorPagado" class="form-label">Valor Pagado</label>
+                <input type="number" id="valorPagado" class="form-control" formControlName="valorPagado"/>
+                <div *ngIf="isInvalid('valorPagado')" class="text-danger small mt-1">
+                    El valor pagado es obligatorio
+                </div>
+            </div>
+
+            <!--Valor a pagar-->
+            <div class="col-md-6">
+                <label for="valorPagar" class="form-label">Valor a Pagar</label>
+                <input type="number" id="valorPagar" class="form-control" formControlName="valorPagar"/>
+                <div *ngIf="isInvalid('valorPagar')" class="text-danger small mt-1">
+                    El valor a pagar es obligatorio
+                </div>
+            </div>
+
+            <!--Valor interese valor a pagar-->
+            <div class="col-md-6">
+                <label for="valorInteresValorPagar" class="form-label">Valor del interes del valor a pagar</label>
+                <input type="number" id="valorInteresValorPagar" class="form-control" formControlName="valorInteresValorPagar"/>
+                <div *ngIf="isInvalid('valorInteresValorPagar')" class="text-danger small mt-1">
+                    El valor interés es obligatorio
+                </div>
+            </div>  
+
+            <!--Valor segur valor a pagar-->
+            <div class="col-md-6">
+                <label for="valorSeguroValorPagar" class="form-label">Valor del seguro del valor a pagar</label>
+                <input type="number" id="valorSeguroValorPagar" class="form-control" formControlName="valorSeguroValorPagar"/>
+                <div *ngIf="isInvalid('valorSeguroValorPagar')" class="text-danger small mt-1">
+                    El valor segur es obligatorio
+                </div>  
+            </div>
+
+            <!--Saldo cuota valor a pagar-->
+            <div class="col-md-6">
+                <label for="saldoCuotaCapitalDiferida" class="form-label">Saldo de la cuota del capital diferida</label>
+                <input type="number" id="saldoCuotaCapitalDiferida" class="form-control" formControlName="saldoCuotaCapitalDiferida"/>
+                <div *ngIf="isInvalid('saldoCuotaCapitalDiferida')" class="text-danger small mt-1">
+                    El saldo cuota es obligatorio
+                </div>
+            </div>
+
+            <!--Valoe Interes capital diferido-->
+            <div class="col-md-6">
+                <label for="valorInteresCapitalDiferido" class="form-label">Valor del interes de capital diferido</label>
+                <input type="number" id="valorInteresCapitalDiferido" class="form-control" formControlName="valorInteresCapitalDiferido"/>
+                <div *ngIf="isInvalid('valorInteresCapitalDiferido')" class="text-danger small mt-1">
+                    El valor interés capital diferido es obligatorio
+                </div>
+            </div> 
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="r22Form.invalid"
+        (click)="onSubmit()"
+      >
+        <i class="bi bi-check"></i> Guardar Registro
+      </button>
+      <button type="button" (click)="closeModal()" class="btn btn-secondary">
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</div>
