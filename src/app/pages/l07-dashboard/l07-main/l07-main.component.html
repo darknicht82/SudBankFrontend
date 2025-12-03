@@ -1,0 +1,139 @@
+<div class="l07-main-container">
+  <!-- CABECERA -->
+  <div class="header">
+    <h1>L07 - Emisarios y custodios para liquidez estructural</h1>
+    <p class="subtitle">Registra el detalle de los saldos en las cuentas de fondos disponibles mantenidos en instituciones financieras.</p>
+  </div>
+
+  <!-- INFORMACIÓN DE ESTRUCTURA -->
+  <div class="structure-info">
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Información de la Estructura L07</h3>
+      </div>
+      <div class="card-content">
+        <p><strong>Descripción:</strong> Registra el detalle de los saldos en las cuentas de fondos disponibles mantenidos en instituciones financieras, contabilizados en la cuenta 1103 “Fondos Disponibles – Bancos y otras instituciones financieras”. Esta estructura debe reportarse obligatoriamente en forma semanal, con corte al día viernes.</p>
+        <p><strong>Periodicidad:</strong> Semanal </p>
+        <p><strong>Plazo entrega:</strong> Según requerimientos de la SB</p>
+        <p><strong>Código Banco:</strong> 1038</p>
+        <p><strong>Formato archivo:</strong> L07Lxxxxddmmaaaa.txt</p>
+        <p><strong>Fuente:</strong> Manual de Control de Inversiones - SB Marzo 2017</p>
+        
+        <div class="requirements">
+          <strong>Validaciones:</strong>
+          <ul>
+            <li>Validación de la semana anterior</li>
+            <li>Validación del balance</li>
+            <li>Registros duplicados</li>
+          </ul>
+        </div>
+
+        <strong>Campos Oficiales:</strong>
+          <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
+            <app-l07-table></app-l07-table>
+          </div>  
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="summary-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>📊 Resumen del Reporte</h3>
+      </div>
+      <div class="card-content">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <label>Total Registros:</label>
+            <span>{{ 20 }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Fecha Generación:</label>
+            <span> 2055/08/20 </span>
+          </div>
+          <div class="summary-item">
+            <label>Emisores:</label>
+            <span>{{ 20 }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Custodios:</label>
+            <span>{{ 20 }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Depositarios:</label>
+            <span>{{ 20 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-section">
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>
+              Tipo de Identificación
+            </th>
+            <th>
+              Indentificación del Emisor
+            </th>
+            <th>
+              Nacionalidad del Emisor
+            </th>
+            <th>
+              Tipo de Emisor
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of arrayResume">
+            <td class="data-cell">
+              <span class="cell-value">{{ item.tipoIdentificacionEmisor?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.identificacionEmisor }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.nacionalidadEmisor?.descripcion }}</span>
+            </td>
+            <td class="data-cell">
+              <span class="cell-value">{{ item.tipoEmisor?.descripcion}}</span>
+            </td>
+            
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <button (click)="validateAndGenerateReport()" [disabled]="loading" class="btn btn-primary">
+      <i class="pi pi-check-circle"></i>
+      {{ loading ? 'Validando...' : 'Validar y Generar Reporte L07' }}
+    </button>
+
+    <button (click)="exportToTxt()" class="btn btn-success">
+      <i class="pi pi-download"></i>
+      Exportar TXT
+    </button>
+
+    <button (click)="openModal()" class="btn btn-info">
+      <i class="pi pi-plus"></i>
+      Crear Nuevo Registro
+    </button>
+  </div>
+
+  <app-l07-modal-form
+    [isVisible]="showModalForm"
+    (modalClosed)="onModalClosed()"></app-l07-modal-form>
+
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Generando reporte L07...</p>
+    </div>
+  </div>
+</div>
