@@ -1,0 +1,58 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.mat-mdc-header-cell {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  color: #333;
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+
+.mat-mdc-cell {
+  padding: 10px 8px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.mat-mdc-row:hover {
+  background-color: #f9f9f9;
+}
+
+.mat-mdc-row:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Estilos específicos para columnas */
+.mat-column-no {
+  width: 50px;
+  text-align: center;
+}
+
+.mat-column-campo {
+  width: 200px;
+  font-weight: 500;
+}
+
+.mat-column-tipoDeDato {
+  width: 120px;
+  text-align: center;
+}
+
+.mat-column-obligatoriedad {
+  width: 60px;
+  text-align: center;
+}
+
+.mat-column-tabla {
+  width: 80px;
+  text-align: center;
+}
+
+.mat-column-descripcion {
+  min-width: 300px;
+}

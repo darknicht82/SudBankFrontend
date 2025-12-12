@@ -2,7 +2,8 @@
   <!-- CABECERA -->
   <div class="header">
     <h1>L05 - Fondos Disponibles Semanales</h1>
-    <p class="subtitle">Registra el detalle de los saldos en las cuentas de fondos disponibles mantenidos en instituciones financieras.</p>
+    <p class="subtitle">Registra el detalle de los saldos en las cuentas de fondos disponibles mantenidos en
+      instituciones financieras.</p>
   </div>
 
   <!-- INFORMACIÓN DE ESTRUCTURA -->
@@ -12,13 +13,16 @@
         <h3>📋 Información de la Estructura L05</h3>
       </div>
       <div class="card-content">
-        <p><strong>Descripción:</strong> Registra el detalle de los saldos en las cuentas de fondos disponibles mantenidos en instituciones financieras, contabilizados en la cuenta 1103 “Fondos Disponibles – Bancos y otras instituciones financieras”. Esta estructura debe reportarse obligatoriamente en forma semanal, con corte al día viernes.</p>
+        <p><strong>Descripción:</strong> Registra el detalle de los saldos en las cuentas de fondos disponibles
+          mantenidos en instituciones financieras, contabilizados en la cuenta 1103 “Fondos Disponibles – Bancos y otras
+          instituciones financieras”. Esta estructura debe reportarse obligatoriamente en forma semanal, con corte al
+          día viernes.</p>
         <p><strong>Periodicidad:</strong> Semanal </p>
         <p><strong>Plazo entrega:</strong> Según requerimientos de la SB</p>
         <p><strong>Código Banco:</strong> 1038</p>
         <p><strong>Formato archivo:</strong> L05Lxxxxddmmaaaa.txt</p>
         <p><strong>Fuente:</strong> Manual de Control de Inversiones - SB Marzo 2017</p>
-        
+
         <div class="requirements">
           <strong>Validaciones:</strong>
           <ul>
@@ -29,9 +33,9 @@
         </div>
 
         <strong>Campos Oficiales:</strong>
-          <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
-            <app-l05-table></app-l05-table>
-          </div>  
+        <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
+          <app-l05-table></app-l05-table>
+        </div>
       </div>
     </div>
   </div>
@@ -103,10 +107,10 @@
               <span class="cell-value">{{ item.tipoIdentificacion?.descripcion }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">{{ item.depositario.description }}</span>
+              <span class="cell-value">{{ item.depositario?.descripcion }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">{{ item.tipoDeposito.description }}</span>
+              <span class="cell-value">{{ item.tipoDeposito?.descripcion }}</span>
             </td>
             <td class="data-cell">
               <span class="cell-value">{{ item.numeroIdentificacionDeposito }}</span>
@@ -115,7 +119,7 @@
               <span class="cell-value">{{ item.cuentaContable }}</span>
             </td>
             <td class="data-cell">
-              <span class="cell-value">{{ item.moneda.description }}</span>
+              <span class="cell-value">{{ item.moneda?.descripcion }}</span>
             </td>
             <td class="data-cell">
               <span class="cell-value">{{ item.valorMonedaDenominacion }}</span>
@@ -143,9 +147,7 @@
     </button>
   </div>
 
-  <app-l05-modal-form
-    [isVisible]="showModalForm"
-    (modalClosed)="onModalClosed()"></app-l05-modal-form>
+  <app-l05-modal-form [isVisible]="showModalForm" (modalClosed)="onModalClosed()"></app-l05-modal-form>
 
   <div *ngIf="loading" class="loading-overlay">
     <div class="loading-spinner">

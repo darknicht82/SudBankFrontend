@@ -23,10 +23,13 @@ export interface L01Resume {
   providedIn: 'root'
 })
 export class L01CatalogService {
+  getL01ByFechaCreacion(from: string, to: string) {
+    throw new Error('Method not implemented.');
+  }
   private baseUrl = environment.backendEndpoint; // ✅ CONECTAR DIRECTAMENTE A APIS REALES
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Tabla 4 - Tipos de Identificación (✅ CONECTAR A API REAL)
   getTabla4(): Observable<L01Catalog[]> {
@@ -163,7 +166,7 @@ export class L01CatalogService {
    * Obtener tipos de emisor aplicables a L01 (excluyendo los que no aplican)
    * Según backend: excluir códigos que indican "no aplica L01"
    */
-    getTabla73ForL01(): Observable<L01Catalog[]> {
+  getTabla73ForL01(): Observable<L01Catalog[]> {
     return this.http.get<L01Catalog[]>(`${this.baseUrl}/catalog/t73`)
       .pipe(
         map(tipos => tipos.filter(t =>

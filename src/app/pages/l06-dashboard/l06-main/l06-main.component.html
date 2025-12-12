@@ -1,0 +1,175 @@
+<div class="l06-container">
+    <div class="header">
+        <h1>L06 - Operaciones interbancarias de Reporto con el Portafolio de Inversiones</h1>
+        <p class="subtitle">Esta estructura debe reportarse de manera obligatoria mensualmente, debiéndose incluir todas
+            las operaciones de este tipo, realizadas durante el mes.</p>
+    </div>
+
+    <div class="structure-info">
+        <div class="card">
+            <div class="card-header">
+                <h3>📋 Información de la Estructura L06</h3>
+            </div>
+            <div class="card-content">
+                <p><strong>Descripción:</strong> Operaciones interbancarias de Reporto con el Portafolio de Inversiones
+                </p>
+                <p><strong>Periodicidad:</strong> Mensual</p>
+                <p><strong>Plazo entrega:</strong> Según requerimientos de la SB (8 días hábiles) </p>
+                <p><strong>Código Banco:</strong> 1038</p>
+                <p><strong>Formato archivo:</strong> L06Mxxxxddmmaaaa.txt</p>
+                <p><strong>Fuente:</strong> Manual de Control de Inversiones - SB Marzo 2017</p>
+
+                <div class="requirements">
+                    <strong>Validaciones:</strong>
+                    <ul>
+                        <li>Validación del balance</li>
+                        <li>Validación del mes anterior</li>
+                        <li>Registros duplicados</li>
+                    </ul>
+                </div>
+
+
+                <strong>Campos Oficiales:</strong>
+                <div style="height: 400px;width: 100%;overflow: auto;border: 1px solid #ccc;background: #fff;">
+                    <app-l06-table></app-l06-table>
+                </div>
+            </div>
+        </div>
+        <div>
+            <!-- RESUMEN -->
+            <div class="summary-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📊 Resumen del Reporte</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <label>Total Registros:</label>
+                                <span>{{getTotalRecords()}}</span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Fecha Generación:</label>
+                                <span> {{ getGenerationDates()}} </span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Emisores:</label>
+                                <!--      <span>{{ getCountByClasificacion(1)}}</span> -->
+                            </div>
+                            <div class="summary-item">
+                                <label>Custodios:</label>
+                                <!--        <span>{{ getCountByClasificacion(2) }}</span> -->
+                            </div>
+                            <div class="summary-item">
+                                <label>Depositarios:</label>
+                                <!--     <span>{{ getCountByClasificacion(3) }}</span> -->
+                            </div>
+                            <div class="summary-item">
+                                <label>Contrapartes:</label>
+                                <!--    <span>{{ getCountByClasificacion(4) }}</span> -->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="data-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3> 📋 Datos del Reporte L06</h3>
+                    </div>
+                    <div class="card-content">
+
+                        <div *ngIf="registrosFiltrados > 0" class="filtered-records-message">
+                            <div class="alert alert-warning">
+                                <h4>⚠️ Registros Filtrados por Validación L06</h4>
+                                <p><strong>Se encontraron {{ registrosFiltrados }} registros que no cumplen con las
+                                        especificaciones
+                                        L06:</strong></p>
+                                <ul>
+                                    <li><strong>Códigos de tipo de identificación no permitidos:</strong> Solo se
+                                        permiten códigos
+                                        <strong>R</strong> y <strong>X</strong>
+                                    </li>
+                                    <li><strong>Registros con códigos C, E, etc. fueron filtrados
+                                            automáticamente</strong></li>
+                                    <li><strong>Estos registros no aparecen en la tabla pero existen en la base de
+                                            datos</strong></li>
+                                </ul>
+                                <p class="text-muted">
+                                    <small>
+                                        <strong>Nota:</strong> Los registros filtrados contienen códigos de tipo de
+                                        identificación
+                                        que no están permitidos según el manual L01 de la Superintendencia de Bancos del
+                                        Ecuador.
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th *ngFor="let column of displayedColumns">
+                                            {{ getColumnTitle(column) }}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of arrayResume; let i = index" class="data-row">
+                                        <td class="data-cell">
+                                            <span class="cell-value">{{
+                                                getTipeIdentificationDesc(item.codigoTipoIdentificacion)}}</span>
+                                        </td>
+                                        <td class="data-cell">
+                                            <span class="cell-value">{{
+                                                getTipeIdentificationDesc(item.codigoIdentificacionEmisor)}}</span>
+                                        </td>
+                                        <td class="data-cell">
+                                            <span class="cell-value">{{
+                                                getTipeIdentificationDesc(item.numeroTitulo)}}</span>
+                                        </td>
+                                        <td class="data-cell">
+                                            <span
+                                                class="cell-value">{{getTipeIdentificationDesc(item.numeroOperacion)}}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="actions-section">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="actions">
+                                <button (click)="validateAndGenerateReport()" [disabled]="loading"
+                                    class="btn btn-primary">
+                                    <i class="pi pi-check-circle"></i>
+                                    {{ loading ? 'Validando...' : 'Validar y Generar Reporte L01 Completo' }}
+                                </button>
+                                <button (click)="exportToTxt()" class="btn btn-success">
+                                    <i class="pi pi-download"></i>
+                                    Exportar TXT
+                                </button>
+                                <button (click)="openModal()" class="btn btn-info">
+                                    <i class="pi pi-plus"></i>
+                                    Crear Nuevo Registro
+                                </button>
+                                <!--      <button (click)="showAddEmitterModal()" class="btn btn-warning"> 
+                                <i class="pi pi-plus-circle"></i>
+                                Agregar Emisor/Custodio
+                                </button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>

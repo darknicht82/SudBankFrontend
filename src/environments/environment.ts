@@ -5,26 +5,26 @@
 
 export const environment = {
   production: false,
-  
+
   // ==========================================
   // CONFIGURACIÓN SWITCH MOCK/REAL
   // ==========================================
   useMockData: false, // SWITCH PRINCIPAL - true para desarrollo, false para producción
   enableDirectRVCSend: false, // SWITCH envío RVC - false en desarrollo para evitar transmisiones reales
-  
+
   // ==========================================
   // CONFIGURACIÓN BANCO SUDAMERICANO
   // ==========================================
   codigoBanco: '1038',
   nombreBanco: 'Banco Sudamericano',
-  
+
   // ==========================================
   // ENDPOINTS DE SERVICIOS
   // ==========================================
   backendEndpoint: 'http://192.168.10.4:5000/api', // Endpoint real del backend
   localEndpoint: 'http://localhost:5000/api', // Endpoint real del backend
   rvcEndpoint: 'https://appweb.superbancos.gob.ec/rvc',
-  
+
   // ==========================================
   // CONFIGURACIÓN L01
   // ==========================================
@@ -34,7 +34,7 @@ export const environment = {
     plazoEntrega: 3, // días hábiles
     formatoArchivo: 'L01E1038ddmmaaaa.txt'
   },
-  
+
   // ==========================================
   // CONFIGURACIÓN APIs
   // ==========================================
@@ -47,7 +47,7 @@ export const environment = {
       validacion: '/validacion'
     }
   },
-  
+
   // ==========================================
   // CONFIGURACIÓN TABLAS CATÁLOGOS
   // ==========================================
@@ -57,7 +57,7 @@ export const environment = {
     t164: 'Códigos Extranjeros',
     t173: 'Clasificaciones'
   },
-  
+
   // ==========================================
   // CONFIGURACIÓN DESARROLLO
   // ==========================================
@@ -66,7 +66,7 @@ export const environment = {
     showMockWarnings: true,
     enableDevTools: true
   },
-  
+
   // ==========================================
   // CONFIGURACIÓN TIMEOUTS
   // ==========================================

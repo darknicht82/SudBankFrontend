@@ -1,0 +1,36 @@
+<div class="filter-container">
+  <div class="date-inputs">
+    <label>Desde</label>
+    <input type="date" [(ngModel)]="from" (change)="validateDate()" />
+
+    <label>Hasta</label>
+    <input type="date" [(ngModel)]="to" [min]="from" />
+  </div>
+
+  <div class="button-container">
+    <button class="btn-apply" (click)="applyFilter()"> <i class="pi pi-filter"></i>Aplicar</button>
+    <button class="btn-clear" (click)="clearFilter()"> <i class="pi pi-filter-slash"></i>Limpiar</button>
+  </div>
+
+</div>
+
+<div class="table-container" *ngIf="showTable">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th *ngFor="let col of displayedColumnsFilter" class="title">
+          {{ getColumnTitle(col) }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data" class="data-row">
+        <td *ngFor="let col of displayedColumnsFilter" class="data-cell">
+          <span class="cell-value">
+            {{ $any(item)[col] }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
